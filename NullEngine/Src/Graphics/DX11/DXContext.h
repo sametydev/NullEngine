@@ -28,4 +28,7 @@ public:
 
 	//State
 	ID3D11RasterizerState* mRSState[2]{};
+
+	virtual ID3D11DeviceContext* GetDXContext() { return mDeviceContext; }
+	virtual ID3D11Device* GetDXDevice() { return mDevice; }
 };

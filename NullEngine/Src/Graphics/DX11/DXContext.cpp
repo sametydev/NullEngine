@@ -104,7 +104,7 @@ void DXContext::ResizeRenderBuffer(uint cx, uint cy)
 
 	D3D11_TEXTURE2D_DESC dsd{};
 	dsd.Width = cx;
-	dsd.Width = cy;
+	dsd.Height = cy;
 	dsd.MipLevels = 1;
 	dsd.ArraySize = 1;
 	dsd.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -150,24 +150,24 @@ void DXContext::CreateSwapChain()
 	}
 
 	DXGI_SWAP_CHAIN_DESC1 sd{};
-	sd.Width = width;
-	sd.Height = height;
-	sd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	sd.SampleDesc.Count = mIsMsaaEnable ? 4 : 1;
+	sd.Width              = width;
+	sd.Height             = height;
+	sd.Format             = DXGI_FORMAT_R8G8B8A8_UNORM;
+	sd.SampleDesc.Count   = mIsMsaaEnable ? 4 : 1;
 	sd.SampleDesc.Quality = mIsMsaaEnable ? Msaa - 1 : 0;
-	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	sd.BufferCount = mFlipModel ? 2:1;
-	sd.SwapEffect = mFlipModel ? DXGI_SWAP_EFFECT_FLIP_DISCARD : DXGI_SWAP_EFFECT_DISCARD;
-	sd.Flags = 0;
-	sd.Scaling = DXGI_SCALING_STRETCH;
-	sd.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
+	sd.BufferUsage        = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	sd.BufferCount        = mFlipModel ? 2:1;
+	sd.SwapEffect         = mFlipModel ? DXGI_SWAP_EFFECT_FLIP_DISCARD : DXGI_SWAP_EFFECT_DISCARD;
+	sd.Flags              = 0;
+	sd.Scaling            = DXGI_SCALING_STRETCH;
+	sd.AlphaMode          = DXGI_ALPHA_MODE_UNSPECIFIED;
 
 	DXGI_SWAP_CHAIN_FULLSCREEN_DESC fd{};
-	fd.RefreshRate.Numerator = 60;
+	fd.RefreshRate.Numerator   = 60;
 	fd.RefreshRate.Denominator = 1;
-	fd.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-	fd.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	fd.Windowed = TRUE;
+	fd.Scaling                 = DXGI_MODE_SCALING_UNSPECIFIED;
+	fd.ScanlineOrdering        = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	fd.Windowed                = TRUE;
 
 	HR(dxgiFactory2->CreateSwapChainForHwnd(
 		mDevice,mHwnd,&sd,&fd,nullptr,&mSwapChain
@@ -184,16 +184,18 @@ void DXContext::CreateSwapChain()
 void DXContext::CreateStates()
 {
 	D3D11_RASTERIZER_DESC rd{};
-	rd.CullMode = D3D11_CULL_BACK;
-	rd.FillMode = D3D11_FILL_SOLID;
+	rd.CullMode              = D3D11_CULL_BACK;
+	rd.FillMode              = D3D11_FILL_SOLID;
 	rd.FrontCounterClockwise = false;
-	rd.DepthClipEnable = true;
-	rd.MultisampleEnable = mIsMsaaEnable;
+	rd.DepthClipEnable       = true;
+	rd.MultisampleEnable     = mIsMsaaEnable;
 	rd.AntialiasedLineEnable = false;
 
 	HR(mDevice->CreateRasterizerState(&rd, &mRSState[0]));
 	rd.FillMode = D3D11_FILL_WIREFRAME;
 	HR(mDevice->CreateRasterizerState(&rd, &mRSState[1]));
+
+	mDeviceContext->RSSetState(mRSState[0]);
 
 }
 

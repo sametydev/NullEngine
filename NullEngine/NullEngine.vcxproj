@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Graphics\DX11\DXBuffer.h" />
     <ClInclude Include="Src\Core\Log.h" />
     <ClInclude Include="Src\Core\Singleton.h" />
     <ClInclude Include="Src\Graphics\Context.h" />
@@ -146,6 +147,8 @@
     <ClInclude Include="Src\Wnd\WndFrame.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Graphics\Context.cpp" />
+    <ClCompile Include="Src\Graphics\DX11\DXBuffer.cpp" />
     <ClCompile Include="Src\Core\Log.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXContext.cpp" />
     <ClCompile Include="Src\Main.cpp" />

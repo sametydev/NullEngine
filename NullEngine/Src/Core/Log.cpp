@@ -13,7 +13,7 @@ void Log::__hr(HRESULT hr)
 		);
 		LocalFree(buffer);
 		char code[256];
-		printf(code,"%s\n",buffer);
+		sprintf_s(code,"%s\n",buffer);
 
 		MessageBox(NULL, code, "HRESULT Error", MB_OK);
 	}
