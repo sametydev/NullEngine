@@ -82,3 +82,10 @@ void PixelShader::BindPipeline()
 {
 	gDXContext->PSSetShader(mPS, 0, 0);
 }
+std::unordered_map<std::string, std::shared_ptr<IShader>> ShaderCache::mCache;
+
+IShader* ShaderCache::Create(const ShaderDesc& desc)
+{
+
+	return nullptr;
+}

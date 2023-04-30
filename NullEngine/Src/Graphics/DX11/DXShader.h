@@ -25,7 +25,7 @@ class IShader
 public:
 	IShader() = default;
 	virtual ~IShader(){}
-
+	virtual void BindPipeline() = 0;
 	void Compile(LPCSTR code,LPCSTR entry,LPCSTR version,ID3DBlob** blob);
 
 };
@@ -38,7 +38,7 @@ public:
 
 	//void Create(const ShaderDesc& desc);
 	void Create(LPCSTR code);
-	void BindPipeline();
+	void BindPipeline() override;
 	ID3D11VertexShader* mVS;
 	ID3DBlob* byteBinary; //vs code binary
 };
@@ -48,8 +48,18 @@ public:
 	PixelShader();
 	~PixelShader();
 
+	void BindPipeline() override;
 	void Create(LPCSTR code);
-	void BindPipeline();
+	
 	ID3D11PixelShader* mPS;
 };
 
+
+#include <unordered_map>
+
+//Todo: ECS Subsystem Shader Cache
+class ShaderCache {
+
+	static IShader* Create(const ShaderDesc& desc);
+	static std::unordered_map<std::string, std::shared_ptr<IShader>> mCache;
+};
