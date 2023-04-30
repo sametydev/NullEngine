@@ -18,6 +18,6 @@ public:
 	//Event Drive Execute
 	std::shared_ptr<Context> mContext;
 
-	int ExecFrame(void* scene = nullptr);
+	int ExecFrame(Scene* scene = nullptr);
 };
 

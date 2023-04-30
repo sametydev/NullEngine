@@ -1,5 +1,6 @@
 #include <PCH.h>
 #include <Wnd/WndFrame.h>
+#include <Engine/Scene.h>
 
 WndFrame::WndFrame(Wnd* parent, uint width, uint heigth) : Wnd(parent, 0, 0, width, heigth)
 {
@@ -28,11 +29,17 @@ void WndFrame::OnCreate()
 
 void WndFrame::OnReSize(uint cx, uint cy)
 {
-	if(mContext)   mContext->ResizeRenderBuffer(cx, cy);
+	//if(mContext)   mContext->ResizeRenderBuffer(cx, cy);
 }
 
-int WndFrame::ExecFrame(void* scene)
+int WndFrame::ExecFrame(Scene* scene)
 {
+	if (scene) {
+		if (!scene->InitFrame())
+		{
+			LOG_ERROR("Failed to init scene");
+		}
+	}
 	MSG msg{};
 
 	while (msg.message != WM_QUIT)
@@ -50,7 +57,11 @@ int WndFrame::ExecFrame(void* scene)
 		if (mContext)
 		{
 			mContext->ClearBuffer(0.4f, 0.2f, 0.2f,1.0f);
-
+			if (scene)
+			{
+				scene->UpdateFrame(0.0f);
+				scene->RenderFrame();
+			}
 			mContext->SwapBuffer();
 		}
 		//Update

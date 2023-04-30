@@ -24,12 +24,14 @@ DXBuffer::~DXBuffer()
 }
 
 
-DXVertexBuffer::DXVertexBuffer() {
+DXVertexBuffer::DXVertexBuffer() : mStride(0) {
 
 }
 
 void DXVertexBuffer::Create(const BufferDesc& desc)
 {
+	mStride = desc.stride;
+
 	D3D11_BUFFER_DESC bd{};
 	bd.ByteWidth = desc.cbSize;
 	bd.Usage = D3D11_USAGE_DEFAULT;
@@ -41,4 +43,10 @@ void DXVertexBuffer::Create(const BufferDesc& desc)
 
 
 	HR(gDXDevice->CreateBuffer(&bd, &sd, &mBuffer));
+}
+
+void DXVertexBuffer::BindPipeline(uint slot)
+{
+	uint offset = 0;
+	gDXContext->IASetVertexBuffers(slot, 1, &mBuffer, &mStride, &offset);
 }

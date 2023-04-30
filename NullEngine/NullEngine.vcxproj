@@ -136,6 +136,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Engine\Scene.h" />
     <ClInclude Include="Src\Graphics\DX11\DXBuffer.h" />
     <ClInclude Include="Src\Core\Log.h" />
     <ClInclude Include="Src\Core\Singleton.h" />
@@ -143,11 +144,13 @@
     <ClInclude Include="Src\Core\TypeDecl.h" />
     <ClInclude Include="Src\Graphics\DX11\DX11Config.h" />
     <ClInclude Include="Src\Graphics\DX11\DXContext.h" />
+    <ClInclude Include="Src\Math\LinearMath.h" />
     <ClInclude Include="Src\PCH.h" />
     <ClInclude Include="Src\Wnd\Wnd.h" />
     <ClInclude Include="Src\Wnd\WndFrame.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Engine\Scene.cpp" />
     <ClCompile Include="Src\Graphics\Context.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXBuffer.cpp" />
     <ClCompile Include="Src\Core\Log.cpp" />

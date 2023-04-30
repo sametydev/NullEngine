@@ -18,3 +18,6 @@ class Scene;
 //DirectX 11
 struct ID3D11Device;
 struct ID3D11DeviceContext;
+
+class DXBuffer;
+class DXVertexBuffer;

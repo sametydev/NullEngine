@@ -11,6 +11,7 @@
 
 #include <Core/TypeDecl.h>
 #include <Core/Log.h>
+#include <Math/LinearMath.h>
 
 #define SAFE_RELEASE(x) if(x) {x->Release(); x = nullptr;}
 #define SAFE_DELETE(x) if(x) {delete x; x = nullptr;}

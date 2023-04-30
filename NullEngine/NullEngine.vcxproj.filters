@@ -11,6 +11,8 @@
     <ClInclude Include="Src\Core\Log.h" />
     <ClInclude Include="Src\Core\Singleton.h" />
     <ClInclude Include="Src\Graphics\DX11\DXBuffer.h" />
+    <ClInclude Include="Src\Engine\Scene.h" />
+    <ClInclude Include="Src\Math\LinearMath.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp" />
@@ -21,5 +23,6 @@
     <ClCompile Include="Src\Core\Log.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXBuffer.cpp" />
     <ClCompile Include="Src\Graphics\Context.cpp" />
+    <ClCompile Include="Src\Engine\Scene.cpp" />
   </ItemGroup>
 </Project>
