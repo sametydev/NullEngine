@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="Src\Graphics\Context.h" />
+    <ClInclude Include="Src\PCH.h" />
+    <ClInclude Include="Src\Wnd\Wnd.h" />
+    <ClInclude Include="Src\Wnd\WndFrame.h" />
+    <ClInclude Include="Src\Core\TypeDecl.h" />
+    <ClInclude Include="Src\Graphics\DX11\DX11Config.h" />
+    <ClInclude Include="Src\Graphics\DX11\DXContext.h" />
+    <ClInclude Include="Src\Core\Log.h" />
+    <ClInclude Include="Src\Core\Singleton.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Src\Main.cpp" />
+    <ClCompile Include="Src\Wnd\Wnd.cpp" />
+    <ClCompile Include="Src\PCH.cpp" />
+    <ClCompile Include="Src\Wnd\WndFrame.cpp" />
+    <ClCompile Include="Src\Graphics\DX11\DXContext.cpp" />
+    <ClCompile Include="Src\Core\Log.cpp" />
+  </ItemGroup>
+</Project>

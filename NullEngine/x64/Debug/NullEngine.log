@@ -1,0 +1,6 @@
+﻿  Main.cpp
+C:\Users\Samet\source\repos\NullEngine\NullEngine\Src\Main.cpp(9,1): error C2857: /YcPCH.h komut satırı seçeneğiyle belirtilen '#include' deyimi kaynak dosyasında bulunamadı
+  PCH.cpp
+C:\Users\Samet\source\repos\NullEngine\NullEngine\Src\PCH.cpp(1,10): fatal  error C1083: içerme dosyası açılamıyor: 'PCH': No such file or directory
+  Wnd.cpp
+C:\Users\Samet\source\repos\NullEngine\NullEngine\Src\Wnd\Wnd.cpp(1,10): fatal  error C1083: içerme dosyası açılamıyor: 'PCH.h': No such file or directory
