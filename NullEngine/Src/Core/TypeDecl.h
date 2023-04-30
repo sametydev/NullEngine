@@ -13,7 +13,7 @@ typedef const char* LPCSTR;
 
 //User declare
 class Context;
-
+class Scene;
 
 //DirectX 11
 struct ID3D11Device;
