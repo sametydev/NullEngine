@@ -80,4 +80,6 @@ void Scene01::RenderFrame()
 	mPS->BindPipeline();
 	gDXContext->IASetInputLayout(mLayout);
 	gDXContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	gDXContext->Draw(3, 0);
 }
