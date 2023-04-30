@@ -17,7 +17,8 @@ public:
 
 protected:
 	DXVertexBuffer* mVBO;
-	VertexShader* mShader;
+	VertexShader* mVS;
+	PixelShader* mPS;
 	ID3D11InputLayout* mLayout;
 };
 

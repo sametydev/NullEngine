@@ -38,6 +38,7 @@ public:
 
 	//void Create(const ShaderDesc& desc);
 	void Create(LPCSTR code);
+	void BindPipeline();
 	ID3D11VertexShader* mVS;
 	ID3DBlob* byteBinary; //vs code binary
 };
@@ -48,6 +49,7 @@ public:
 	~PixelShader();
 
 	void Create(LPCSTR code);
+	void BindPipeline();
 	ID3D11PixelShader* mPS;
 };
 

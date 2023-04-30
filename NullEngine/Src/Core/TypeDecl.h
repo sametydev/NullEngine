@@ -23,3 +23,4 @@ class DXBuffer;
 class DXVertexBuffer;
 
 class VertexShader;
+class PixelShader;

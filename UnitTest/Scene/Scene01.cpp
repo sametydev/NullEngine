@@ -3,7 +3,7 @@
 #include <Graphics/DX11/DXBuffer.h>
 #include <Graphics/DX11/DXShader.h>
 
-LPCSTR vsCode = R"(
+LPCSTR hlsl = R"(
 struct VS_IN{
 	float3 pos : POSITION;
 };
@@ -18,7 +18,13 @@ PS_IN VS(VS_IN vs){
 	ps.pos = float4(vs.pos,1);
 
 	return ps;
-}
+};
+
+float4 PS(PS_IN ps) : SV_TARGET
+{
+	return float4(1,0,0,1);
+};
+
 )";
 
 
@@ -44,8 +50,11 @@ bool Scene01::InitFrame()
 
 	mVBO->BindPipeline(0);
 	
-	mShader = new VertexShader();
-	mShader->Create(vsCode);
+	mVS = new VertexShader();
+	mVS->Create(hlsl);
+
+	mPS = new PixelShader();
+	mPS->Create(hlsl);
 
 	D3D11_INPUT_ELEMENT_DESC ied[]{
 	
@@ -53,8 +62,8 @@ bool Scene01::InitFrame()
 	};
 
 
-	HRESULT hr = gDXDevice->CreateInputLayout(ied, ARRAYSIZE(ied), mShader->byteBinary->GetBufferPointer(),
-		mShader->byteBinary->GetBufferSize(), &mLayout
+	HRESULT hr = gDXDevice->CreateInputLayout(ied, ARRAYSIZE(ied), mVS->byteBinary->GetBufferPointer(),
+		mVS->byteBinary->GetBufferSize(), &mLayout
 		);
 
 	return true;
@@ -66,4 +75,9 @@ void Scene01::UpdateFrame(float dt)
 
 void Scene01::RenderFrame()
 {
+	mVBO->BindPipeline(0);
+	mVS->BindPipeline();
+	mPS->BindPipeline();
+	gDXContext->IASetInputLayout(mLayout);
+	gDXContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }

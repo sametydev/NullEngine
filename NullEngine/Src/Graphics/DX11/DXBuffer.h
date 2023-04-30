@@ -25,7 +25,7 @@ class DXVertexBuffer : public DXBuffer {
 public:
 	DXVertexBuffer();
 	void Create(const BufferDesc& desc) override;
-	void BindPipeline(uint slot) override;
+	void BindPipeline(uint slot = 0) override;
 
 	uint mStride;
 };

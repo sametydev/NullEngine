@@ -48,6 +48,11 @@ void VertexShader::Create(LPCSTR code)
 	));
 }
 
+void VertexShader::BindPipeline()
+{
+	gDXContext->VSSetShader(mVS, 0, 0);
+}
+
 PixelShader::PixelShader() : mPS(nullptr)
 {
 }
@@ -61,7 +66,7 @@ void PixelShader::Create(LPCSTR code)
 {
 	ID3DBlob* psBlob = nullptr; // binary byte code
 
-	Compile(code, VS_ENTRY, VS_VERSION, &psBlob);
+	Compile(code, PS_ENTRY, PS_VERSION, &psBlob);
 
 	HR(gDXDevice->CreatePixelShader(
 		psBlob->GetBufferPointer(),
@@ -71,4 +76,9 @@ void PixelShader::Create(LPCSTR code)
 	));
 
 	SAFE_RELEASE(psBlob);
+}
+
+void PixelShader::BindPipeline()
+{
+	gDXContext->PSSetShader(mPS, 0, 0);
 }
