@@ -136,6 +136,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Graphics\DX11\DXShader.h" />
     <ClInclude Include="Src\Engine\Scene.h" />
     <ClInclude Include="Src\Graphics\DX11\DXBuffer.h" />
     <ClInclude Include="Src\Core\Log.h" />
@@ -150,6 +151,7 @@
     <ClInclude Include="Src\Wnd\WndFrame.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Graphics\DX11\DXShader.cpp" />
     <ClCompile Include="Src\Engine\Scene.cpp" />
     <ClCompile Include="Src\Graphics\Context.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXBuffer.cpp" />

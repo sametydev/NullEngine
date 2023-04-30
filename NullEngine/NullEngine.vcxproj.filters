@@ -13,6 +13,7 @@
     <ClInclude Include="Src\Graphics\DX11\DXBuffer.h" />
     <ClInclude Include="Src\Engine\Scene.h" />
     <ClInclude Include="Src\Math\LinearMath.h" />
+    <ClInclude Include="Src\Graphics\DX11\DXShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp" />
@@ -24,5 +25,6 @@
     <ClCompile Include="Src\Graphics\DX11\DXBuffer.cpp" />
     <ClCompile Include="Src\Graphics\Context.cpp" />
     <ClCompile Include="Src\Engine\Scene.cpp" />
+    <ClCompile Include="Src\Graphics\DX11\DXShader.cpp" />
   </ItemGroup>
 </Project>

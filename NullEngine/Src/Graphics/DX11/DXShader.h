@@ -37,7 +37,8 @@ public:
 	~VertexShader();
 
 	//void Create(const ShaderDesc& desc);
-	void Create(LPCSTR code)
+	void Create(LPCSTR code);
 	ID3D11VertexShader* mVS;
+	ID3DBlob* byteBinary; //vs code binary
 };
 

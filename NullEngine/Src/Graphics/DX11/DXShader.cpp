@@ -38,4 +38,6 @@ void VertexShader::Create(LPCSTR code)
 	ID3DBlob* vsBlob = nullptr; // binary byte code
 
 	Compile(code,VS_ENTRY,VS_VERSION,&vsBlob);
+
+	byteBinary = vsBlob;
 }
