@@ -1,5 +1,5 @@
 #pragma once
-#include <Graphics/DX11/DX11Config.h>
+#include <Graphics/DX11/DXContext.h>
 
 #define VS_ENTRY	"VS"
 #define PS_ENTRY	"PS"
@@ -40,5 +40,14 @@ public:
 	void Create(LPCSTR code);
 	ID3D11VertexShader* mVS;
 	ID3DBlob* byteBinary; //vs code binary
+};
+
+class PixelShader : public IShader {
+public:
+	PixelShader();
+	~PixelShader();
+
+	void Create(LPCSTR code);
+	ID3D11PixelShader* mPS;
 };
 

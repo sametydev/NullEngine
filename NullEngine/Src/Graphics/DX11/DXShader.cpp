@@ -40,4 +40,35 @@ void VertexShader::Create(LPCSTR code)
 	Compile(code,VS_ENTRY,VS_VERSION,&vsBlob);
 
 	byteBinary = vsBlob;
+	HR(gDXDevice->CreateVertexShader(
+		vsBlob->GetBufferPointer(),
+		vsBlob->GetBufferSize(),
+		nullptr,
+		&mVS
+	));
+}
+
+PixelShader::PixelShader() : mPS(nullptr)
+{
+}
+
+PixelShader::~PixelShader()
+{
+	SAFE_DELETE(mPS);
+}
+
+void PixelShader::Create(LPCSTR code)
+{
+	ID3DBlob* psBlob = nullptr; // binary byte code
+
+	Compile(code, VS_ENTRY, VS_VERSION, &psBlob);
+
+	HR(gDXDevice->CreatePixelShader(
+		psBlob->GetBufferPointer(),
+		psBlob->GetBufferSize(),
+		nullptr,
+		&mPS
+	));
+
+	SAFE_RELEASE(psBlob);
 }
