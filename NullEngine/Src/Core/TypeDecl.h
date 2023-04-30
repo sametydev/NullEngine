@@ -21,3 +21,5 @@ struct ID3D11DeviceContext;
 
 class DXBuffer;
 class DXVertexBuffer;
+
+class VertexShader;

@@ -1,6 +1,11 @@
 #pragma once
 #include <Graphics/DX11/DX11Config.h>
 
+#define VS_ENTRY	"VS"
+#define PS_ENTRY	"PS"
+#define VS_VERSION	"vs_5_0"
+#define PS_VERSION	"ps_5_0"
+
 enum class ShaderType : uint
 {
 	Vertex,
@@ -9,6 +14,12 @@ enum class ShaderType : uint
 	Geometry,
 	Compute
 };
+
+struct ShaderDesc {
+	LPCSTR code;
+	ShaderType type;
+};
+
 class IShader
 {
 public:
@@ -25,6 +36,8 @@ public:
 	VertexShader();
 	~VertexShader();
 
+	//void Create(const ShaderDesc& desc);
+	void Create(LPCSTR code)
 	ID3D11VertexShader* mVS;
 };
 

@@ -1,6 +1,7 @@
 #include <PCH.h>
 #include <Scene/Scene01.h>
 #include <Graphics/DX11/DXBuffer.h>
+#include <Graphics/DX11/DXShader.h>
 
 bool Scene01::InitFrame()
 {
