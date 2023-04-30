@@ -16,6 +16,7 @@ enum class ShaderType : uint
 };
 
 struct ShaderDesc {
+	LPCSTR filename;
 	LPCSTR code;
 	ShaderType type;
 };

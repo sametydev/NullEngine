@@ -86,6 +86,34 @@ std::unordered_map<std::string, std::shared_ptr<IShader>> ShaderCache::mCache;
 
 IShader* ShaderCache::Create(const ShaderDesc& desc)
 {
+	//Checking
+	std::string codeStr(desc.code);
+	auto it = mCache.find(codeStr);
+	if (it != mCache.end())
+	{
+		return it->second.get();
+	}
 
-	return nullptr;
+
+	std::shared_ptr<IShader> shader = nullptr;
+
+	switch (desc.type)
+	{
+	case ShaderType::Vertex: {
+		auto vs = std::shared_ptr<VertexShader>();
+		vs->Create(desc.code);
+		shader = vs;
+		}
+		break;
+	case ShaderType::Pixel: {
+		auto ps = std::shared_ptr<PixelShader>();
+		ps->Create(desc.code);
+		shader = ps;
+		}
+		break;
+	}
+
+	mCache.insert(std::make_pair(codeStr,shader));
+
+	return shader.get();
 }
