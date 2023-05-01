@@ -34,7 +34,12 @@ struct Mat4x4 {
 	float* data() {
 		return f;
 	};
-
+	float* operator[](unsigned int i) {
+		return m[i];
+	}
+	const float* operator[](unsigned int i) const {
+		return m[i];
+	}
 	//Static
 	static Mat4x4 scaled(const Vec3f& v) {
 		Mat4x4 mat = {
@@ -99,3 +104,43 @@ struct Mat4x4 {
 		float m[4][4];
 	};
 };
+
+
+/*
+
+	***** VIEW MATRIX *****
+	//Rot-1 == Rot(t)
+	<!> ONLY IN ROTATION <!>
+	(Col)
+	R = {
+		4,5
+		1,2
+	}
+
+	(Row)
+	R (-1) = {
+		4,1
+		5,2
+	}
+
+	//T-1 == T(t) == T(xyz-1)
+	<!> ONLY IN TRANSFORM <!>
+	T = {
+		2,3,4
+		1,0,6
+	}
+
+	T (-1) = {
+		2,3,-4
+		1,0,-6
+	}
+
+
+	V = T(-1) * R(-1)
+
+	(equals) ==
+
+	V = T(t) * R(t)
+	**************************
+	
+*/
