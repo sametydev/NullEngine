@@ -1,6 +1,7 @@
 #pragma once
 #include <Math/LinearMath.h>
-
+# define M_PI			3.14159265358979323846f
+# define RADIANS		(M_PI / 180.f)
 __declspec(align(16))
 struct Mat4x4 {
 	Mat4x4() {
@@ -45,6 +46,53 @@ struct Mat4x4 {
 
 		return mat;
 	};
+
+	static Mat4x4 translated(const Vec3f& t) {
+		Mat4x4 mat = {
+		1.f,0.f,0.f,t.x,
+		0.f,1.f,0.f,t.y,
+		0.f,0.f,1.f,t.z,
+		0.f,0.f,0.f,1.f
+		};
+
+		return mat;
+	}
+
+	//ROTATE Functions;
+	static Mat4x4 rotateX(float angle) {
+		float theta = angle * RADIANS;
+		Mat4x4 mat = {
+		1.f,0.f,0.f,0.f,
+		0.f,cos(theta),-sin(theta),0.f,
+		0.f,sin(theta),cos(theta),0.f,
+		0.f,0.f,0.f,1.f
+		};
+
+		return mat;
+	}
+	static Mat4x4 rotateY(float angle) {
+		float theta = angle * RADIANS;
+		Mat4x4 mat = {
+		cos(theta),0.f,sin(theta),0.f,
+		0.f,1.f,0.f,0.f,
+		-sin(theta),0.f,cos(theta),0.f,
+		0.f,0.f,0.f,1.f
+		};
+
+		return mat;
+	}
+	static Mat4x4 rotateZ(float angle) {
+		float theta = angle * RADIANS;
+		Mat4x4 mat = {
+		cos(theta),-sin(theta),0.f,0.f,
+		sin(theta),cos(theta),0.f,0.f,
+		0.f,0.f,1.f,0.f,
+		0.f,0.f,0.f,1.f
+		};
+
+		return mat;
+	}
+	//----------------------------------
 
 	union {
 		float f[16];

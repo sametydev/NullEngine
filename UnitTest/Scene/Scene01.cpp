@@ -105,7 +105,7 @@ bool Scene01::InitFrame()
 		0,0,0,1
 	};
 
-	Mat4x4 s = Mat4x4::scaled(Vec3f(2,1,1));
+	Mat4x4 s = Mat4x4::rotateZ(90);
 
 
 	desc.pData = s.data();
