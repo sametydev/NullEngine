@@ -105,8 +105,11 @@ bool Scene01::InitFrame()
 		0,0,0,1
 	};
 
-	desc.pData = ;
-	desc.cbSize = sizeof(scale);
+	Mat4x4 s = Mat4x4::scaled(Vec3f(2,1,1));
+
+
+	desc.pData = s.data();
+	desc.cbSize = sizeof(Mat4x4);
 
 	mCBO = new DXConstantBuffer;
 	mCBO->Create(desc);
