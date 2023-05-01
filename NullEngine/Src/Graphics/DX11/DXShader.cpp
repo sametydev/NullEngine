@@ -69,7 +69,7 @@ PixelShader::PixelShader() : mPS(nullptr)
 
 PixelShader::~PixelShader()
 {
-	SAFE_DELETE(mPS);
+	SAFE_RELEASE(mPS);
 }
 
 void PixelShader::Create(LPCSTR code)
@@ -115,12 +115,14 @@ IShader* ShaderCache::Create(LPCSTR name,ShaderDesc* desc)
 		vs->Create(desc->code);
 		vs->CreateInputLayout(desc->element,desc->numberOfElements);
 		mShaders.emplace_back(vs);
+		return vs.get();
 		}
 		break;
 	case ShaderType::Pixel: {
 		auto ps = std::make_shared<PixelShader>();
 		ps->Create(desc->code);
 		mShaders.emplace_back(ps);
+		return ps.get();
 		}
 		break;
 

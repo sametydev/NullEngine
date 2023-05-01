@@ -33,3 +33,5 @@ public:
 	uint mStride;
 };
 
+//TODO : DXConstantBuffer
+
