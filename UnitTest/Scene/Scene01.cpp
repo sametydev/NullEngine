@@ -105,22 +105,41 @@ bool Scene01::InitFrame()
 		0,0,0,1
 	};
 
-	Mat4x4 s = Mat4x4::rotateZ(90);
+	//this projection
 
 
-	desc.pData = s.data();
+	desc.pData = model.data();
 	desc.cbSize = sizeof(Mat4x4);
 
 	mCBO = new DXConstantBuffer;
 	mCBO->Create(desc);
 
 
+	Vec3f test(1, 2, 3);
+
+	LOG << test << ENDL;
 	
 	return true;
 }
 
 void Scene01::UpdateFrame(float dt)
 {
+	Mat4x4 s = Mat4x4::scaled(Vec3f(0.5f, 0.5f, 0.5f));
+	Mat4x4 r = Mat4x4::rotateZ(90.f);
+	Mat4x4 t = Mat4x4::translated(pos);
+
+	model = s * r * t;
+
+	if (GetAsyncKeyState('A') & 0x8000)
+	{
+		pos.x += 0.01f;
+	}
+	if (GetAsyncKeyState('D') & 0x8000)
+	{
+		pos.x -= 0.01f;
+	}
+
+	mCBO->SubData(model.data());
 }
 
 void Scene01::RenderFrame()

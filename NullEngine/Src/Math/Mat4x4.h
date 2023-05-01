@@ -2,8 +2,11 @@
 #include <Math/LinearMath.h>
 # define M_PI			3.14159265358979323846f
 # define RADIANS		(M_PI / 180.f)
+
+
 __declspec(align(16))
 struct Mat4x4 {
+	//static float radians = 3.14159265358979323846f / 180.f;
 	Mat4x4() {
 		SetIdentity();
 	};
@@ -23,6 +26,37 @@ struct Mat4x4 {
 		m[3][0] = m30; m[3][1] = m31; m[3][2] = m32; m[3][3] = m33;
 	};
 
+	Mat4x4 operator*(const Mat4x4& rhs) {
+		Mat4x4 mat;
+		//00 01 02 03          //00 01 02 03
+		//10 11 12 13		   //10 11 12 13
+		//20 21 22 23		   //20 21 22 23
+		//30 31 32 33		   //30 31 32 33
+
+		//mat[0][0] = mat[0][0] * rhs[0][0] +
+		//			  mat[0][1] * rhs[1][0] +
+		//			  mat[0][2] * rhs[2][0] +
+		//			  mat[0][3] * rhs[3][0];
+
+		//mat[1][0] = mat[1][0] * rhs[0][1] +
+		//			  mat[1][1] * rhs[1][1] +
+		//			  mat[1][2] * rhs[2][1] +
+		//			  mat[1][3] * rhs[3][1];
+
+
+		for (int row = 0; row < 4; row++)
+		{
+			for (int col = 0; col < 4; col++)
+			{
+				mat[row][col] = m[row][0] * rhs[0][col] +
+								m[row][1] * rhs[1][col] +
+								m[row][2] * rhs[2][col] +
+								m[row][3] * rhs[3][col];
+			}
+		}
+		return mat;
+	}
+
 	void SetIdentity() {
 		memset(f, 0, sizeof(f));
 		m[0][0] = 1.f;
@@ -40,6 +74,18 @@ struct Mat4x4 {
 	const float* operator[](unsigned int i) const {
 		return m[i];
 	}
+
+	static Mat4x4 transposed(const Mat4x4& m) {
+		Mat4x4 mat = {
+			m[0][0],m[1][0],m[2][0],m[3][0],
+			m[0][1],m[1][1],m[2][1],m[3][1],
+			m[0][2],m[1][2],m[2][2],m[3][2],
+			m[0][3],m[1][3],m[2][3],m[3][3]
+		};
+
+		return mat;
+	}
+
 	//Static
 	static Mat4x4 scaled(const Vec3f& v) {
 		Mat4x4 mat = {
@@ -88,9 +134,11 @@ struct Mat4x4 {
 	}
 	static Mat4x4 rotateZ(float angle) {
 		float theta = angle * RADIANS;
+		float sinx = sin(theta);
+		float cosx = cos(theta);
 		Mat4x4 mat = {
-		cos(theta),-sin(theta),0.f,0.f,
-		sin(theta),cos(theta),0.f,0.f,
+		cosx,-sinx,0.f,0.f,
+		sinx,cosx,0.f,0.f,
 		0.f,0.f,1.f,0.f,
 		0.f,0.f,0.f,1.f
 		};
@@ -99,14 +147,51 @@ struct Mat4x4 {
 	}
 	//----------------------------------
 
+	static Mat4x4 perspectiveLH(float fovY,float ratioX,float znear,float zfar)
+	{
+		float halfFov = fovY * 0.5f;
+		const float tanFov = std::tan(RADIANS * halfFov);
+
+		float A = 1.f / (ratioX * tanFov);
+		float B = 1.f / tanFov;
+		float C = zfar / (zfar - znear);
+		float D = (-znear * zfar) / (zfar - znear);
+		float E = 1.f;
+
+		Mat4x4 mat = {
+			  A,0.f,0.f,0.f,
+			0.f,  B,0.f,0.f,
+			0.f,0.f,  C,  E,
+			0.f,0.f,  D,0.f
+		};
+
+		return mat;
+	}
+
 	union {
 		float f[16];
 		float m[4][4];
 	};
+
 };
 
 
 /*
+
+
+	{        
+		1,2
+		3,4
+	}
+
+	{
+		1,2
+		4,5
+	}
+
+	1*1 + 2*4, 1*2 + 2*5
+	3*1 + 4*4, 3*2 + 4*5
+
 
 	***** VIEW MATRIX *****
 	//Rot-1 == Rot(t)

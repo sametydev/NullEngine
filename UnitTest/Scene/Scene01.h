@@ -20,5 +20,8 @@ protected:
 	IShader* mPS;
 
 	DXConstantBuffer* mCBO;
+
+	Vec3f pos;
+	Mat4x4 model;
 };
 
