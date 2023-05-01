@@ -111,7 +111,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PCH.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -146,6 +146,7 @@
     <ClInclude Include="Src\Graphics\DX11\DX11Config.h" />
     <ClInclude Include="Src\Graphics\DX11\DXContext.h" />
     <ClInclude Include="Src\Math\LinearMath.h" />
+    <ClInclude Include="Src\Math\Mat4x4.h" />
     <ClInclude Include="Src\PCH.h" />
     <ClInclude Include="Src\Wnd\Wnd.h" />
     <ClInclude Include="Src\Wnd\WndFrame.h" />
@@ -158,7 +159,9 @@
     <ClCompile Include="Src\Core\Log.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXContext.cpp" />
     <ClCompile Include="Src\Main.cpp" />
-    <ClCompile Include="Src\PCH.cpp" />
+    <ClCompile Include="Src\PCH.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Src\Wnd\Wnd.cpp" />
     <ClCompile Include="Src\Wnd\WndFrame.cpp" />
   </ItemGroup>

@@ -14,6 +14,7 @@
     <ClInclude Include="Src\Engine\Scene.h" />
     <ClInclude Include="Src\Math\LinearMath.h" />
     <ClInclude Include="Src\Graphics\DX11\DXShader.h" />
+    <ClInclude Include="Src\Math\Mat4x4.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp" />

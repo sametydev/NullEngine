@@ -4,6 +4,11 @@
 #include <Graphics/DX11/DXShader.h>
 
 LPCSTR hlsl = R"(
+cbuffer matrices : register(b0)
+{
+	matrix world;
+};
+
 struct VS_IN{
 	float3 pos : POSITION;
 };
@@ -13,9 +18,9 @@ struct PS_IN{
 };
 
 PS_IN VS(VS_IN vs){
-
+	
 	PS_IN ps;
-	ps.pos = float4(vs.pos,1);
+	ps.pos = mul(float4(vs.pos,1),world);
 
 	return ps;
 };
@@ -36,6 +41,12 @@ bool Scene01::InitFrame()
 		{{-i,-i,0}},
 		{{0,i,0}},
 		{{i,-i,0}}
+	};
+
+	uint indices[] = {
+		{0},
+		{1},
+		{2}
 	};
 
 	
@@ -66,6 +77,41 @@ bool Scene01::InitFrame()
 	sd.type = ShaderType::Pixel;
 	mPS = ShaderCache::Create("triPS", &sd);
 
+	desc.pData = indices;
+	desc.cbSize = sizeof(indices);
+	desc.indices = 3;
+
+	mIBO = new DXIndexBuffer;
+	mIBO->Create(desc);
+
+	float scale[16] = {
+		1,0,0,0,
+		0,1,0,0,
+		0,0,1,0,
+		0,0,0,1
+	};
+	
+	float rotation[16] = {
+		1,0,0,0,
+		0,1,0,0,
+		0,0,1,0,
+		0,0,0,1
+	};
+
+	float translate[16] = {
+		1,0,0,0,
+		0,1,0,0,
+		0,0,1,0,
+		0,0,0,1
+	};
+
+	desc.pData = ;
+	desc.cbSize = sizeof(scale);
+
+	mCBO = new DXConstantBuffer;
+	mCBO->Create(desc);
+
+
 	
 	return true;
 }
@@ -77,11 +123,14 @@ void Scene01::UpdateFrame(float dt)
 void Scene01::RenderFrame()
 {
 	mVBO->BindPipeline();
+	mIBO->BindPipeline();
+
 	mVS->BindPipeline();
 	mPS->BindPipeline();
 
+	mCBO->BindPipeline(0);
 
 	gDXContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	gDXContext->Draw(3, 0);
+	gDXContext->DrawIndexed(mIBO->GetIndices(), 0,0);
 }
