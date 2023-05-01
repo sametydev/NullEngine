@@ -1,10 +1,13 @@
 #pragma once
 #include <Graphics/DX11/DX11Config.h>
 
+
 struct BufferDesc {
 	void* pData;
 	uint cbSize;
 	uint stride;
+	//optional
+	//our custom input layout
 };
 
 

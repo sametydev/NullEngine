@@ -31,18 +31,17 @@ VertexShader::VertexShader() : mVS(nullptr)
 VertexShader::~VertexShader()
 {
 	SAFE_RELEASE(mVS);
+	SAFE_RELEASE(mBinary);
 }
 
 void VertexShader::Create(LPCSTR code)
 {
-	ID3DBlob* vsBlob = nullptr; // binary byte code
+	//Compile -> Create Shader -> Create Input Layout
+	Compile(code,VS_ENTRY,VS_VERSION,&mBinary);
 
-	Compile(code,VS_ENTRY,VS_VERSION,&vsBlob);
-
-	byteBinary = vsBlob;
 	HR(gDXDevice->CreateVertexShader(
-		vsBlob->GetBufferPointer(),
-		vsBlob->GetBufferSize(),
+		mBinary->GetBufferPointer(),
+		mBinary->GetBufferSize(),
 		nullptr,
 		&mVS
 	));
@@ -50,7 +49,18 @@ void VertexShader::Create(LPCSTR code)
 
 void VertexShader::BindPipeline()
 {
+	if (!mLayout)
+	{
+		LOG_ERROR("Failed to bind Input Layout");
+	}
+	gDXContext->IASetInputLayout(mLayout);
 	gDXContext->VSSetShader(mVS, 0, 0);
+}
+
+void VertexShader::CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* element, uint numOfElements)
+{
+	HR(gDXDevice->CreateInputLayout(element, numOfElements,
+		mBinary->GetBufferPointer(), mBinary->GetBufferSize(), &mLayout));
 }
 
 PixelShader::PixelShader() : mPS(nullptr)
@@ -83,37 +93,44 @@ void PixelShader::BindPipeline()
 	gDXContext->PSSetShader(mPS, 0, 0);
 }
 std::unordered_map<std::string, std::shared_ptr<IShader>> ShaderCache::mCache;
+std::vector<std::shared_ptr<IShader>> ShaderCache::mShaders;
 
-IShader* ShaderCache::Create(const ShaderDesc& desc)
+IShader* ShaderCache::Create(LPCSTR name,ShaderDesc* desc)
 {
 	//Checking
-	std::string codeStr(desc.code);
-	auto it = mCache.find(codeStr);
-	if (it != mCache.end())
-	{
-		return it->second.get();
-	}
+	//std::string nameStr = name;
+	//auto it = mCache.find(nameStr);
+	//if (it != mCache.end())
+	//{
+	//	return it->second.get();
+	//}
 
 
 	std::shared_ptr<IShader> shader = nullptr;
 
-	switch (desc.type)
+	switch (desc->type)
 	{
 	case ShaderType::Vertex: {
-		auto vs = std::shared_ptr<VertexShader>();
-		vs->Create(desc.code);
-		shader = vs;
+		auto vs = std::make_shared<VertexShader>();
+		vs->Create(desc->code);
+		vs->CreateInputLayout(desc->element,desc->numberOfElements);
+		mShaders.emplace_back(vs);
 		}
 		break;
 	case ShaderType::Pixel: {
-		auto ps = std::shared_ptr<PixelShader>();
-		ps->Create(desc.code);
-		shader = ps;
+		auto ps = std::make_shared<PixelShader>();
+		ps->Create(desc->code);
+		mShaders.emplace_back(ps);
 		}
+		break;
+
+	default:
+		LOG_ERROR("Doesnt match shader type");
 		break;
 	}
 
-	mCache.insert(std::make_pair(codeStr,shader));
+	/*mCache.insert(std::make_pair(nameStr,shader));*/
+	//mShaders.emplace_back(shader);
 
-	return shader.get();
+	return nullptr;
 }

@@ -50,22 +50,23 @@ bool Scene01::InitFrame()
 
 	mVBO->BindPipeline(0);
 	
-	mVS = new VertexShader();
-	mVS->Create(hlsl);
-
-	mPS = new PixelShader();
-	mPS->Create(hlsl);
-
 	D3D11_INPUT_ELEMENT_DESC ied[]{
-	
+
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, offsetof(Vertex,Vertex::pos), D3D11_INPUT_PER_VERTEX_DATA, 0}
 	};
 
+	ShaderDesc sd;
+	sd.element = ied;
+	sd.numberOfElements = ARRAYSIZE(ied);
+	sd.code = hlsl;
+	sd.type = ShaderType::Vertex;
 
-	HRESULT hr = gDXDevice->CreateInputLayout(ied, ARRAYSIZE(ied), mVS->byteBinary->GetBufferPointer(),
-		mVS->byteBinary->GetBufferSize(), &mLayout
-		);
+	mVS = ShaderCache::Create("triVS", &sd);
 
+	sd.type = ShaderType::Pixel;
+	mPS = ShaderCache::Create("triPS", &sd);
+
+	
 	return true;
 }
 
@@ -75,10 +76,11 @@ void Scene01::UpdateFrame(float dt)
 
 void Scene01::RenderFrame()
 {
-	mVBO->BindPipeline(0);
+	mVBO->BindPipeline();
 	mVS->BindPipeline();
 	mPS->BindPipeline();
-	gDXContext->IASetInputLayout(mLayout);
+
+
 	gDXContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	gDXContext->Draw(3, 0);

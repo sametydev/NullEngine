@@ -3,9 +3,7 @@
 #include <Engine/Scene.h>
 #include <Graphics/DX11/DXContext.h>
 
-struct Vertex {
-	Vec3f pos;
-};
+
 class Scene01 : public Scene
 {
 public:
@@ -17,8 +15,8 @@ public:
 
 protected:
 	DXVertexBuffer* mVBO;
-	VertexShader* mVS;
-	PixelShader* mPS;
+	IShader* mVS;
+	IShader* mPS;
 	ID3D11InputLayout* mLayout;
 };
 
