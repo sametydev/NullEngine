@@ -14,6 +14,7 @@ struct vec2f
 	bool operator==(const vec2f& v);
 
 
+
 	float lenght2() const;
 	float lenght() const;
 	float dot(const vec2f& v);
@@ -84,4 +85,7 @@ inline float vec2f::dot(const vec2f& v)
 inline float vec2f::dot(const vec2f& v1, const vec2f& v2)
 {
 	return v1.x * v2.x + v1.y * v2.y;
+}
+inline vec2f operator-(const vec2f& v1, const vec2f& v2) {
+	return vec2f(v1.x - v2.x, v1.y - v2.y);
 }
