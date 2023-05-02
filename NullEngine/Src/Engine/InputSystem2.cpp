@@ -56,7 +56,7 @@ void InputSystem2::Update()
         }
     }
     //Storing current key states to old keys state buffer
-    ::memcpy(m_oldKeyState, m_keyState, sizeof(short)*256);
+    ::memcpy(m_oldKeyState, m_keyState, sizeof(short) * 256);
 
     horizontalAxis = 0.0f;
     verticalAxis = 0.0f;
@@ -96,11 +96,11 @@ void InputSystem2::LockCursor(bool lock)
     ShowCursor(!lock);
 }
 
-//void InputSystem2::SetLockArea(const Rect& Area)
-//{
-//    lockArea = Area;
-//    lockAreaCenter = Vector2(floor(Area.left + (float)Area.width / 2.0f), floor(Area.top + (float)Area.height / 2.0f));
-//}
+void InputSystem2::SetLockArea(const rect& Area)
+{
+    lockArea = Area;
+    lockAreaCenter = vec2f(floor(Area.left + (float)Area.width / 2.0f), floor(Area.top + (float)Area.height / 2.0f));
+}
 
 float InputSystem2::GetAxis(const char* axis)
 {

@@ -21,6 +21,7 @@
     <ClInclude Include="Src\Math\vec2f.h" />
     <ClInclude Include="Src\Math\vec3f.h" />
     <ClInclude Include="Src\Engine\InputSystem2.h" />
+    <ClInclude Include="Src\Math\rect.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp" />

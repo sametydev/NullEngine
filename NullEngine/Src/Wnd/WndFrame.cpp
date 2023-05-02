@@ -65,7 +65,6 @@ int WndFrame::ExecFrame(Scene* scene)
 		{
 			Timer::instance()->Update();
 			InputSystem2::instance()->Update();
-
 			mContext->ClearBuffer(0.4f, 0.2f, 0.2f,1.0f);
 			if (scene)
 			{

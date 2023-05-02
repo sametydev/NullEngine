@@ -1,6 +1,7 @@
 #pragma once
 #include <Core/Singleton.h>
 #include <Math/vec2f.h>
+#include <Math/rect.h>
 
 enum class NKey
 {
@@ -64,36 +65,35 @@ enum class NKey
 class InputSystem2 : public Singleton<InputSystem2>
 {
 public:
-	InputSystem2();
-	~InputSystem2();
+    InputSystem2();
+    ~InputSystem2();
 public:
-	void Update();
+    void Update();
 
-	bool GetKeyDown(const NKey& key);
-	bool GetKeyUp(const NKey& key);
-	bool GetKey(const NKey& key);
+    bool GetKeyDown(const NKey& key);
+    bool GetKeyUp(const NKey& key);
+    bool GetKey(const NKey& key);
 
-	void LockCursor(bool lock);
-	//void SetLockArea(const Rect& Area);
-	float GetAxis(const char* axis);
+    void LockCursor(bool lock);
+    void SetLockArea(const rect& Area);
+    float GetAxis(const char* axis);
 
 
-	vec2f GetDeltaMouse();
+    vec2f GetDeltaMouse();
 private:
-	short GetInternalKeyCode(const NKey& key);
-	short m_keyState[256] = {};
-	short m_oldKeyState[256] = {};
-	short m_finalKeyState[256] = {};
+    short GetInternalKeyCode(const NKey& key);
+    short m_keyState[256] = {};
+    short m_oldKeyState[256] = {};
+    short m_finalKeyState[256] = {};
 
-	float horizontalAxis = 0.0f;
-	float verticalAxis = 0.0f;
+    float horizontalAxis = 0.0f;
+    float verticalAxis = 0.0f;
 
-	bool cursorLocked = false;
-	//Rect lockArea;
-	vec2f lockAreaCenter;
-	vec2f oldMousePosition;
-	vec2f deltaMousePosition;
+    bool cursorLocked = false;
+    rect lockArea;
+    vec2f lockAreaCenter;
+    vec2f oldMousePosition;
+    vec2f deltaMousePosition;
 };
-
 
 

@@ -47,12 +47,18 @@ float4 PS(PS_IN ps) : SV_TARGET
 
 bool Scene01::InitFrame()
 {
+	
 	D3D11_VIEWPORT vp{};
 	uint nVp = 1;
 
 	gDXContext->RSGetViewports(&nVp, &vp);
 
 	float aspect = vp.Width / vp.Height;
+
+
+	input->LockCursor(true);
+	LOG << vp.Width;
+	input->SetLockArea(rect(860, 640));
 
 	P = mat4x4::perspectiveLH(45.f, aspect, 0.01f, 100.f);
 
