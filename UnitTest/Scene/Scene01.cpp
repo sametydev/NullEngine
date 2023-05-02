@@ -3,6 +3,7 @@
 #include <Graphics/DX11/DXBuffer.h>
 #include <Graphics/DX11/DXShader.h>
 #include <Graphics/Vertex.h>
+#include <Engine/InputSystem.h>
 
 LPCSTR vsCode = R"(
 cbuffer matrices : register(b0)
@@ -126,29 +127,29 @@ bool Scene01::InitFrame()
 void Scene01::UpdateFrame(float dt)
 {
 
-	if (GetAsyncKeyState('W') & 0x8000)
+	if (EventSystem::IsKeyDown('W'))
 	{
 		pos.z += 0.8f * dt;
 	}
-	if (GetAsyncKeyState('S') & 0x8000)
+	if (EventSystem::IsKeyDown('S'))
 	{
 		pos.z -= 0.8f * dt;
 	}
 
-	if (GetAsyncKeyState('A') & 0x8000)
+	if (EventSystem::IsKeyDown('A'))
 	{
 		pos.x += 0.8f * dt;
 	}
-	if (GetAsyncKeyState('D') & 0x8000)
+	if (EventSystem::IsKeyDown('D'))
 	{
 		pos.x -= 0.8f * dt;
 	}
 
-	if (GetAsyncKeyState('J') & 0x8000)
+	if (EventSystem::IsKeyDown('J'))
 	{
 		angle += 0.8f * dt;
 	}
-	if (GetAsyncKeyState('L') & 0x8000)
+	if (EventSystem::IsKeyDown('L'))
 	{
 		angle -= 0.8f * dt;
 	}

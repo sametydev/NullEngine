@@ -50,7 +50,10 @@ int WndFrame::ExecFrame(Scene* scene)
 
 		if (PeekMessage(&msg, NULL, 0, 0,PM_REMOVE)) {
 			TranslateMessage(&msg);
-
+			if (msg.message >= WM_MOUSEFIRST && msg.message <= WM_MOUSELAST)
+			{
+				
+			}
 			DispatchMessage(&msg);
 			if (msg.message == WM_KEYDOWN && msg.wParam == VK_ESCAPE)
 			{
