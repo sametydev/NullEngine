@@ -1,5 +1,6 @@
 #pragma once
 #include <Math/LinearMath.h>
+#include <iomanip>
 # define M_PI			3.14159265358979323846f
 # define RADIANS		(M_PI / 180.f)
 
@@ -26,7 +27,7 @@ struct mat4x4 {
 	const float* operator[](unsigned int i) const;
 
 	static mat4x4 transposed(const mat4x4& m);
-
+	static mat4x4 transposedTranslation(const mat4x4& rhs);
 	//Static
 	static mat4x4 scaled(const vec3f& v);
 
@@ -181,6 +182,16 @@ inline mat4x4 mat4x4::transposed(const mat4x4& m) {
 	return mat;
 }
 
+inline mat4x4 mat4x4::transposedTranslation(const mat4x4& rhs)
+{
+	mat4x4 mat;
+	mat[0][3] = rhs[0][3] *	-1.f;
+	mat[1][3] = rhs[1][3] *	-1.f;
+	mat[2][3] = rhs[2][3] *	-1.f;
+
+	return mat;
+}
+
 //Static
 inline mat4x4 mat4x4::scaled(const vec3f& v) {
 	mat4x4 mat = {
@@ -256,9 +267,21 @@ inline mat4x4 mat4x4::perspectiveLH(float fovY, float ratioX, float znear, float
 	mat4x4 mat = {
 		  A,0.f,0.f,0.f,
 		0.f,  B,0.f,0.f,
-		0.f,0.f,  C,  E,
-		0.f,0.f,  D,0.f
+		0.f,0.f,  C,  D,
+		0.f,0.f,  E,0.f
 	};
 
 	return mat;
+}
+
+inline std::ostream& operator<<(std::ostream& o, const mat4x4& mat) {
+#define FM std::setw(12)
+	//row major order
+	o << "mat4x4[" << "\n" <<
+		FM << mat[0][0] << FM << mat[0][1] << FM << mat[0][2] << FM << mat[0][3] << "\n" <<
+		FM << mat[1][0] << FM << mat[1][1] << FM << mat[1][2] << FM << mat[1][3] << "\n" <<
+		FM << mat[2][0] << FM << mat[2][1] << FM << mat[2][2] << FM << mat[2][3] << "\n" <<
+		FM << mat[3][0] << FM << mat[3][1] << FM << mat[3][2] << FM << mat[3][3] << " ]" << "\n";
+#undef FM
+	return o;
 }

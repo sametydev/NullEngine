@@ -1,6 +1,7 @@
 #include <PCH.h>
 #include <Wnd/WndFrame.h>
 #include <Engine/Scene.h>
+#include <Engine/Timer.h>
 
 WndFrame::WndFrame(Wnd* parent, uint width, uint heigth) : Wnd(parent, 0, 0, width, heigth)
 {
@@ -40,11 +41,14 @@ int WndFrame::ExecFrame(Scene* scene)
 			LOG_ERROR("Failed to init scene");
 		}
 	}
+
+
 	MSG msg{};
 
 	while (msg.message != WM_QUIT)
 	{
-		if (GetMessage(&msg, NULL, 0, 0)) {
+
+		if (PeekMessage(&msg, NULL, 0, 0,PM_REMOVE)) {
 			TranslateMessage(&msg);
 
 			DispatchMessage(&msg);
@@ -56,16 +60,18 @@ int WndFrame::ExecFrame(Scene* scene)
 		}
 		if (mContext)
 		{
+			Timer::instance()->Update();
 			mContext->ClearBuffer(0.4f, 0.2f, 0.2f,1.0f);
 			if (scene)
 			{
-				scene->UpdateFrame(0.0f);
+				
+				scene->UpdateFrame(Timer::instance()->deltaTime);
 				scene->RenderFrame();
 			}
 			mContext->SwapBuffer();
 		}
 		//Update
-
+		
 		//Render
 
 		//SwapChain

@@ -7,7 +7,9 @@
 LPCSTR vsCode = R"(
 cbuffer matrices : register(b0)
 {
-	matrix world;
+	//matrix proj;
+	//matrix model;
+	matrix mvp;
 };
 
 struct VS_IN{
@@ -22,7 +24,7 @@ struct PS_IN{
 
 PS_IN VS(VS_IN vs){
 	PS_IN ps;
-	ps.pos = mul(float4(vs.pos,1),world);
+	ps.pos = mul(float4(vs.pos,1),mvp);
 	ps.col = vs.col;
 	return ps;
 };
@@ -44,6 +46,16 @@ float4 PS(PS_IN ps) : SV_TARGET
 
 bool Scene01::InitFrame()
 {
+	D3D11_VIEWPORT vp{};
+	uint nVp = 1;
+
+	gDXContext->RSGetViewports(&nVp, &vp);
+
+	float aspect = vp.Width / vp.Height;
+
+	P = mat4x4::perspectiveLH(45.f, aspect, 0.01f, 100.f);
+
+
 	float i = 0.5f;
 
 
@@ -89,9 +101,22 @@ bool Scene01::InitFrame()
 	desc.indices = 3;
 
 	mIBO = BufferCache::Create<DXIndexBuffer>(desc);
-	
-	desc.pData = model.data();
-	desc.cbSize = sizeof(mat4x4);
+	pos = { 0,0,-10 };
+
+	T = mat4x4::translated(pos);
+	mat4x4 t = t.transposedTranslation(T);
+	mat4x4 r = mat4x4::rotateY(angle);
+
+
+	//define as SRT
+	V = r*t;
+
+	//define as PVM
+	MVP = P * V;
+
+
+	desc.pData = MVP.data();
+	desc.cbSize = sizeof(MVP);
 
 	mCBO = BufferCache::Create<DXConstantBuffer>(desc);
 	
@@ -100,22 +125,44 @@ bool Scene01::InitFrame()
 
 void Scene01::UpdateFrame(float dt)
 {
-	mat4x4 s = mat4x4::scaled(vec3f(0.5f, 0.5f, 0.5f));
-	mat4x4 r = mat4x4::rotateZ(90.f);
-	mat4x4 t = mat4x4::translated(pos);
 
-	model = s * r * t;
+	if (GetAsyncKeyState('W') & 0x8000)
+	{
+		pos.z += 0.8f * dt;
+	}
+	if (GetAsyncKeyState('S') & 0x8000)
+	{
+		pos.z -= 0.8f * dt;
+	}
 
 	if (GetAsyncKeyState('A') & 0x8000)
 	{
-		pos.x += 0.01f;
+		pos.x += 0.8f * dt;
 	}
 	if (GetAsyncKeyState('D') & 0x8000)
 	{
-		pos.x -= 0.01f;
+		pos.x -= 0.8f * dt;
 	}
 
-	mCBO->SubData(model.data());
+	if (GetAsyncKeyState('J') & 0x8000)
+	{
+		angle += 0.8f * dt;
+	}
+	if (GetAsyncKeyState('L') & 0x8000)
+	{
+		angle -= 0.8f * dt;
+	}
+
+
+	T = mat4x4::translated(pos);
+	mat4x4 t = t.transposedTranslation(T);
+	mat4x4 r = mat4x4::rotateY(angle);
+
+	V = r*t;
+
+	MVP = P*V;
+
+	mCBO->SubData(MVP.data());
 }
 
 void Scene01::RenderFrame()

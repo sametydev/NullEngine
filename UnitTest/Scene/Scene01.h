@@ -21,10 +21,20 @@ protected:
 
 	DXConstantBuffer* mCBO;
 
-	vec3f pos;
+	vec3f pos = {0,0,0};
+	float angle = 0;
 
 	mat4x4 M;
-	mat4x4 P;
 	mat4x4 V;
+	mat4x4 P;
+	mat4x4 MVP;
+
+	mat4x4 T;
+	//struct
+	//{
+	//	mat4x4 P;
+	//	mat4x4 V;
+	//	mat4x4 M;
+	//}matrice;
 };
 
