@@ -2,6 +2,7 @@
 #include <Scene/Scene01.h>
 #include <Graphics/DX11/DXBuffer.h>
 #include <Graphics/DX11/DXShader.h>
+#include <Graphics/Vertex.h>
 
 LPCSTR vsCode = R"(
 cbuffer matrices : register(b0)
@@ -11,17 +12,18 @@ cbuffer matrices : register(b0)
 
 struct VS_IN{
 	float3 pos : POSITION;
+	float3 col : COLOR;
 };
 
 struct PS_IN{
 	float4 pos : SV_POSITION;
+	float3 col : COLOR;
 };
 
 PS_IN VS(VS_IN vs){
-	
 	PS_IN ps;
 	ps.pos = mul(float4(vs.pos,1),world);
-
+	ps.col = vs.col;
 	return ps;
 };
 )";
@@ -30,11 +32,12 @@ PS_IN VS(VS_IN vs){
 LPCSTR psCode = R"(
 struct PS_IN{
 	float4 pos : SV_POSITION;
+	float3 col : COLOR;
 };
 
 float4 PS(PS_IN ps) : SV_TARGET
 {
-	return float4(1,0,0,1);
+	return float4(ps.col,1);
 };
 )";
 
@@ -43,10 +46,11 @@ bool Scene01::InitFrame()
 {
 	float i = 0.5f;
 
-	Vertex vertices[] = {
-		{{-i,-i,0}},
-		{{0,i,0}},
-		{{i,-i,0}}
+
+	VertexPC vertices[] = {
+		{{-i,-i,0},  {1,0,0,}},
+		{{0,i,0},    {1,1,0}},
+		{{i,-i,0},   {0,1,1}}
 	};
 
 	uint indices[] = {
@@ -58,23 +62,18 @@ bool Scene01::InitFrame()
 	
 	BufferDesc desc{};
 
-	desc.cbSize = sizeof(Vertex) * ARRAYSIZE(vertices);
+	desc.cbSize = sizeof(vertices);
 	desc.pData = vertices;
-	desc.stride = sizeof(Vertex);
+	desc.stride = sizeof(VertexPC);
 
-	mVBO = new DXVertexBuffer();
-	mVBO->Create(desc);
+	mVBO = BufferCache::Create<DXVertexBuffer>(desc);
 
 	mVBO->BindPipeline(0);
 	
-	D3D11_INPUT_ELEMENT_DESC ied[]{
-
-		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, offsetof(Vertex,Vertex::pos), D3D11_INPUT_PER_VERTEX_DATA, 0}
-	};
 
 	ShaderDesc sd;
-	sd.element = ied;
-	sd.numberOfElements = ARRAYSIZE(ied);
+	sd.element = VertexPC::elements;
+	sd.numberOfElements = VertexPC::nElements;
 	sd.code = vsCode;
 	sd.type = ShaderType::Vertex;
 
@@ -89,43 +88,12 @@ bool Scene01::InitFrame()
 	desc.cbSize = sizeof(indices);
 	desc.indices = 3;
 
-	mIBO = new DXIndexBuffer;
-	mIBO->Create(desc);
-
-	float scale[16] = {
-		1,0,0,0,
-		0,1,0,0,
-		0,0,1,0,
-		0,0,0,1
-	};
+	mIBO = BufferCache::Create<DXIndexBuffer>(desc);
 	
-	float rotation[16] = {
-		1,0,0,0,
-		0,1,0,0,
-		0,0,1,0,
-		0,0,0,1
-	};
-
-	float translate[16] = {
-		1,0,0,0,
-		0,1,0,0,
-		0,0,1,0,
-		0,0,0,1
-	};
-
-	//this projection
-
-
 	desc.pData = model.data();
 	desc.cbSize = sizeof(mat4x4);
 
-	mCBO = new DXConstantBuffer;
-	mCBO->Create(desc);
-
-
-	vec3f test(1, 2, 3);
-
-	LOG << test << ENDL;
+	mCBO = BufferCache::Create<DXConstantBuffer>(desc);
 	
 	return true;
 }

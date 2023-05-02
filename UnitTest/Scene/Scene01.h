@@ -22,6 +22,9 @@ protected:
 	DXConstantBuffer* mCBO;
 
 	vec3f pos;
-	mat4x4 model;
+
+	mat4x4 M;
+	mat4x4 P;
+	mat4x4 V;
 };
 

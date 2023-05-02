@@ -11,7 +11,7 @@
 
 DXBuffer::DXBuffer() : mId(0)
 {
-	static uint mCounter;
+	static uint mCounter = 0;
 
 
 	mId = mCounter;
@@ -98,6 +98,7 @@ void DXConstantBuffer::BindPipeline(uint slot)
 }
 
 
+
 void DXConstantBuffer::SubData(void* pData)
 {
 	gDXContext->UpdateSubresource(mBuffer, NULL, NULL, pData, NULL, NULL);
@@ -141,3 +142,5 @@ uint DXIndexBuffer::GetIndices()
 {
 	return mIndices;
 }
+
+std::vector<std::shared_ptr<DXBuffer>> BufferCache::mCache = {};

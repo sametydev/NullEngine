@@ -15,6 +15,7 @@
     <ClInclude Include="Src\Math\LinearMath.h" />
     <ClInclude Include="Src\Graphics\DX11\DXShader.h" />
     <ClInclude Include="Src\Math\mat4x4.h" />
+    <ClInclude Include="Src\Graphics\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp" />
@@ -27,5 +28,6 @@
     <ClCompile Include="Src\Graphics\Context.cpp" />
     <ClCompile Include="Src\Engine\Scene.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXShader.cpp" />
+    <ClCompile Include="Src\Graphics\Vertex.cpp" />
   </ItemGroup>
 </Project>

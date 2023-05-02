@@ -1,16 +1,7 @@
 #pragma once
 #include <Graphics/DX11/DX11Config.h>
-
-
-struct BufferDesc {
-	void* pData;
-	uint cbSize;
-	uint stride;
-	uint indices;
-	//optional
-	//our custom input layout
-};
-
+#include <map>
+#include <unordered_map>
 
 class DXBuffer
 {
@@ -62,4 +53,20 @@ public:
 	void Map(void* pData,uint size);
 };
 
+class BufferCache
+{
+public:
+	template<typename T>
+	static T* Create(const BufferDesc& desc);
 
+	static std::vector<std::shared_ptr<DXBuffer>> mCache;
+};
+
+template<typename T>
+inline T* BufferCache::Create(const BufferDesc& desc) {
+
+	auto buffer = std::make_shared<T>();
+	buffer->Create(desc);
+	mCache.emplace_back(buffer);
+	return buffer.get();
+}

@@ -7,9 +7,6 @@
 #define VS_VERSION	"vs_5_0"
 #define PS_VERSION	"ps_5_0"
 
-struct Vertex {
-	vec3f pos;
-};
 
 enum class ShaderType : uint
 {

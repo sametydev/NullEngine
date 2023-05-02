@@ -28,3 +28,11 @@ class DXConstantBuffer;
 class IShader;
 class VertexShader;
 class PixelShader;
+
+
+struct BufferDesc {
+	void* pData;
+	uint cbSize;
+	uint stride;
+	uint indices;
+};
