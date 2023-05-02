@@ -2,7 +2,7 @@
 #include <Wnd/WndFrame.h>
 #include <Engine/Scene.h>
 #include <Engine/Timer.h>
-#include <Engine/InputSystem.h>
+#include <Engine/InputSystem2.h>
 
 WndFrame::WndFrame(Wnd* parent, uint width, uint heigth) : Wnd(parent, 0, 0, width, heigth)
 {
@@ -53,12 +53,7 @@ int WndFrame::ExecFrame(Scene* scene)
 			TranslateMessage(&msg);
 
 
-			if (msg.message >= WM_MOUSEFIRST && msg.message <= WM_MOUSELAST)
-			{
-				EventSystem::HookMsg(&msg);
-			}
-
-
+			//EventSystem::HookMsg(&msg);
 			DispatchMessage(&msg);
 			if (msg.message == WM_KEYDOWN && msg.wParam == VK_ESCAPE)
 			{
@@ -69,6 +64,8 @@ int WndFrame::ExecFrame(Scene* scene)
 		if (mContext)
 		{
 			Timer::instance()->Update();
+			InputSystem2::instance()->Update();
+
 			mContext->ClearBuffer(0.4f, 0.2f, 0.2f,1.0f);
 			if (scene)
 			{

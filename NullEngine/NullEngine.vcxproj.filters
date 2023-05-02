@@ -18,6 +18,9 @@
     <ClInclude Include="Src\Graphics\Vertex.h" />
     <ClInclude Include="Src\Engine\Timer.h" />
     <ClInclude Include="Src\Engine\InputSystem.h" />
+    <ClInclude Include="Src\Math\vec2f.h" />
+    <ClInclude Include="Src\Math\vec3f.h" />
+    <ClInclude Include="Src\Engine\InputSystem2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp" />
@@ -33,5 +36,6 @@
     <ClCompile Include="Src\Graphics\Vertex.cpp" />
     <ClCompile Include="Src\Engine\Timer.cpp" />
     <ClCompile Include="Src\Engine\InputSystem.cpp" />
+    <ClCompile Include="Src\Engine\InputSystem2.cpp" />
   </ItemGroup>
 </Project>

@@ -136,6 +136,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Engine\InputSystem2.h" />
     <ClInclude Include="Src\Engine\InputSystem.h" />
     <ClInclude Include="Src\Graphics\DX11\DXShader.h" />
     <ClInclude Include="Src\Engine\Scene.h" />
@@ -148,6 +149,8 @@
     <ClInclude Include="Src\Graphics\DX11\DXContext.h" />
     <ClInclude Include="Src\Math\LinearMath.h" />
     <ClInclude Include="Src\Math\mat4x4.h" />
+    <ClInclude Include="Src\Math\vec2f.h" />
+    <ClInclude Include="Src\Math\vec3f.h" />
     <ClInclude Include="Src\PCH.h" />
     <ClInclude Include="Src\Wnd\Wnd.h" />
     <ClInclude Include="Src\Wnd\WndFrame.h" />
@@ -155,6 +158,7 @@
     <ClInclude Include="Src\Engine\Timer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Engine\InputSystem2.cpp" />
     <ClCompile Include="Src\Engine\InputSystem.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXShader.cpp" />
     <ClCompile Include="Src\Engine\Scene.cpp" />

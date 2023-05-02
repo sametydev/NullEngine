@@ -5,7 +5,7 @@ struct vec2f
 {
 	vec2f() : x(0.0f), y(0.0f) {}
 	vec2f(float x) : x(x), y(x) {}
-	vec2f(float x, float y, float z) : x(x), y(y) {}
+	vec2f(float x, float y) : x(x), y(y) {}
 
 	vec2f& operator+=(const vec2f& v);
 	vec2f& operator-=(const vec2f& v);

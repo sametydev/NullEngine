@@ -2,7 +2,7 @@
 #include <PCH.h>
 #include <Engine/Scene.h>
 #include <Graphics/DX11/DXContext.h>
-
+#include <Engine/InputSystem2.h>
 
 class Scene01 : public Scene
 {
@@ -30,6 +30,8 @@ protected:
 	mat4x4 MVP;
 
 	mat4x4 T;
+
+	InputSystem2* input = InputSystem2::instance();
 	//struct
 	//{
 	//	mat4x4 P;

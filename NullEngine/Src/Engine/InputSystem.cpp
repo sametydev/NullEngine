@@ -27,9 +27,9 @@ uint EventSystem::HookMsg(const MSG* msg)
     }break;
 
     case WM_MOUSEMOVE: {
-        type = MouseEvent::MOVE;
-        pos = { LOWORD(msg->lParam), HIWORD(msg->lParam) };
-        state = msg->wParam;
+        //type = MouseEvent::MOVE;
+        //pos = { LOWORD(msg->lParam), HIWORD(msg->lParam) };
+        //state = msg->wParam;
     }break;
     default:
         type = MouseEvent::NONE;

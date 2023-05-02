@@ -126,37 +126,25 @@ bool Scene01::InitFrame()
 
 void Scene01::UpdateFrame(float dt)
 {
+	auto deltaM = input->GetDeltaMouse();
+	angle += deltaM.x * dt * 1.2f;
 
-	if (EventSystem::type == MouseEvent::MOVE)
-	{
-		LOG << "Mouse Moving!" << ENDL;
-	}
-
-	if (EventSystem::IsKeyDown('W'))
+	if (input->GetKeyDown(NKey::W))
 	{
 		pos.z += 0.8f * dt;
 	}
-	if (EventSystem::IsKeyDown('S'))
+	if (input->GetKeyDown(NKey::S))
 	{
 		pos.z -= 0.8f * dt;
 	}
 
-	if (EventSystem::IsKeyDown('A'))
+	if (input->GetKeyDown(NKey::A))
 	{
 		pos.x += 0.8f * dt;
 	}
-	if (EventSystem::IsKeyDown('D'))
+	if (input->GetKeyDown(NKey::D))
 	{
 		pos.x -= 0.8f * dt;
-	}
-
-	if (EventSystem::IsKeyDown('J'))
-	{
-		angle += 0.8f * dt;
-	}
-	if (EventSystem::IsKeyDown('L'))
-	{
-		angle -= 0.8f * dt;
 	}
 
 
