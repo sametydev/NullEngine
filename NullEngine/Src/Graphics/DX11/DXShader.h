@@ -8,7 +8,7 @@
 #define PS_VERSION	"ps_5_0"
 
 struct Vertex {
-	Vec3f pos;
+	vec3f pos;
 };
 
 enum class ShaderType : uint

@@ -12,7 +12,7 @@
 #include <Core/TypeDecl.h>
 #include <Core/Log.h>
 #include <Math/LinearMath.h>
-#include <Math/Mat4x4.h>
+#include <Math/mat4x4.h>
 
 #define SAFE_RELEASE(x) if(x) {x->Release(); x = nullptr;}
 #define SAFE_DELETE(x) if(x) {delete x; x = nullptr;}

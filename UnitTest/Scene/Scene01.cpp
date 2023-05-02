@@ -109,13 +109,13 @@ bool Scene01::InitFrame()
 
 
 	desc.pData = model.data();
-	desc.cbSize = sizeof(Mat4x4);
+	desc.cbSize = sizeof(mat4x4);
 
 	mCBO = new DXConstantBuffer;
 	mCBO->Create(desc);
 
 
-	Vec3f test(1, 2, 3);
+	vec3f test(1, 2, 3);
 
 	LOG << test << ENDL;
 	
@@ -124,9 +124,9 @@ bool Scene01::InitFrame()
 
 void Scene01::UpdateFrame(float dt)
 {
-	Mat4x4 s = Mat4x4::scaled(Vec3f(0.5f, 0.5f, 0.5f));
-	Mat4x4 r = Mat4x4::rotateZ(90.f);
-	Mat4x4 t = Mat4x4::translated(pos);
+	mat4x4 s = mat4x4::scaled(vec3f(0.5f, 0.5f, 0.5f));
+	mat4x4 r = mat4x4::rotateZ(90.f);
+	mat4x4 t = mat4x4::translated(pos);
 
 	model = s * r * t;
 
