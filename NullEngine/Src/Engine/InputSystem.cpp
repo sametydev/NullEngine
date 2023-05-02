@@ -32,9 +32,7 @@ uint EventSystem::HookMsg(const MSG* msg)
         state = msg->wParam;
     }break;
     default:
-
-
-
+        type = MouseEvent::NONE;
         break;
     }
     return 0;  //is not process here 1 is we ownded this event

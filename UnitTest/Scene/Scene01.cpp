@@ -127,6 +127,11 @@ bool Scene01::InitFrame()
 void Scene01::UpdateFrame(float dt)
 {
 
+	if (EventSystem::type == MouseEvent::MOVE)
+	{
+		LOG << "Mouse Moving!" << ENDL;
+	}
+
 	if (EventSystem::IsKeyDown('W'))
 	{
 		pos.z += 0.8f * dt;

@@ -5,6 +5,7 @@ typedef tagMSG MSG;
 struct MouseEvent
 {
     enum Type {
+        NONE,
         LPRESS,
         LRELEASE,
         RPRESS,
