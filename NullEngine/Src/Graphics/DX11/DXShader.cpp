@@ -95,44 +95,37 @@ void PixelShader::BindPipeline()
 std::unordered_map<std::string, std::shared_ptr<IShader>> ShaderCache::mCache;
 std::vector<std::shared_ptr<IShader>> ShaderCache::mShaders;
 
-IShader* ShaderCache::Create(LPCSTR name,ShaderDesc* desc)
+IShader* ShaderCache::Create(ShaderDesc* desc)
 {
-	//Checking
-	//std::string nameStr = name;
-	//auto it = mCache.find(nameStr);
-	//if (it != mCache.end())
-	//{
-	//	return it->second.get();
-	//}
-
+	auto it = mCache.find(desc->code);
+	if (it != mCache.end())
+	{
+		return it->second.get();
+	}
 
 	std::shared_ptr<IShader> shader = nullptr;
 
 	switch (desc->type)
 	{
-	case ShaderType::Vertex: {
-		auto vs = std::make_shared<VertexShader>();
-		vs->Create(desc->code);
-		vs->CreateInputLayout(desc->element,desc->numberOfElements);
-		mShaders.emplace_back(vs);
-		return vs.get();
-		}
-		break;
-	case ShaderType::Pixel: {
-		auto ps = std::make_shared<PixelShader>();
-		ps->Create(desc->code);
-		mShaders.emplace_back(ps);
-		return ps.get();
-		}
-		break;
+		case ShaderType::Vertex: {
+			auto vs = std::make_shared<VertexShader>();
+			vs->Create(desc->code);
+			vs->CreateInputLayout(desc->element,desc->numberOfElements);
+			shader = vs;
+			}
+			break;
+		case ShaderType::Pixel: {
+			auto ps = std::make_shared<PixelShader>();
+			ps->Create(desc->code);
+			shader = ps;
+			}
+			break;
 
-	default:
-		LOG_ERROR("Doesnt match shader type");
-		break;
+		default:
+			LOG_ERROR("Doesnt match shader type");
+			break;
 	}
+	mCache.insert(std::make_pair(desc->code, shader));
 
-	/*mCache.insert(std::make_pair(nameStr,shader));*/
-	//mShaders.emplace_back(shader);
-
-	return nullptr;
+	return shader.get();
 }

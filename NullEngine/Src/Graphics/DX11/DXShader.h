@@ -76,7 +76,7 @@ public:
 //Todo: ECS Subsystem Shader Cache
 class ShaderCache {
 public:
-	static IShader* Create(LPCSTR name,ShaderDesc* desc);
+	static IShader* Create(ShaderDesc* desc);
 	static std::unordered_map<std::string, std::shared_ptr<IShader>> mCache;
 	static std::vector<std::shared_ptr<IShader>> mShaders;
 };

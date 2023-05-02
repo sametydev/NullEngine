@@ -3,7 +3,7 @@
 #include <Graphics/DX11/DXBuffer.h>
 #include <Graphics/DX11/DXShader.h>
 
-LPCSTR hlsl = R"(
+LPCSTR vsCode = R"(
 cbuffer matrices : register(b0)
 {
 	matrix world;
@@ -24,12 +24,18 @@ PS_IN VS(VS_IN vs){
 
 	return ps;
 };
+)";
+
+
+LPCSTR psCode = R"(
+struct PS_IN{
+	float4 pos : SV_POSITION;
+};
 
 float4 PS(PS_IN ps) : SV_TARGET
 {
 	return float4(1,0,0,1);
 };
-
 )";
 
 
@@ -69,13 +75,15 @@ bool Scene01::InitFrame()
 	ShaderDesc sd;
 	sd.element = ied;
 	sd.numberOfElements = ARRAYSIZE(ied);
-	sd.code = hlsl;
+	sd.code = vsCode;
 	sd.type = ShaderType::Vertex;
 
-	mVS = ShaderCache::Create("triVS", &sd);
+	mVS = ShaderCache::Create(&sd);
 
 	sd.type = ShaderType::Pixel;
-	mPS = ShaderCache::Create("triPS", &sd);
+	sd.code = psCode;
+
+	mPS = ShaderCache::Create(&sd);
 
 	desc.pData = indices;
 	desc.cbSize = sizeof(indices);
