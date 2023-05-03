@@ -5,12 +5,15 @@ public:
 	Transform();
 
 	void SetPosition(const vec3f& position);
+	void SetRotation(const vec3f& rotation);
+	void SetScale(const vec3f& scale);
 
-	Transform* parent;
+	Transform* mParent = nullptr;
 	std::vector<Transform> mChild;
 
 	void Update();
 
+	mat4x4 mGlobal;
 	mat4x4 mLocal;
 
 	vec3f mPosition;
