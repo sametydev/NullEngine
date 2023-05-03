@@ -85,7 +85,12 @@ LRESULT Wnd::LocalWndProc(UINT msg, WPARAM wp, LPARAM lp)
 	case WM_CREATE:
 		OnCreate();
 		break;
-
+	case WM_LBUTTONDOWN:
+		SetCapture(mHwnd);
+		break;
+	case WM_LBUTTONUP:
+		ReleaseCapture();
+		break;
 	case WM_SIZE:
 		OnReSize(LOWORD(lp), HIWORD(lp));
 		break;

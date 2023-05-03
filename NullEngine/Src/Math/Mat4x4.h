@@ -40,6 +40,8 @@ struct mat4x4 {
 	//----------------------------------
 
 	static mat4x4 perspectiveLH(float fovY, float ratioX, float znear, float zfar);
+	static mat4x4 RotationYawPitchRoll(float yaw, float pitch, float roll);
+	static mat4x4 RotationAxis(const vec3f& v, float angle);
 
 	union {
 		float f[16];
@@ -47,61 +49,6 @@ struct mat4x4 {
 	};
 
 };
-
-
-/*
-
-
-	{        
-		1,2
-		3,4
-	}
-
-	{
-		1,2
-		4,5
-	}
-
-	1*1 + 2*4, 1*2 + 2*5
-	3*1 + 4*4, 3*2 + 4*5
-
-
-	***** VIEW MATRIX *****
-	//Rot-1 == Rot(t)
-	<!> ONLY IN ROTATION <!>
-	(Col)
-	R = {
-		4,5
-		1,2
-	}
-
-	(Row)
-	R (-1) = {
-		4,1
-		5,2
-	}
-
-	//T-1 == T(t) == T(xyz-1)
-	<!> ONLY IN TRANSFORM <!>
-	T = {
-		2,3,4
-		1,0,6
-	}
-
-	T (-1) = {
-		2,3,-4
-		1,0,-6
-	}
-
-
-	V = T(-1) * R(-1)
-
-	(equals) ==
-
-	V = T(t) * R(t)
-	**************************
-	
-*/
 
 inline mat4x4::mat4x4() {
 	SetIdentity();
@@ -185,9 +132,9 @@ inline mat4x4 mat4x4::transposed(const mat4x4& m) {
 inline mat4x4 mat4x4::transposedTranslation(const mat4x4& rhs)
 {
 	mat4x4 mat;
-	mat[0][3] = rhs[0][3] *	-1.f;
-	mat[1][3] = rhs[1][3] *	-1.f;
-	mat[2][3] = rhs[2][3] *	-1.f;
+	mat[0][3] = rhs[0][3] * -1.f;
+	mat[1][3] = rhs[1][3] * -1.f;
+	mat[2][3] = rhs[2][3] * -1.f;
 
 	return mat;
 }
@@ -271,6 +218,65 @@ inline mat4x4 mat4x4::perspectiveLH(float fovY, float ratioX, float znear, float
 		0.f,0.f,  E,0.f
 	};
 
+	return mat;
+}
+
+inline mat4x4 mat4x4::RotationYawPitchRoll(float yaw, float pitch, float roll)
+{
+	//https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles
+
+	//          yaw               pitch                roll
+	// |  cosy   0  siny     1      0      0  |     | cosz  -sinz    0 |
+	// |     0   1     0  *  0   cosx  -sinx  |  *  | sinz   cosz    0 |
+	// | -siny   0  cosy     0   sinx   cosx  |     |    0      0    1 |
+	//
+	//            (yaw * pitch)                       roll
+	// |  cosy   siny*sinx   siny*cosx  |     | cosz  -sinz    0 |
+	// |   0     cosx       -sinx	    |  *  | sinz   cosz    0 |
+	// | -siny   cosy*sinx   cosy*cosx  |     |    0      0    1 |
+	//
+	//							Yaw * Pitch * Roll
+	// | cosy*cosz + siny*sinx *sinz   cosy*-sinz+ siny*sinx*cosz   siny*cosx |
+	// | cosx*sinz                     cosx*cosz                    -sinx	  |
+	// | -siny*cosz+cosy*sinx*sinz     -siny*-sinz+cosy*sinx*cosz   cosy*cosx |
+
+	yaw *= RADIANS;
+	pitch *= RADIANS;
+	roll *= RADIANS;
+
+	float cosx = cos(pitch);
+	float cosy = cos(yaw);
+	float cosz = cos(roll);
+	float sinx = sin(pitch);
+	float siny = sin(yaw);
+	float sinz = sin(roll);
+
+	mat4x4 mat = {
+			cosy * cosz + siny * sinx * sinz,  cosy * -sinz + siny * sinx * cosz,  siny * cosx,  0.0f,
+			cosx * sinz,                    cosx * cosz,                    -sinx,      0.0f,
+			-siny * cosz + cosy * sinx * sinz,  -siny * -sinz + cosy * sinx * cosz, cosy * cosx,  0.0f,
+			0.0f,                         0.0f,                         0.0f,       1.0f
+	};
+
+	return mat;
+}
+
+inline mat4x4 mat4x4::RotationAxis(const vec3f& v, float angle)
+{
+	float theta = angle * RADIANS;
+	float cosx = cos(v.x * theta);
+	float cosy = cos(v.y * theta);
+	float cosz = cos(v.z * theta);
+	float sinx = sin(v.x * theta);
+	float siny = sin(v.y * theta);
+	float sinz = sin(v.z * theta);
+
+	mat4x4 mat = {
+		cosy * cosz + siny * sinx * sinz,  cosy * -sinz + siny * sinx * cosz,  siny * cosx,  0.0f,
+		cosx * sinz,                    cosx * cosz,                    -sinx,      0.0f,
+		-siny * cosz + cosy * sinx * sinz,  -siny * -sinz + cosy * sinx * cosz, cosy * cosx,  0.0f,
+		0.0f,                         0.0f,                         0.0f,       1.0f
+	};
 	return mat;
 }
 

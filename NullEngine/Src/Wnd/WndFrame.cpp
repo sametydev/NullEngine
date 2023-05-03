@@ -2,6 +2,7 @@
 #include <Wnd/WndFrame.h>
 #include <Engine/Scene.h>
 #include <Engine/Timer.h>
+#include <Engine/Input.h>
 #include <Engine/InputSystem2.h>
 
 WndFrame::WndFrame(Wnd* parent, uint width, uint heigth) : Wnd(parent, 0, 0, width, heigth)
@@ -51,15 +52,17 @@ int WndFrame::ExecFrame(Scene* scene)
 
 		if (PeekMessage(&msg, NULL, 0, 0,PM_REMOVE)) {
 			TranslateMessage(&msg);
-
-
-			//EventSystem::HookMsg(&msg);
+			Input::HookMsg(&msg);
 			DispatchMessage(&msg);
 			if (msg.message == WM_KEYDOWN && msg.wParam == VK_ESCAPE)
 			{
 				PostQuitMessage(0);
 			}
 			
+		}
+		else
+		{
+			Input::DiscardEvents();
 		}
 		if (mContext)
 		{

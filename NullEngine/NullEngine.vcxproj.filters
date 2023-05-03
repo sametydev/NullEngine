@@ -17,7 +17,7 @@
     <ClInclude Include="Src\Math\mat4x4.h" />
     <ClInclude Include="Src\Graphics\Vertex.h" />
     <ClInclude Include="Src\Engine\Timer.h" />
-    <ClInclude Include="Src\Engine\InputSystem.h" />
+    <ClInclude Include="Src\Engine\Input.h" />
     <ClInclude Include="Src\Math\vec2f.h" />
     <ClInclude Include="Src\Math\vec3f.h" />
     <ClInclude Include="Src\Engine\InputSystem2.h" />
@@ -36,7 +36,7 @@
     <ClCompile Include="Src\Graphics\DX11\DXShader.cpp" />
     <ClCompile Include="Src\Graphics\Vertex.cpp" />
     <ClCompile Include="Src\Engine\Timer.cpp" />
-    <ClCompile Include="Src\Engine\InputSystem.cpp" />
+    <ClCompile Include="Src\Engine\Input.cpp" />
     <ClCompile Include="Src\Engine\InputSystem2.cpp" />
   </ItemGroup>
 </Project>

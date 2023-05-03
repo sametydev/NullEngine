@@ -6,6 +6,8 @@ struct vec3f
 	vec3f(float x) : x(x), y(x), z(x) {}
 	vec3f(float x, float y, float z) : x(x), y(y), z(z) {}
 
+	vec3f operator*(const float d);
+
 	vec3f& operator+=(const vec3f& v);
 	vec3f& operator-=(const vec3f& v);
 	vec3f& operator*=(const vec3f& v);
@@ -26,6 +28,11 @@ struct vec3f
 
 inline std::ostream& operator<< (std::ostream& o, const vec3f& v) {
 	return o << "vec3( " << v.x << ", " << v.y << ", " << v.z << ")";
+}
+
+inline vec3f vec3f::operator*(const float d)
+{
+	return vec3f(x * d, y * d, z * d);
 }
 
 inline vec3f& vec3f::operator+=(const vec3f& v)

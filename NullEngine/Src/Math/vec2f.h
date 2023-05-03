@@ -12,6 +12,7 @@ struct vec2f
 	vec2f& operator*=(const vec2f& v);
 	vec2f& operator/=(const vec2f& v);
 	bool operator==(const vec2f& v);
+	bool operator!=(const vec2f& v);
 
 
 
@@ -62,11 +63,6 @@ inline vec2f& vec2f::operator/=(const vec2f& v)
 	return *this;
 }
 
-inline bool vec2f::operator==(const vec2f& v)
-{
-	return (x == v.x && y == v.y);
-}
-
 inline float vec2f::lenght2() const
 {
 	return (x * x) + (y * y);
@@ -88,4 +84,12 @@ inline float vec2f::dot(const vec2f& v1, const vec2f& v2)
 }
 inline vec2f operator-(const vec2f& v1, const vec2f& v2) {
 	return vec2f(v1.x - v2.x, v1.y - v2.y);
+}
+
+inline bool vec2f::operator==(const vec2f& v) {
+	return (x == v.x && y == v.y);
+}
+
+inline bool vec2f::operator!=(const vec2f& v) {
+	return !(*this == v);
 }

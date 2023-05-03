@@ -137,7 +137,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Src\Engine\InputSystem2.h" />
-    <ClInclude Include="Src\Engine\InputSystem.h" />
+    <ClInclude Include="Src\Engine\Input.h" />
     <ClInclude Include="Src\Graphics\DX11\DXShader.h" />
     <ClInclude Include="Src\Engine\Scene.h" />
     <ClInclude Include="Src\Graphics\DX11\DXBuffer.h" />
@@ -160,7 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Engine\InputSystem2.cpp" />
-    <ClCompile Include="Src\Engine\InputSystem.cpp" />
+    <ClCompile Include="Src\Engine\Input.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXShader.cpp" />
     <ClCompile Include="Src\Engine\Scene.cpp" />
     <ClCompile Include="Src\Graphics\Context.cpp" />

@@ -3,7 +3,7 @@
 #include <Graphics/DX11/DXBuffer.h>
 #include <Graphics/DX11/DXShader.h>
 #include <Graphics/Vertex.h>
-#include <Engine/InputSystem.h>
+#include <Engine/Input.h>
 
 LPCSTR vsCode = R"(
 cbuffer matrices : register(b0)
@@ -56,7 +56,7 @@ bool Scene01::InitFrame()
 	float aspect = vp.Width / vp.Height;
 
 
-	input->LockCursor(true);
+	//input->LockCursor(true);
 	LOG << vp.Width;
 	input->SetLockArea(rect(860, 640));
 
@@ -112,13 +112,18 @@ bool Scene01::InitFrame()
 
 	T = mat4x4::translated(pos);
 	mat4x4 t = t.transposedTranslation(T);
-	mat4x4 r = mat4x4::rotateY(angle);
+	mat4x4 ry = mat4x4::rotateX(rot.y);    //yaw
+	mat4x4 rx = mat4x4::rotateY(rot.x); //pitch
+
+	mat4x4 R = rx * ry;
+	R = mat4x4::transposed(R);
+	vec3f right = vec3f(R[0][0], R[0][1], R[0][2]);
+	vec3f forward = vec3f(R[2][0], R[2][1], R[2][2]);
 
 
-	//define as SRT
-	V = r*t;
 
-	//define as PVM
+	V = R * t;
+
 	MVP = P * V;
 
 
@@ -132,35 +137,55 @@ bool Scene01::InitFrame()
 
 void Scene01::UpdateFrame(float dt)
 {
-	auto deltaM = input->GetDeltaMouse();
-	angle += deltaM.x * dt * 1.2f;
-
-	if (input->GetKeyDown(NKey::W))
-	{
-		pos.z += 0.8f * dt;
-	}
-	if (input->GetKeyDown(NKey::S))
-	{
-		pos.z -= 0.8f * dt;
-	}
-
-	if (input->GetKeyDown(NKey::A))
-	{
-		pos.x += 0.8f * dt;
-	}
-	if (input->GetKeyDown(NKey::D))
-	{
-		pos.x -= 0.8f * dt;
+	float speed = 128.3;
+	float keySpeed = 5.3f;
+	if (Input::type == MouseEvent::MOVE) {
+		printf("move\n");
+		if (Input::state == Key::LMB) {
+			vec2f delta = Input::delta;
+			rot.x += -delta.x * speed * dt;
+			rot.y += -delta.y * speed * dt;
+			//LOG << delta << ENDL;
+		}
 	}
 
 
+	mat4x4 ry = mat4x4::rotateX(rot.y);    //yaw
+	mat4x4 rx = mat4x4::rotateY(rot.x); //pitch
+
+	mat4x4 R = rx * ry;
+	//pre multed
+	//what is x axis on R  = Right compponet(axis)
+	//what is y axis on R = Up commponet
+	//what is z axis on R = Foward com
+	R = mat4x4::transposed(R);
+
+	vec3f right = vec3f(R[0][0], R[0][1], R[0][2]);
+	vec3f foward = vec3f(R[2][0], R[2][1], R[2][2]);
+
+	if (Input::IsKeyDown(Key::W))
+	{
+		pos += foward * keySpeed * dt;
+	}
+	if (Input::IsKeyDown(Key::S))
+	{
+		pos -= foward * keySpeed * dt;
+	}
+
+	if (Input::IsKeyDown(Key::D))
+	{
+		pos += right * keySpeed * dt;
+	}
+	if (Input::IsKeyDown(Key::A))
+	{
+		pos -= right * keySpeed * dt;
+	}
 	T = mat4x4::translated(pos);
 	mat4x4 t = t.transposedTranslation(T);
-	mat4x4 r = mat4x4::rotateY(angle);
 
-	V = r*t;
+	V = R * t;
 
-	MVP = P*V;
+	MVP = P * V;
 
 	mCBO->SubData(MVP.data());
 }
