@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</ExternalIncludePath>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)/Src</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)/Src;$(SolutionDir)/include</IncludePath>
     <OutDir>$(SolutionDir)lib\</OutDir>
     <IntDir>$(SolutionDir)lib\$(ProjectName)\</IntDir>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(SolutionDir)\lib</LibraryPath>
@@ -113,6 +113,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>PCH.h</PrecompiledHeaderFile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -136,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Graphics\DX11\DXTexture.h" />
     <ClInclude Include="Src\Engine\InputSystem2.h" />
     <ClInclude Include="Src\Engine\Input.h" />
     <ClInclude Include="Src\Graphics\DX11\DXShader.h" />
@@ -147,6 +149,7 @@
     <ClInclude Include="Src\Core\TypeDecl.h" />
     <ClInclude Include="Src\Graphics\DX11\DX11Config.h" />
     <ClInclude Include="Src\Graphics\DX11\DXContext.h" />
+    <ClInclude Include="Src\Graphics\Texture.h" />
     <ClInclude Include="Src\Math\LinearMath.h" />
     <ClInclude Include="Src\Math\mat4x4.h" />
     <ClInclude Include="Src\Math\rect.h" />
@@ -157,8 +160,10 @@
     <ClInclude Include="Src\Wnd\WndFrame.h" />
     <ClInclude Include="Src\Graphics\Vertex.h" />
     <ClInclude Include="Src\Engine\Timer.h" />
+    <ClInclude Include="Src\Component\Transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Graphics\DX11\DXTexture.cpp" />
     <ClCompile Include="Src\Engine\InputSystem2.cpp" />
     <ClCompile Include="Src\Engine\Input.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXShader.cpp" />
@@ -167,6 +172,7 @@
     <ClCompile Include="Src\Graphics\DX11\DXBuffer.cpp" />
     <ClCompile Include="Src\Core\Log.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXContext.cpp" />
+    <ClCompile Include="Src\Graphics\Texture.cpp" />
     <ClCompile Include="Src\Main.cpp" />
     <ClCompile Include="Src\PCH.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -175,6 +181,7 @@
     <ClCompile Include="Src\Wnd\WndFrame.cpp" />
     <ClCompile Include="Src\Graphics\Vertex.cpp" />
     <ClCompile Include="Src\Engine\Timer.cpp" />
+    <ClCompile Include="Src\Component\Transform.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -24,7 +24,9 @@ class DXVertexBuffer;
 class DXIndexBuffer;
 class DXConstantMapBuffer;
 class DXConstantBuffer;
+class DXTexture;
 
+class Texture;
 class IShader;
 class VertexShader;
 class PixelShader;

@@ -8,14 +8,17 @@ public:
 	DXTexture();
 	virtual ~DXTexture();
 
-	virtual void Load(LPCSTR filename) = 0;
-	virtual void BindPipeline(uint slot = 0) = 0;
+	virtual void Load(LPCSTR filename);
+	virtual void BindPipeline(uint slot = 0);
 	virtual void UnBind() {};
 
-	uint bytePerPixel = 0; //Optional;
 	uint width;
 	uint height;
+	uint mSlot;
 
-
+	ID3D11ShaderResourceView* mSRV;
+private:
+	void CreateSampler();
+	static comptr<ID3D11SamplerState> InternalSampler;
 };
 

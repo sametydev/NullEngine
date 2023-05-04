@@ -58,7 +58,7 @@ bool Scene01::InitFrame()
 
 	//input->LockCursor(true);
 	LOG << vp.Width;
-	input->SetLockArea(rect(860, 640));
+	//input->SetLockArea(rect(860, 640));
 
 	P = mat4x4::perspectiveLH(45.f, aspect, 0.01f, 100.f);
 
@@ -132,6 +132,9 @@ bool Scene01::InitFrame()
 
 	mCBO = BufferCache::Create<DXConstantBuffer>(desc);
 	
+	texture = new DXTexture();
+	texture->Load("../data/wall.jpg");
+
 	return true;
 }
 

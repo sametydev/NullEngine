@@ -1,6 +1,6 @@
 #pragma once
 #include <Core/TypeDecl.h>
-
+#include <unordered_map>
 class Texture
 {
 public:
@@ -14,4 +14,9 @@ public:
 	uint bytePerPixel = 0; //Optional;
 	uint width;
 	uint height;
+};
+
+class TextureCache {
+	static Texture* Load(LPCSTR filename);
+	static std::unordered_map<std::string, std::shared_ptr<Texture>> mCache;
 };
