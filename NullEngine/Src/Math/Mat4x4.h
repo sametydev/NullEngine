@@ -19,6 +19,7 @@ struct mat4x4 {
 	);
 
 	mat4x4 operator*(const mat4x4& rhs);
+	vec3f operator*(const vec3f& v);
 
 	void SetIdentity();
 
@@ -98,6 +99,22 @@ inline mat4x4 mat4x4::operator*(const mat4x4& rhs) {
 		}
 	}
 	return mat;
+}
+
+inline vec3f mat4x4::operator*(const vec3f& v)
+{
+	float x, y, z;
+
+	x =			(v.x * m[0][0]) + (v.y * m[0][1]) + (v.z * m[0][2]) + m[0][1];
+	y =			(v.x * m[1][0]) + (v.y * m[1][1]) + (v.z * m[1][2]) + m[1][1];
+	z =			(v.x * m[2][0]) + (v.y * m[2][1]) + (v.z * m[2][2]) + m[2][1];
+	float w =   (v.x * m[3][0]) + (v.y * m[3][1]) + (v.z * m[3][2]) + m[3][1];
+
+	x /= w;
+	y /= w;
+	z /= w;
+
+	return vec3f(x,y,z);
 }
 
 inline void mat4x4::SetIdentity() {

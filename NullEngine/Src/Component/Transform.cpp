@@ -26,6 +26,11 @@ void Transform::SetScale(const vec3f& scale)
 	mScale = scale;
 }
 
+mat4x4& Transform::GetGlobal()
+{
+	return mGlobal;
+}
+
 void Transform::Update()
 {
 	if (!mIsAutoUpdate) return;
@@ -38,11 +43,9 @@ void Transform::Update()
 	mat4x4 ry = mat4x4::RotationAxis(mUp, mRotation.y);
 	mat4x4 rz = mat4x4::RotationAxis(mForward, mRotation.z);
 
-
 	mat4x4 R = ry * rx * rz;
 
 	mLocal = S * T * R;
-
 
 	//NOT GOOD FOR PERFORMANCE ITS TEMPORARY
 	if (mParent == nullptr)

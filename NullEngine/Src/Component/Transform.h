@@ -8,8 +8,9 @@ public:
 	void SetRotation(const vec3f& rotation);
 	void SetScale(const vec3f& scale);
 
+	mat4x4& GetGlobal();
+
 	Transform* mParent = nullptr;
-	std::vector<Transform> mChild;
 
 	void Update();
 
