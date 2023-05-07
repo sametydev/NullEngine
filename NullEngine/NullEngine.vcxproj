@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Core\FileSystem.h" />
     <ClInclude Include="Src\Graphics\DX11\DXTexture.h" />
     <ClInclude Include="Src\Engine\InputSystem2.h" />
     <ClInclude Include="Src\Engine\Input.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Src\Component\Transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Core\FileSystem.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXTexture.cpp" />
     <ClCompile Include="Src\Engine\InputSystem2.cpp" />
     <ClCompile Include="Src\Engine\Input.cpp" />

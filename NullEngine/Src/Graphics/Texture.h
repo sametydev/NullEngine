@@ -2,6 +2,7 @@
 #include <Core/TypeDecl.h>
 #include <unordered_map>
 #include <Core/FileSystem.h>
+
 class Texture
 {
 public:

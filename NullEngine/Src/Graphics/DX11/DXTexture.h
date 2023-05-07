@@ -10,7 +10,7 @@ public:
 
 	virtual void Load(LPCSTR filename);
 	virtual void BindPipeline(uint slot = 0);
-	virtual void UnBind() {};
+	virtual void UnBind();
 
 	uint width;
 	uint height;
