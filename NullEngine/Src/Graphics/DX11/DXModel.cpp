@@ -66,14 +66,10 @@ void DXModel::Load(LPCSTR filename)
 		nodes[index].baseVertex += mesh->mNumVertices;
 		//node.indicesOffset += //first must be 0
 		//	index == 0 ? 0 : ()
-		nodes[index].indicesNum = nIndices;
+		
 		nodes[index].indicesOffset += (index > 0) ? nodes[index - 1].indicesNum :
 			0;
-		if (index == 1)
-		{
-			g = 0;
-		}
-
+		nodes[index].indicesNum = nIndices;
 		for (int i = 0; i < mesh->mNumFaces; i++)
 		{
 			//face indices couldnt over 3
@@ -106,6 +102,9 @@ void DXModel::Load(LPCSTR filename)
 
 void DXModel::Render()
 {
+	vbo->BindPipeline(0);
+	ibo->BindPipeline(0);
+
 	for (int i = 0; i < mNode.size(); i++)
 	{
 		auto node = &mNode[i];
@@ -113,8 +112,7 @@ void DXModel::Render()
 		{
 
 		}
-		//vbo->BindPipeline(0);
-		//ibo->BindPipeline(0);
+
 		gDXContext->DrawIndexed(node->indicesNum, node->indicesOffset, 0);
 	}
 }
