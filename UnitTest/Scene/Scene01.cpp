@@ -81,10 +81,10 @@ bool Scene01::InitFrame()
 	desc.pData = vertices;
 	desc.stride = sizeof(VertexPC);
 
-	//CreateVertexBuffer
-	mVBO = BufferCache::Create<DXVertexBuffer>(desc);
+	////CreateVertexBuffer
+	//mVBO = BufferCache::Create<DXVertexBuffer>(desc);
 
-	mVBO->BindPipeline(0);
+	//mVBO->BindPipeline(0);
 	
 
 	ShaderDesc sd;
@@ -104,7 +104,7 @@ bool Scene01::InitFrame()
 	desc.cbSize = sizeof(indices);
 	desc.indices = 3;
 
-	mIBO = BufferCache::Create<DXIndexBuffer>(desc);
+	//mIBO = BufferCache::Create<DXIndexBuffer>(desc);
 
 
 	mat4x4 T = mat4x4::translated(vec3f(0,0,-5));
@@ -140,6 +140,7 @@ bool Scene01::InitFrame()
 	matrices.proj = mat4x4::perspectiveLH(45.f, (float)(vp.w/vp.h), 0.01f, 100.f);
 
 	model = new DXModel();
+	model->Load("../data/model/tree.obj");
 
 	return true;
 }
@@ -199,22 +200,13 @@ void Scene01::UpdateFrame(float dt)
 	//V = S R T;
 	// wa mult (T*R*S).inverted()
 	matrices.view = (T*R).inverted();
-	static vec3f modelPos = {};
-	if (Input::IsKeyDown(Key::C))
-	{
-		modelPos.x -= 3.3f * keySpeed * dt;
-	}
 
-	mat4x4 model = mat4x4::translated(modelPos);
-	matrices.model = model;
 
 	mCBO->SubData(&matrices);
 }
 
 void Scene01::RenderFrame()
 {
-	mVBO->BindPipeline();
-	mIBO->BindPipeline();
 
 	mVS->BindPipeline();
 	mPS->BindPipeline();
@@ -225,5 +217,5 @@ void Scene01::RenderFrame()
 
 	gDXContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	gDXContext->DrawIndexed(mIBO->GetIndices(), 0,0);
+	model->Render();
 }

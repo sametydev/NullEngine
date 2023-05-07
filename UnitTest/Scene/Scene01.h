@@ -12,8 +12,8 @@ public:
 	void RenderFrame() override;
 
 protected:
-	DXVertexBuffer* mVBO;
-	DXIndexBuffer* mIBO;
+	//DXVertexBuffer* mVBO;
+	//DXIndexBuffer* mIBO;
 	IShader* mVS;
 	IShader* mPS;
 
