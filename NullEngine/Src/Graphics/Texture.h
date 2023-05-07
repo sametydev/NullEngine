@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <Core/FileSystem.h>
 
+
 class Texture
 {
 public:
@@ -19,6 +20,7 @@ public:
 };
 
 class TextureCache {
+public:
 	static Texture* Load(LPCSTR filename);
 	static std::unordered_map<std::string, std::shared_ptr<Texture>> mCache;
 };

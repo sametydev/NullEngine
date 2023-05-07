@@ -1,9 +1,6 @@
 #pragma once
 #include <PCH.h>
 #include <Engine/Scene.h>
-#include <Graphics/DX11/DXContext.h>
-#include <Engine/InputSystem2.h>
-#include <Graphics/DX11/DXTexture.h>
 
 class Scene01 : public Scene
 {
@@ -26,13 +23,13 @@ protected:
 	vec3f rot = { 0,0,0 };
 	float angle = 0;
 
-	mat4x4 M;
-	mat4x4 V;
-	mat4x4 P;
-	mat4x4 MVP;
-
-	mat4x4 T;
-
+	struct
+	{
+		mat4x4 proj;
+		mat4x4 view;
+		mat4x4 model;
+	}matrices;
+	DXModel* model;
 	Texture* texture;
 };
 

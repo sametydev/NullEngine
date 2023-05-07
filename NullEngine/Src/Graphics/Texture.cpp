@@ -26,5 +26,5 @@ Texture* TextureCache::Load(LPCSTR filename)
 
 	mCache.insert(std::make_pair(name,texture));
 
-	return nullptr;
+	return texture.get();
 }

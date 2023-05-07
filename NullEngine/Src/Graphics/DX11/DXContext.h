@@ -31,4 +31,9 @@ public:
 
 	virtual ID3D11DeviceContext* GetDXContext() { return mDeviceContext; }
 	virtual ID3D11Device* GetDXDevice() { return mDevice; }
+
+
+	//API Type
+	virtual void GetViewport(Viewport* vp);
+
 };

@@ -212,3 +212,17 @@ void DXContext::SwapBuffer()
 {
 	mSwapChain->Present(0, 0);
 }
+
+void DXContext::GetViewport(Viewport* vp)
+{
+	D3D11_VIEWPORT dxVp{};
+
+
+	uint nViewCount = 1;
+	mDeviceContext->RSGetViewports(&nViewCount,&dxVp);
+
+	vp->x = dxVp.TopLeftX;
+	vp->y = dxVp.TopLeftY;
+	vp->w = dxVp.Width;
+	vp->h = dxVp.Height;
+}

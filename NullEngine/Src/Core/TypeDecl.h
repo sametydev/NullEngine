@@ -61,11 +61,17 @@ class DXIndexBuffer;
 class DXConstantMapBuffer;
 class DXConstantBuffer;
 class DXTexture;
+class DXModel;
 
 class Texture;
 class IShader;
 class VertexShader;
 class PixelShader;
+
+//API Type
+struct Viewport {
+	float x, y, w, h;
+};
 
 
 struct BufferDesc {

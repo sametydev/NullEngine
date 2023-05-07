@@ -8,11 +8,13 @@ class Context {
 public:
 	Context(int cx, int cy, HWND hwnd);
 	virtual ~Context() {};
-	//Todo
+	//DX specific functions
 	virtual void ClearBuffer(float r,float g,float b,float a) = 0;
 	virtual void SwapBuffer() = 0;
 	virtual void ResizeRenderBuffer(uint cx, uint cy) {};
 
+	//Shared func
+	virtual void GetViewport(Viewport* vp) {};
 
 	HWND mHwnd;
 	int width;
