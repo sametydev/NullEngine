@@ -158,6 +158,7 @@
     <ClInclude Include="Src\Math\vec3f.h" />
     <ClInclude Include="Src\PCH.h" />
     <ClInclude Include="Src\Wnd\Wnd.h" />
+    <ClInclude Include="Src\Wnd\WndConfig.h" />
     <ClInclude Include="Src\Wnd\WndFrame.h" />
     <ClInclude Include="Src\Graphics\Vertex.h" />
     <ClInclude Include="Src\Engine\Timer.h" />

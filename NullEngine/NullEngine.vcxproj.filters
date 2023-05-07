@@ -26,6 +26,7 @@
     <ClInclude Include="Src\Graphics\Texture.h" />
     <ClInclude Include="Src\Component\Transform.h" />
     <ClInclude Include="Src\Core\FileSystem.h" />
+    <ClInclude Include="Src\Wnd\WndConfig.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp" />

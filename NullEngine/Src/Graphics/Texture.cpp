@@ -9,7 +9,7 @@ Texture::Texture()
 Texture::~Texture()
 {
 }
-
+std::unordered_map<std::string, std::shared_ptr<Texture>> TextureCache::mCache;
 Texture* TextureCache::Load(LPCSTR filename)
 {
 	std::string name = FileSystem::GetNameFromPath(filename);
