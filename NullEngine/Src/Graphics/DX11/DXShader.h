@@ -1,5 +1,5 @@
 #pragma once
-#include <Graphics/DX11/DXContext.h>
+#include <Graphics/Shader.h>
 #include <vector>
 
 #define VS_ENTRY	"VS"
@@ -8,40 +8,10 @@
 #define PS_VERSION	"ps_5_0"
 
 
-enum class ShaderType : uint
-{
-	Vertex,
-	Pixel,
-	Hull,
-	Geometry,
-	Compute
-};
-
-struct ShaderDesc {
-	LPCSTR filename;
-	LPCSTR code;
-	ShaderType type;
-
-	//Optional
-	D3D11_INPUT_ELEMENT_DESC* element;
-	uint					  numberOfElements;
-};
-
-class IShader
-{
+class DXVertexShader : public Shader {
 public:
-	IShader() = default;
-	virtual ~IShader(){}
-	virtual void BindPipeline() = 0;
-	static void Compile(LPCSTR code,LPCSTR entry,LPCSTR version,ID3DBlob** blob);
-
-};
-
-
-class VertexShader : public IShader {
-public:
-	VertexShader();
-	~VertexShader();
+	DXVertexShader();
+	~DXVertexShader();
 
 	//void Create(const ShaderDesc& desc);
 	void Create(LPCSTR code);
@@ -56,10 +26,10 @@ public:
 	ID3D11InputLayout* mLayout = nullptr;
 };
 
-class PixelShader : public IShader {
+class DXPixelShader : public Shader {
 public:
-	PixelShader();
-	~PixelShader();
+	DXPixelShader();
+	~DXPixelShader();
 
 	void BindPipeline() override;
 	void Create(LPCSTR code);
@@ -68,12 +38,3 @@ public:
 };
 
 
-#include <unordered_map>
-
-//Todo: ECS Subsystem Shader Cache
-class ShaderCache {
-public:
-	static IShader* Create(ShaderDesc* desc);
-	static std::unordered_map<std::string, std::shared_ptr<IShader>> mCache;
-	static std::vector<std::shared_ptr<IShader>> mShaders;
-};

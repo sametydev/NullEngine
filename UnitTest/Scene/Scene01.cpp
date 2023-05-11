@@ -1,13 +1,14 @@
 #include <PCH.h>
 #include <Scene/Scene01.h>
-#include <Graphics/DX11/DXBuffer.h>
+#include <Graphics/Buffer.h>
 #include <Graphics/DX11/DXShader.h>
 #include <Graphics/Vertex.h>
 #include <Engine/Input.h>
 #include <Graphics/Texture.h>
-#include <Graphics/DX11/DXContext.h>
-#include <Graphics/DX11/DXTexture.h>
+#include <Graphics/Context.h>
+#include <Graphics/Texture.h>
 #include <Graphics/DX11/DXModel.h>
+#include <Graphics/DX11/DX11Config.h>
 
 LPCSTR vsCode = R"(
 cbuffer matrices : register(b0)
@@ -56,6 +57,9 @@ float4 PS(PS_IN ps) : SV_TARGET
 
 bool Scene01::InitFrame()
 {
+	Viewport vp{};
+	
+	gContext->GetViewport(&vp);
 
 	float i = 1.f;
 
@@ -74,73 +78,28 @@ bool Scene01::InitFrame()
 		{2}
 	};
 
+
+	matrices.proj = mat4x4::perspectiveLH(45.f, vp.w /vp.h,0.01f,100.f);
 	
-	BufferDesc desc{};
+	VertexBufferDesc vd{};
+	vd.cbSize = sizeof(vertices);
+	vd.cbStride = sizeof(VertexPC);
+	vd.pData = vertices;
 
-	desc.cbSize = sizeof(vertices);
-	desc.pData = vertices;
-	desc.stride = sizeof(VertexPC);
+	vbo = BufferCache::CreateVertexBuffer(vd);
 
-	////CreateVertexBuffer
-	//mVBO = BufferCache::Create<DXVertexBuffer>(desc);
+	IndexBufferDesc id{};
+	id.cbSize = sizeof(indices);
+	id.nIndices = std::size(indices);
+	id.pData = indices;
 
-	//mVBO->BindPipeline(0);
-	
+	ibo = BufferCache::CreateIndexBuffer(id);
 
-	ShaderDesc sd;
-	sd.element = VertexPC::elements;
-	sd.numberOfElements = VertexPC::nElements;
-	sd.code = vsCode;
-	sd.type = ShaderType::Vertex;
+	ConstantBufferDesc cd{};
+	cd.cbSize = sizeof(matrices);
+	cd.pData = &matrices;
 
-	mVS = ShaderCache::Create(&sd);
-
-	sd.type = ShaderType::Pixel;
-	sd.code = psCode;
-
-	mPS = ShaderCache::Create(&sd);
-
-	desc.pData = indices;
-	desc.cbSize = sizeof(indices);
-	desc.indices = 3;
-
-	//mIBO = BufferCache::Create<DXIndexBuffer>(desc);
-
-
-	mat4x4 T = mat4x4::translated(vec3f(0,0,-5));
-	mat4x4 ry = mat4x4::rotateX(rot.y);    //yaw
-	mat4x4 rx = mat4x4::rotateY(rot.x); //pitch
-
-	//ry(yaw) * rx(pitch) * rz(roll)
-	mat4x4 R = ry * rx;
-
-	vec3f right = vec3f(R[0][0], R[1][0], R[2][0]);
-	vec3f forward = vec3f(R[0][2], R[1][2], R[2][2]);
-
-	//V = (R-1 * T-1)
-	
-	//00 01 02 03
-	//10 11 12 13
-	//20 21 22 23
-	//30 31 32 33
-	desc.cbSize = sizeof(matrices);
-	desc.pData  = &matrices;
-	
-
-
-	mCBO = BufferCache::Create<DXConstantBuffer>(desc);
-	
-	texture = new DXTexture();
-	//texture->Load("../data/wall.jpg");
-	texture = TextureCache::Load("../data/wall.jpg");
-
-	//Matrices
-	Viewport vp;
-	gContext->GetViewport(&vp);
-	matrices.proj = mat4x4::perspectiveLH(45.f, (float)(vp.w/vp.h), 0.01f, 100.f);
-
-	model = new DXModel();
-	model->Load("../data/model/tree.obj");
+	cbo = BufferCache::CreateConstantBuffer(cd);
 
 	return true;
 }
@@ -160,15 +119,12 @@ void Scene01::UpdateFrame(float dt)
 	}
 
 
-	mat4x4 ry = mat4x4::rotateX(rot.y);    //yaw
-	mat4x4 rx = mat4x4::rotateY(rot.x); //pitch
+	mat4x4 ry = mat4x4::rotateX(rot.y);		//yaw
+	mat4x4 rx = mat4x4::rotateY(rot.x);		//pitch
 
 	mat4x4 R = ry * rx;
-	//pre multed
-	//what is x axis on R  = Right compponet(axis)
-	//what is y axis on R = Up commponet
-	//what is z axis on R = forward com
 
+	matrices.model = mat4x4();
 
 	vec3f right = vec3f(R[0][0], R[1][0], R[2][0]);
 	vec3f forward = vec3f(R[0][2], R[1][2], R[2][2]);
@@ -190,19 +146,13 @@ void Scene01::UpdateFrame(float dt)
 	{
 		pos -= right * keySpeed * dt;
 	}
+
 	mat4x4 T = mat4x4::translated(pos);
-	mat4x4 invR = mat4x4::transposed(R);
-	mat4x4 invT = mat4x4::transposedTranslation(T);
+	mat4x4 V = R * T;
+	
+	matrices.view = V.inverted();
 
-	//V = (R-1*T-1)
-	//matrices.view = invR * invT;
-	//V = (TR)-1
-	//V = S R T;
-	// wa mult (T*R*S).inverted()
-	matrices.view = (T*R).inverted();
-
-
-	mCBO->SubData(&matrices);
+	cbo->SubData(&matrices);
 }
 
 void Scene01::RenderFrame()
@@ -211,11 +161,10 @@ void Scene01::RenderFrame()
 	mVS->BindPipeline();
 	mPS->BindPipeline();
 
-	mCBO->BindPipeline(0);
+	cbo->BindPipeline(0);
 	texture->BindPipeline(0);
 
+	gContext->SetTopology(Topolgy::TRIANGLELIST);
 
-	gDXContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	model->Render();
+	//mModel->Render();
 }

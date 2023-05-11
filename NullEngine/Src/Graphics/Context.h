@@ -16,6 +16,7 @@ public:
 	//API Function
 	virtual void GetViewport(Viewport* vp) {};
 	virtual void SetSampler(SamplerState sampler) {};
+	virtual void SetTopology(Topolgy topology) {};
 
 	HWND mHwnd;
 	int width;
@@ -27,6 +28,5 @@ public:
 
 	virtual ID3D11DeviceContext* GetDXContext();
 	virtual ID3D11Device* GetDXDevice();
-}
 	static Context* gInstance;
 };

@@ -2,7 +2,7 @@
 #include <Core/TypeDecl.h>
 #include <Graphics/DX11/DX11Config.h>
 #include <Graphics/DX11/DXTexture.h>
-#include <Graphics/DX11/DXContext.h>
+#include <Graphics/Context.h>
 #include <filesystem>
 
 #define STB_IMAGE_IMPLEMENTATION

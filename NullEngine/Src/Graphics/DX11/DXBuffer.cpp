@@ -3,6 +3,8 @@
 #include <Graphics/DX11/DXBuffer.h>
 #include <Graphics/DX11/DX11Config.h>
 
+//remember if u need dx function include DXConfig!
+//if u need dxContext include only Context!
 
 DXVertexBuffer::DXVertexBuffer() : mBuffer(nullptr), mStride(0) {
 

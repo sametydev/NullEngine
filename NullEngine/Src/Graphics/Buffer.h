@@ -1,6 +1,4 @@
 #pragma once
-#include <Core/TypeDecl.h>
-
 class Buffer
 {
 public:

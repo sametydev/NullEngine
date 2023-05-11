@@ -1,5 +1,6 @@
 #include <PCH.h>
 #include <Graphics/Vertex.h>
+#include <Graphics/DX11/DX11Config.h>
 
 D3D11_INPUT_ELEMENT_DESC VertexPC::elements[] = {
 

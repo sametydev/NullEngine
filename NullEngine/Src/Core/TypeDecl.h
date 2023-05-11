@@ -59,32 +59,44 @@ struct ID3D11RenderTargetView;
 struct ID3D11DepthStencilView;
 struct ID3D11Texture2D;
 struct ID3D11RasterizerState;
-struct D3D11_INPUT_ELEMENT_DESC;
+
+
+struct ID3D11Buffer;
+struct ID3D11InputLayout;
 struct ID3D11VertexShader;
 struct ID3D11PixelShader;
 struct ID3D11ShaderResourceView;
-struct ID3D10Blob;
-struct ID3D11Buffer;
-struct ID3D11InputLayout;
 struct ID3D11SamplerState;
+
+struct ID3D10Blob;
 typedef ID3D10Blob ID3DBlob;
+
+struct D3D11_INPUT_ELEMENT_DESC;
 //===============================================
 
+//=================USER==========================
 class Context;
 class Scene;
 
-class DXBuffer;
-class DXVertexBuffer;
-class DXIndexBuffer;
-class DXConstantMapBuffer;
-class DXConstantBuffer;
-class DXTexture;
-class DXModel;
+//class DXBuffer;
+//class DXVertexBuffer;
+//class DXIndexBuffer;
+//class DXConstantMapBuffer;
+//class DXConstantBuffer;
+//class DXTexture;
+//class DXModel;
 
+class IndexBuffer;
+class VertexBuffer;
+class ConstantBuffer;
+
+class DXModel;
 class Texture;
 class IShader;
 class VertexShader;
 class PixelShader;
+
+//===============================================
 
 
 //API Type
@@ -92,8 +104,12 @@ struct Viewport {
     float x, y, w, h;
 };
 
-enum SamplerState {
+enum class SamplerState {
     WRAP, CLAMP
+};
+
+enum class Topolgy {
+    UNDEFINED = 0,POINTLIST, LINELIST,LINESTRIP,TRIANGLELIST,TRIANGLESTRIP
 };
 
 struct VertexBufferDesc {

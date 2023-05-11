@@ -33,6 +33,7 @@ public:
 
 	virtual ID3D11DeviceContext* GetDXContext();
 	virtual ID3D11Device* GetDXDevice();
+	virtual void SetTopology(Topolgy topology);
 
 
 	//API Function 

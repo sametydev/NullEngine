@@ -2,8 +2,8 @@
 #include <Graphics/DX11/DXModel.h>
 #include <Core/FileSystem.h>
 #include <Graphics/Vertex.h>
-#include <Graphics/DX11/DXBuffer.h>
-#include <Graphics/DX11/DXContext.h>
+#include <Graphics/Buffer.h>
+#include <Graphics/Context.h>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -115,6 +115,6 @@ void DXModel::Render()
 
 		}
 
-		gDXContext->DrawIndexed(node->indicesNum, node->indicesOffset, 0);
+		//gDXContext->DrawIndexed(node->indicesNum, node->indicesOffset, 0);
 	}
 }
