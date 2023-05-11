@@ -1,6 +1,6 @@
 #pragma once
-//Win32
 
+//Win32
 #define CALLBACK		__stdcall
 #define WINAPI			__stdcall
 #define APIENTRY		WINAPI
@@ -47,13 +47,31 @@ typedef UINT			uint;
 typedef unsigned char	byte;
 typedef const char* LPCSTR;
 
-//User declare
-class Context;
-class Scene;
 
-//DirectX 11
+
+//==================DirectX 11===================
 struct ID3D11Device;
 struct ID3D11DeviceContext;
+struct ID3D11Device1;
+struct ID3D11DeviceContext1;
+struct IDXGISwapChain1;
+struct ID3D11RenderTargetView;
+struct ID3D11DepthStencilView;
+struct ID3D11Texture2D;
+struct ID3D11RasterizerState;
+struct D3D11_INPUT_ELEMENT_DESC;
+struct ID3D11VertexShader;
+struct ID3D11PixelShader;
+struct ID3D11ShaderResourceView;
+struct ID3D10Blob;
+struct ID3D11Buffer;
+struct ID3D11InputLayout;
+struct ID3D11SamplerState;
+typedef ID3D10Blob ID3DBlob;
+//===============================================
+
+class Context;
+class Scene;
 
 class DXBuffer;
 class DXVertexBuffer;
@@ -68,15 +86,29 @@ class IShader;
 class VertexShader;
 class PixelShader;
 
+
 //API Type
 struct Viewport {
-	float x, y, w, h;
+    float x, y, w, h;
 };
 
+enum SamplerState {
+    WRAP, CLAMP
+};
 
-struct BufferDesc {
-	void* pData;
-	uint cbSize;
-	uint stride;
-	uint indices;
+struct VertexBufferDesc {
+    void* pData;
+    uint cbSize;
+    uint cbStride;
+};
+
+struct IndexBufferDesc {
+    void* pData;
+    uint    cbSize;
+    uint    nIndices;
+};
+
+struct ConstantBufferDesc {
+    void* pData;
+    uint    cbSize;
 };

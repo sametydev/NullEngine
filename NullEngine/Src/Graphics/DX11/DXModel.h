@@ -19,8 +19,8 @@ public:
     void Load(LPCSTR filename);
     void Render();
 
-    DXVertexBuffer* vbo;
-    DXIndexBuffer*  ibo;
+    VertexBuffer* vbo;
+    IndexBuffer*  ibo;
 
     std::vector<ModelNode> mNode;
 

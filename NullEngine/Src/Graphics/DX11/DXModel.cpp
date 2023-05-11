@@ -84,19 +84,21 @@ void DXModel::Load(LPCSTR filename)
 		}
 	}
 
-	BufferDesc desc{};
+	VertexBufferDesc vd{};
 
-	desc.cbSize		= sizeof(VertexPC) * vertices.size();
-	desc.stride = sizeof(VertexPC);
-	desc.pData = vertices.data();
+	vd.cbSize		= sizeof(VertexPC) * vertices.size();
+	vd.cbStride = sizeof(VertexPC);
+	vd.pData = vertices.data();
 	//desc.indices	= indices.size();
 
-	vbo = BufferCache::Create<DXVertexBuffer>(desc);
-	
-	desc.cbSize = indices.size() * sizeof(uint);
-	desc.indices = indices.size();
-	desc.pData = indices.data();
-	ibo = BufferCache::Create<DXIndexBuffer>(desc);
+	vbo = BufferCache::CreateVertexBuffer(vd);
+
+	IndexBufferDesc id{};
+	id.cbSize = indices.size() * sizeof(uint);
+	id.nIndices = indices.size();
+	id.pData = indices.data();
+
+	ibo = BufferCache::CreateIndexBuffer(id);
 
 }
 

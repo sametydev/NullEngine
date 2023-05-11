@@ -1,72 +1,37 @@
 #pragma once
-#include <Graphics/DX11/DX11Config.h>
-#include <map>
-#include <unordered_map>
+#include <Graphics/Buffer.h>
 
-class DXBuffer
-{
-public:
-	DXBuffer();
-	virtual ~DXBuffer();
-	virtual void BindPipeline(uint slot) = 0;
-	virtual void Create(const BufferDesc& desc) = 0;
-	ID3D11Buffer* mBuffer = nullptr;
-private:
-	uint mId;
-};
-
-
-class DXVertexBuffer : public DXBuffer {
+class DXVertexBuffer : public VertexBuffer {
 public:
 	DXVertexBuffer();
-	void Create(const BufferDesc& desc) override;
-	void BindPipeline(uint slot = 0) override;
+	virtual~DXVertexBuffer();
+	void Create(const VertexBufferDesc& desc) override;
+	void BindPipeline(uint slot) override;
 
 	uint mStride;
+	ID3D11Buffer* mBuffer;
+
 };
 
-class DXIndexBuffer : public DXBuffer {
+class DXIndexBuffer : public IndexBuffer {
 public:
 	DXIndexBuffer();
-	void Create(const BufferDesc& desc) override;
-	void BindPipeline(uint offset = 0) override;
-	uint GetIndices();
+	virtual~DXIndexBuffer();
+	void Create(const IndexBufferDesc& desc) override;
+	void BindPipeline(uint offset) override;
 private:
-	uint mIndices;
+	ID3D11Buffer* mBuffer;
 };
 
 
 
-class DXConstantBuffer : public DXBuffer {
+class DXConstantBuffer : public ConstantBuffer {
 public:
 	DXConstantBuffer();
-	void Create(const BufferDesc& desc) override;
-	void BindPipeline(uint slot = 0) override;
-		void SubData(void* pData);
+	virtual~DXConstantBuffer();
+	void Create(const ConstantBufferDesc& desc) override;
+	void BindPipeline(uint slot) override;
+	void SubData(void* pData) override;
+
+	ID3D11Buffer* mBuffer;
 };
-
-class DXConstantMapBuffer : public DXBuffer {
-public:
-	DXConstantMapBuffer();
-	void Create(const BufferDesc& desc) override;
-	void BindPipeline(uint slot = 0) override;
-	void Map(void* pData,uint size);
-};
-
-class BufferCache
-{
-public:
-	template<typename T>
-	static T* Create(const BufferDesc& desc);
-
-	static std::vector<std::shared_ptr<DXBuffer>> mCache;
-};
-
-template<typename T>
-inline T* BufferCache::Create(const BufferDesc& desc) {
-
-	auto buffer = std::make_shared<T>();
-	buffer->Create(desc);
-	mCache.emplace_back(buffer);
-	return buffer.get();
-}

@@ -1,5 +1,4 @@
 #pragma once
-#include <Graphics/DX11/DX11Config.h>
 #include <Math/LinearMath.h>
 
 struct VertexPC

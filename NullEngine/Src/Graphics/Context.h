@@ -9,12 +9,13 @@ public:
 	Context(int cx, int cy, HWND hwnd);
 	virtual ~Context() {};
 	//DX specific functions
-	virtual void ClearBuffer(float r,float g,float b,float a) = 0;
+	virtual void ClearBuffer(float r, float g, float b, float a) = 0;
 	virtual void SwapBuffer() = 0;
 	virtual void ResizeRenderBuffer(uint cx, uint cy) {};
 
-	//Shared func
+	//API Function
 	virtual void GetViewport(Viewport* vp) {};
+	virtual void SetSampler(SamplerState sampler) {};
 
 	HWND mHwnd;
 	int width;
@@ -24,7 +25,8 @@ public:
 	uint Msaa;
 	bool mFlipModel;
 
-	virtual ID3D11DeviceContext* GetDXContext() { return nullptr; }
-	virtual ID3D11Device* GetDXDevice() { return nullptr; }
+	virtual ID3D11DeviceContext* GetDXContext();
+	virtual ID3D11Device* GetDXDevice();
+}
 	static Context* gInstance;
 };

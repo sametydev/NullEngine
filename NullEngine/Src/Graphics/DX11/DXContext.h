@@ -1,5 +1,4 @@
 #pragma once
-#include <Graphics/DX11/DX11Config.h>
 #include <Graphics/Context.h>
 
 class DXContext : public Context
@@ -9,13 +8,13 @@ public:
 	DXContext(int cx, int cy, HWND hwnd);
 	~DXContext();
 
+	//protected
 	void CreateDevice();
 	void ResizeRenderBuffer(uint cx, uint cy) override;
 	void CreateSwapChain();
 	void CreateStates();
-
-	virtual void ClearBuffer(float r, float g, float b, float a);
-	virtual void SwapBuffer();
+	void CreateSampler();
+	//end protected
 
 	ID3D11Device1*			mDevice;
 	ID3D11DeviceContext1*	mDeviceContext;
@@ -29,11 +28,17 @@ public:
 	//State
 	ID3D11RasterizerState* mRSState[2]{};
 
-	virtual ID3D11DeviceContext* GetDXContext() { return mDeviceContext; }
-	virtual ID3D11Device* GetDXDevice() { return mDevice; }
+	//Sampler
+	ID3D11SamplerState* mSamplerState[2]{};
+
+	virtual ID3D11DeviceContext* GetDXContext();
+	virtual ID3D11Device* GetDXDevice();
 
 
-	//API Type
-	virtual void GetViewport(Viewport* vp);
+	//API Function 
+	virtual void GetViewport(Viewport* vp) override;
+	virtual void SetSampler(SamplerState sampler) override;
+	virtual void ClearBuffer(float r, float g, float b, float a);
+	virtual void SwapBuffer();
 
 };

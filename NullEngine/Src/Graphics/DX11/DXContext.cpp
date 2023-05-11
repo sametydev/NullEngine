@@ -1,5 +1,6 @@
 #include <PCH.h>
 #include <Graphics/DX11/DXContext.h>
+#include <Graphics/DX11/DX11Config.h>
 
 DXContext::DXContext(int cx, int cy, HWND hwnd) :
 	Context(cx,cy,hwnd),
@@ -199,6 +200,35 @@ void DXContext::CreateStates()
 
 }
 
+void DXContext::CreateSampler()
+{
+	D3D11_SAMPLER_DESC sd{};
+	sd.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
+	sd.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sd.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sd.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	sd.BorderColor[0] = { 0 };
+	sd.BorderColor[1] = { 0 };
+	sd.BorderColor[2] = { 0 };
+	sd.BorderColor[3] = { 0 };
+	sd.MinLOD = 0;
+	sd.MaxAnisotropy = D3D11_MAX_MAXANISOTROPY;
+	sd.ComparisonFunc = D3D11_COMPARISON_NEVER;
+
+
+	//Wrap sampler to default 
+	HR(gDXDevice->CreateSamplerState(&sd, &mSamplerState[0]));
+	sd.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sd.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+	sd.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+	//Clamp
+	HR(gDXDevice->CreateSamplerState(&sd, &mSamplerState[1]));
+
+	//Default Sampler Set;
+	mDeviceContext->PSSetSamplers(0, 1, &mSamplerState[0]);
+
+}
+
 void DXContext::ClearBuffer(float r, float g, float b, float a)
 {
 	const float colors[] = { r,g,b,a };
@@ -213,6 +243,16 @@ void DXContext::SwapBuffer()
 	mSwapChain->Present(0, 0);
 }
 
+ID3D11DeviceContext* DXContext::GetDXContext()
+{
+	return mDeviceContext;
+}
+
+ID3D11Device* DXContext::GetDXDevice()
+{
+	return mDevice;
+}
+
 void DXContext::GetViewport(Viewport* vp)
 {
 	D3D11_VIEWPORT dxVp{};
@@ -225,4 +265,20 @@ void DXContext::GetViewport(Viewport* vp)
 	vp->y = dxVp.TopLeftY;
 	vp->w = dxVp.Width;
 	vp->h = dxVp.Height;
+}
+
+void DXContext::SetSampler(SamplerState sampler)
+{
+	switch (sampler)
+	{
+		case SamplerState::WRAP:
+			mDeviceContext->PSSetSamplers(0, 1, &mSamplerState[0]);
+			break;
+		case SamplerState::CLAMP:
+			mDeviceContext->PSSetSamplers(0, 1, &mSamplerState[1]);
+			break;
+		default:
+			LOG_ERROR("Wrong Sampler Type!");
+			break;
+	}
 }

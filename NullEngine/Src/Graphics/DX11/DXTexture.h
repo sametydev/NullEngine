@@ -1,6 +1,5 @@
 #pragma once
 #include <Graphics/Texture.h>
-#include <Graphics/DX11/DXContext.h>
 
 
 class DXTexture : public Texture
@@ -18,8 +17,5 @@ public:
 	uint mSlot;
 
 	ID3D11ShaderResourceView* mSRV;
-private:
-	void CreateSampler();
-	static comptr<ID3D11SamplerState> InternalSampler;
 };
 

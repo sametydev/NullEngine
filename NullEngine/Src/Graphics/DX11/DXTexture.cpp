@@ -1,20 +1,18 @@
 #include <PCH.h>
+#include <Core/TypeDecl.h>
+#include <Graphics/DX11/DX11Config.h>
 #include <Graphics/DX11/DXTexture.h>
-
+#include <Graphics/DX11/DXContext.h>
 #include <filesystem>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 #include <stb/stb_image_write.h>
 
-comptr<ID3D11SamplerState> DXTexture::InternalSampler = nullptr;
 
 DXTexture::DXTexture():mSRV(nullptr),mSlot(0)
 {
-	if (!InternalSampler)
-	{
-		CreateSampler();
-	}
+
 }
 
 DXTexture::~DXTexture()
@@ -84,7 +82,6 @@ void DXTexture::Load(LPCSTR filename)
 void DXTexture::BindPipeline(uint slot)
 {
 	mSlot = slot;
-	gDXContext->PSSetSamplers(0, 1, InternalSampler.GetAddressOf());
 	gDXContext->PSSetShaderResources(mSlot, 1, &mSRV);
 }
 
@@ -92,23 +89,4 @@ void DXTexture::UnBind()
 {
 	ID3D11ShaderResourceView* clearView = nullptr;
 	gDXContext->PSSetShaderResources(mSlot, 1, &clearView);
-}
-
-void DXTexture::CreateSampler()
-{
-	D3D11_SAMPLER_DESC sd{};
-	sd.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
-	sd.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	sd.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	sd.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	sd.BorderColor[0] = { 0 };
-	sd.BorderColor[1] = { 0 };
-	sd.BorderColor[2] = { 0 };
-	sd.BorderColor[3] = { 0 };
-	sd.MinLOD = 0;
-	sd.MaxAnisotropy = D3D11_MAX_MAXANISOTROPY;
-	sd.ComparisonFunc = D3D11_COMPARISON_NEVER;
-	
-	gDXDevice->CreateSamplerState(&sd, InternalSampler.GetAddressOf());
-
 }

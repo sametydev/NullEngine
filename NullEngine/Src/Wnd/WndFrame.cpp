@@ -4,6 +4,8 @@
 #include <Engine/Timer.h>
 #include <Engine/Input.h>
 #include <Engine/InputSystem2.h>
+#include <Graphics/DX11/DXContext.h>
+#include <Wnd/WndConfig.h>
 
 WndFrame::WndFrame(Wnd* parent, uint width, uint heigth) : Wnd(parent, 0, 0, width, heigth)
 {

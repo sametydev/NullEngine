@@ -20,7 +20,6 @@
     <ClInclude Include="Src\Engine\Input.h" />
     <ClInclude Include="Src\Math\vec2f.h" />
     <ClInclude Include="Src\Math\vec3f.h" />
-    <ClInclude Include="Src\Engine\InputSystem2.h" />
     <ClInclude Include="Src\Math\rect.h" />
     <ClInclude Include="Src\Graphics\DX11\DXTexture.h" />
     <ClInclude Include="Src\Graphics\Texture.h" />
@@ -29,6 +28,8 @@
     <ClInclude Include="Src\Wnd\WndConfig.h" />
     <ClInclude Include="Src\Graphics\Model.h" />
     <ClInclude Include="Src\Graphics\DX11\DXModel.h" />
+    <ClInclude Include="Src\Core\Type.h" />
+    <ClInclude Include="Src\Graphics\Buffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp" />
@@ -44,12 +45,12 @@
     <ClCompile Include="Src\Graphics\Vertex.cpp" />
     <ClCompile Include="Src\Engine\Timer.cpp" />
     <ClCompile Include="Src\Engine\Input.cpp" />
-    <ClCompile Include="Src\Engine\InputSystem2.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXTexture.cpp" />
     <ClCompile Include="Src\Graphics\Texture.cpp" />
     <ClCompile Include="Src\Component\Transform.cpp" />
     <ClCompile Include="Src\Core\FileSystem.cpp" />
     <ClCompile Include="Src\Graphics\Model.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXModel.cpp" />
+    <ClCompile Include="Src\Graphics\Buffer.cpp" />
   </ItemGroup>
 </Project>
