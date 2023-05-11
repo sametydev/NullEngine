@@ -4,72 +4,68 @@
 #include <Graphics/DX11/DXShader.h>
 #include <Graphics/Vertex.h>
 #include <Engine/Input.h>
+#include <Graphics/Texture.h>
+#include <Graphics/DX11/DXContext.h>
+#include <Graphics/DX11/DXTexture.h>
+#include <Graphics/DX11/DXModel.h>
 
 LPCSTR vsCode = R"(
 cbuffer matrices : register(b0)
 {
-	//matrix proj;
-	//matrix model;
-	matrix mvp;
+    matrix proj;
+    matrix view;
+    matrix model;   //world
 };
 
 struct VS_IN{
-	float3 pos : POSITION;
-	float3 col : COLOR;
+    float3 pos : POSITION;
+    float2 st : TEXCOORD;
 };
 
 struct PS_IN{
-	float4 pos : SV_POSITION;
-	float3 col : COLOR;
+    float4 pos : SV_POSITION;
+    float2 st : TEXCOORD;
 };
 
 PS_IN VS(VS_IN vs){
-	PS_IN ps;
-	ps.pos = mul(float4(vs.pos,1),mvp);
-	ps.col = vs.col;
-	return ps;
+    PS_IN ps;
+    ps.pos = mul(float4(vs.pos,1),model);
+    ps.pos = mul(ps.pos, view);
+    ps.pos = mul(ps.pos, proj);
+    ps.st = vs.st;
+    return ps;
 };
 )";
 
-
 LPCSTR psCode = R"(
+Texture2D Texture01 : register(t0);
+SamplerState Sampler01 : register(s0);
 struct PS_IN{
 	float4 pos : SV_POSITION;
-	float3 col : COLOR;
+	float2 st  : TEXCOORD;
 };
 
 float4 PS(PS_IN ps) : SV_TARGET
 {
-	return float4(ps.col,1);
+	float4 albedo = Texture01.Sample(Sampler01,ps.st);
+
+	return albedo;
 };
 )";
 
 
 bool Scene01::InitFrame()
 {
-	
-	D3D11_VIEWPORT vp{};
-	uint nVp = 1;
 
-	gDXContext->RSGetViewports(&nVp, &vp);
+	float i = 1.f;
 
-	float aspect = vp.Width / vp.Height;
-
-
-	//input->LockCursor(true);
-	LOG << vp.Width;
-	//input->SetLockArea(rect(860, 640));
-
-	P = mat4x4::perspectiveLH(45.f, aspect, 0.01f, 100.f);
-
-
-	float i = 0.5f;
-
+	//00-10
+	//01-11
 
 	VertexPC vertices[] = {
-		{{-i,-i,0},  {1,0,0,}},
-		{{0,i,0},    {1,1,0}},
-		{{i,-i,0},   {0,1,1}}
+		{{-i,-i,0},  {0,1}},
+		{{0,i,0},    {0.5f,0}},
+		{{i,-i,0},   {1,1}}
 	};
 
 	uint indices[] = {
@@ -85,9 +81,10 @@ bool Scene01::InitFrame()
 	desc.pData = vertices;
 	desc.stride = sizeof(VertexPC);
 
-	mVBO = BufferCache::Create<DXVertexBuffer>(desc);
+	////CreateVertexBuffer
+	//mVBO = BufferCache::Create<DXVertexBuffer>(desc);
 
-	mVBO->BindPipeline(0);
+	//mVBO->BindPipeline(0);
 	
 
 	ShaderDesc sd;
@@ -107,33 +104,43 @@ bool Scene01::InitFrame()
 	desc.cbSize = sizeof(indices);
 	desc.indices = 3;
 
-	mIBO = BufferCache::Create<DXIndexBuffer>(desc);
-	pos = { 0,0,-10 };
+	//mIBO = BufferCache::Create<DXIndexBuffer>(desc);
 
-	T = mat4x4::translated(pos);
-	mat4x4 t = t.transposedTranslation(T);
+
+	mat4x4 T = mat4x4::translated(vec3f(0,0,-5));
 	mat4x4 ry = mat4x4::rotateX(rot.y);    //yaw
 	mat4x4 rx = mat4x4::rotateY(rot.x); //pitch
 
-	mat4x4 R = rx * ry;
-	R = mat4x4::transposed(R);
-	vec3f right = vec3f(R[0][0], R[0][1], R[0][2]);
-	vec3f forward = vec3f(R[2][0], R[2][1], R[2][2]);
+	//ry(yaw) * rx(pitch) * rz(roll)
+	mat4x4 R = ry * rx;
 
+	vec3f right = vec3f(R[0][0], R[1][0], R[2][0]);
+	vec3f forward = vec3f(R[0][2], R[1][2], R[2][2]);
 
+	//V = (R-1 * T-1)
+	
+	//00 01 02 03
+	//10 11 12 13
+	//20 21 22 23
+	//30 31 32 33
+	desc.cbSize = sizeof(matrices);
+	desc.pData  = &matrices;
+	
 
-	V = R * t;
-
-	MVP = P * V;
-
-
-	desc.pData = MVP.data();
-	desc.cbSize = sizeof(MVP);
 
 	mCBO = BufferCache::Create<DXConstantBuffer>(desc);
 	
 	texture = new DXTexture();
-	texture->Load("../data/wall.jpg");
+	//texture->Load("../data/wall.jpg");
+	texture = TextureCache::Load("../data/wall.jpg");
+
+	//Matrices
+	Viewport vp;
+	gContext->GetViewport(&vp);
+	matrices.proj = mat4x4::perspectiveLH(45.f, (float)(vp.w/vp.h), 0.01f, 100.f);
+
+	model = new DXModel();
+	model->Load("../data/model/tree.obj");
 
 	return true;
 }
@@ -143,7 +150,7 @@ void Scene01::UpdateFrame(float dt)
 	float speed = 128.3;
 	float keySpeed = 5.3f;
 	if (Input::type == MouseEvent::MOVE) {
-		printf("move\n");
+		//printf("move\n");
 		if (Input::state == Key::LMB) {
 			vec2f delta = Input::delta;
 			rot.x += -delta.x * speed * dt;
@@ -156,23 +163,23 @@ void Scene01::UpdateFrame(float dt)
 	mat4x4 ry = mat4x4::rotateX(rot.y);    //yaw
 	mat4x4 rx = mat4x4::rotateY(rot.x); //pitch
 
-	mat4x4 R = rx * ry;
+	mat4x4 R = ry * rx;
 	//pre multed
 	//what is x axis on R  = Right compponet(axis)
 	//what is y axis on R = Up commponet
-	//what is z axis on R = Foward com
-	R = mat4x4::transposed(R);
+	//what is z axis on R = forward com
 
-	vec3f right = vec3f(R[0][0], R[0][1], R[0][2]);
-	vec3f foward = vec3f(R[2][0], R[2][1], R[2][2]);
+
+	vec3f right = vec3f(R[0][0], R[1][0], R[2][0]);
+	vec3f forward = vec3f(R[0][2], R[1][2], R[2][2]);
 
 	if (Input::IsKeyDown(Key::W))
 	{
-		pos += foward * keySpeed * dt;
+		pos += forward * keySpeed * dt;
 	}
 	if (Input::IsKeyDown(Key::S))
 	{
-		pos -= foward * keySpeed * dt;
+		pos -= forward * keySpeed * dt;
 	}
 
 	if (Input::IsKeyDown(Key::D))
@@ -183,27 +190,32 @@ void Scene01::UpdateFrame(float dt)
 	{
 		pos -= right * keySpeed * dt;
 	}
-	T = mat4x4::translated(pos);
-	mat4x4 t = t.transposedTranslation(T);
+	mat4x4 T = mat4x4::translated(pos);
+	mat4x4 invR = mat4x4::transposed(R);
+	mat4x4 invT = mat4x4::transposedTranslation(T);
 
-	V = R * t;
+	//V = (R-1*T-1)
+	//matrices.view = invR * invT;
+	//V = (TR)-1
+	//V = S R T;
+	// wa mult (T*R*S).inverted()
+	matrices.view = (T*R).inverted();
 
-	MVP = P * V;
 
-	mCBO->SubData(MVP.data());
+	mCBO->SubData(&matrices);
 }
 
 void Scene01::RenderFrame()
 {
-	mVBO->BindPipeline();
-	mIBO->BindPipeline();
 
 	mVS->BindPipeline();
 	mPS->BindPipeline();
 
 	mCBO->BindPipeline(0);
+	texture->BindPipeline(0);
+
 
 	gDXContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	gDXContext->DrawIndexed(mIBO->GetIndices(), 0,0);
+	model->Render();
 }

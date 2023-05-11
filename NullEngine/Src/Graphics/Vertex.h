@@ -5,7 +5,7 @@
 struct VertexPC
 {
 	vec3f position;
-	vec3f color;
+	vec2f st;
 
 	static D3D11_INPUT_ELEMENT_DESC elements[];
 	static int nElements;

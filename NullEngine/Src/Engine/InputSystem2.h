@@ -2,6 +2,7 @@
 #include <Core/Singleton.h>
 #include <Math/vec2f.h>
 #include <Math/rect.h>
+#include <Wnd/WndConfig.h>
 
 enum class NKey
 {

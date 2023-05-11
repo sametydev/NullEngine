@@ -1,5 +1,6 @@
 #include <PCH.h>
 #include <Core/Log.h>
+#include <Wnd/WndConfig.h>
 
 void Log::__hr(HRESULT hr)
 {

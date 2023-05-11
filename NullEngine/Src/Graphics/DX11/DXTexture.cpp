@@ -7,10 +7,14 @@
 #include <stb/stb_image.h>
 #include <stb/stb_image_write.h>
 
-comptr<ID3D11SamplerState> DXTexture::InternalSampler;
+comptr<ID3D11SamplerState> DXTexture::InternalSampler = nullptr;
 
 DXTexture::DXTexture():mSRV(nullptr),mSlot(0)
 {
+	if (!InternalSampler)
+	{
+		CreateSampler();
+	}
 }
 
 DXTexture::~DXTexture()

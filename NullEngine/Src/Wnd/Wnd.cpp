@@ -1,5 +1,6 @@
-#include "PCH.h"
-#include "Wnd.h"
+#include <PCH.h>
+#include <Wnd/Wnd.h>
+#include <Wnd/WndConfig.h>
 
 Wnd::Wnd(Wnd* parent, int x, int y, int width, int height) : mParent(parent), geo { x,y,width,height } , mHwnd (nullptr)
 {
