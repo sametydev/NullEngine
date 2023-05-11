@@ -10,7 +10,7 @@ public:
 
 	uint mStride;
 	ID3D11Buffer* mBuffer;
-
+	ID3D11InputLayout* mLayout;
 };
 
 class DXIndexBuffer : public IndexBuffer {

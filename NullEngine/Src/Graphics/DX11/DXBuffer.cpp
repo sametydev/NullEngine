@@ -1,5 +1,6 @@
 #include <PCH.h>
 #include <Graphics/Context.h>
+#include <Graphics/Shader.h>
 #include <Graphics/DX11/DXBuffer.h>
 #include <Graphics/DX11/DX11Config.h>
 
@@ -28,8 +29,21 @@ void DXVertexBuffer::Create(const VertexBufferDesc& desc)
 	D3D11_SUBRESOURCE_DATA sd{};
 	sd.pSysMem = desc.pData;
 
-
 	HR(gDXDevice->CreateBuffer(&bd, &sd, &mBuffer));
+
+	//make temp shader
+	LPCSTR tempCode = R"(
+	void VS(){
+	
+	}
+	)";
+	D3D11_INPUT_ELEMENT_DESC ied{};
+	Shader* vs = ShaderCache::CreateVertexShaderFromCode(tempCode);
+
+	
+
+
+	//make element with custom out element
 }
 
 void DXVertexBuffer::BindPipeline(uint slot)

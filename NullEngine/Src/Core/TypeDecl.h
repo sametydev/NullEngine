@@ -112,10 +112,39 @@ enum class Topolgy {
     UNDEFINED = 0,POINTLIST, LINELIST,LINESTRIP,TRIANGLELIST,TRIANGLESTRIP
 };
 
+enum class ShaderType : uint
+{
+    Vertex,
+    Pixel,
+    Hull,
+    Geometry,
+    Compute
+};
+
+enum class Format : int
+{
+    Byte,
+    Int,
+    Uint,
+    Short,
+    Float,
+    Double
+};
+
+struct VertexAttrib {
+    uint slot;
+    Format format;
+    uint nFormat;
+    uint stride;
+    uint offset;
+};
+
 struct VertexBufferDesc {
     void* pData;
     uint cbSize;
     uint cbStride;
+    VertexAttrib*   pAttrib;
+    uint            nAttrib;
 };
 
 struct IndexBufferDesc {

@@ -14,16 +14,12 @@ public:
 	~DXVertexShader();
 
 	//void Create(const ShaderDesc& desc);
-	void Create(LPCSTR code);
+	void Create(LPCSTR code) override;
 	void BindPipeline() override;
 
-	void CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* element,uint numOfElements);
+	//void CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* element,uint numOfElements);
 
 	ID3D11VertexShader* mVS;
-	ID3DBlob* mBinary; //vs code binary
-
-	//input for temporary at the moment;
-	ID3D11InputLayout* mLayout = nullptr;
 };
 
 class DXPixelShader : public Shader {
@@ -32,7 +28,7 @@ public:
 	~DXPixelShader();
 
 	void BindPipeline() override;
-	void Create(LPCSTR code);
+	void Create(LPCSTR code) override;
 	
 	ID3D11PixelShader* mPS;
 };

@@ -78,6 +78,10 @@ bool Scene01::InitFrame()
 		{2}
 	};
 
+	VertexAttrib attbs[] = {
+		{0,Format::Float,3,sizeof(VertexPC),offsetof(VertexPC,vertices)}
+	};
+
 
 	matrices.proj = mat4x4::perspectiveLH(45.f, vp.w /vp.h,0.01f,100.f);
 	
