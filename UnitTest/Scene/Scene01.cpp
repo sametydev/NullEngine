@@ -53,6 +53,49 @@ float4 PS(PS_IN ps) : SV_TARGET
 };
 )";
 
+LPCSTR vsTest = R"(
+cbuffer matrices : register(b0) {
+	matrix proj;
+	matrix view;
+	matrix model;
+};
+
+
+struct VS_IN {
+	float3 pos : POSITION;
+	float2 uv  : TEXCOORD0;
+};
+
+struct PS_IN {
+	float4 pos : SV_POSITION;
+	float2 uv  : TEXCOORD;
+};
+
+PS_IN VS(VS_IN vs) {
+	PS_IN ps;
+	ps.pos = mul(float4(vs.pos,1),model);
+	ps.pos = mul(ps.pos,view);
+	ps.pos = mul(ps.pos,proj);
+
+	ps.uv  = vs.uv;
+	
+	return ps;
+};
+
+)";
+
+LPCSTR psTest = R"(
+struct PS_IN {
+	float4 pos : SV_POSITION;
+	float2 uv  : TEXCOORD;
+};
+
+float4 PS(PS_IN ps) : SV_TARGET {
+	
+	return ps.pos;
+};
+)";
+
 
 bool Scene01::InitFrame()
 {
@@ -106,6 +149,9 @@ bool Scene01::InitFrame()
 
 	cbo = BufferCache::CreateConstantBuffer(cd);
 
+	vs = ShaderCache::CreateVertexShaderFromCode(vsTest);
+	ps = ShaderCache::CreatePixelShaderFromCode(psTest);
+
 	return true;
 }
 
@@ -134,26 +180,11 @@ void Scene01::UpdateFrame(float dt)
 	vec3f right = vec3f(R[0][0], R[1][0], R[2][0]);
 	vec3f forward = vec3f(R[0][2], R[1][2], R[2][2]);
 
-	if (Input::IsKeyDown(Key::W))
-	{
-		pos += forward * keySpeed * dt;
-	}
-	if (Input::IsKeyDown(Key::S))
-	{
-		pos -= forward * keySpeed * dt;
-	}
-
-	if (Input::IsKeyDown(Key::D))
-	{
-		pos += right * keySpeed * dt;
-	}
-	if (Input::IsKeyDown(Key::A))
-	{
-		pos -= right * keySpeed * dt;
-	}
-
 	mat4x4 T = mat4x4::translated(pos);
 	mat4x4 V = R * T;
+
+	mat4x4 I = V * R * T;
+	V = (T * R);
 	
 	matrices.view = V.inverted();
 
@@ -163,13 +194,15 @@ void Scene01::UpdateFrame(float dt)
 void Scene01::RenderFrame()
 {
 
-	//mVS->BindPipeline();
-	//mPS->BindPipeline();
+	cbo->BindPipeline(0);
+	vbo->BindPipeline();
+	vs->BindPipeline();
+	ps->BindPipeline();
 
-	//cbo->BindPipeline(0);
 	//texture->BindPipeline(0);
 
 	gContext->SetTopology(Topolgy::TRIANGLELIST);
 
+	gDXContext->Draw(3, 0);
 	//mModel->Render();
 }

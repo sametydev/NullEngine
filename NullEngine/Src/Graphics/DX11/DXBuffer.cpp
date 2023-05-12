@@ -42,7 +42,7 @@ void DXVertexBuffer::Create(const VertexBufferDesc& desc)
 		D3D11_INPUT_ELEMENT_DESC& input = inputs[i];
 		VertexAttrib& attr = desc.pAttrib[i];
 		input.SemanticName = (i == 0) ? "POSITION" : "TEXCOORD";
-		input.SemanticIndex = (i == 0) ? 0 : (i - 0);
+		input.SemanticIndex = (i == 0) ? 0 : (i - 1);
 		input.Format = format::FormatToDX(attr.nFormat, attr.format);
 		input.InputSlot = attr.slot;
 		input.AlignedByteOffset = attr.offset;

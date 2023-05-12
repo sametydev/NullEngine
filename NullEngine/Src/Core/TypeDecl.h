@@ -90,9 +90,10 @@ class IndexBuffer;
 class VertexBuffer;
 class ConstantBuffer;
 
+class Shader;
+
 class DXModel;
 class Texture;
-class IShader;
 class VertexShader;
 class PixelShader;
 
