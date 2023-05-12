@@ -15,6 +15,7 @@ Shader* ShaderCache::CreateVertexShaderFromCode(LPCSTR code)
 	}
 
 	std::shared_ptr<Shader> shader = std::make_shared<DXVertexShader>();
+	shader->Create(code);
 	mCache.insert(std::make_pair(code, shader));
 
 	return shader.get();
@@ -29,6 +30,8 @@ Shader* ShaderCache::CreatePixelShaderFromCode(LPCSTR code)
 	}
 
 	std::shared_ptr<Shader> shader = std::make_shared<DXPixelShader>();
+	shader->Create(code);
+
 	mCache.insert(std::make_pair(code, shader));
 
 	return shader.get();

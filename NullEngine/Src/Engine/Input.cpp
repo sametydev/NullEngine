@@ -1,6 +1,7 @@
 #include <PCH.h>
 #include <Engine/Input.h>
 #include <Windows.h>
+#include <windowsx.h>
 
 uint Input::type = 0;
 uint Input::state = 0;
@@ -26,10 +27,10 @@ uint Input::HookMsg(const MSG* msg)
     }break;
     case WM_MOUSEMOVE: {
         type = MouseEvent::MOVE;
-        pos = { (float)LOWORD(msg->lParam), (float)HIWORD(msg->lParam) };
+        pos = { (float)GET_X_LPARAM(msg->lParam), (float)GET_X_LPARAM(msg->lParam) };
         state = msg->wParam;
         if (lastPos != pos) {
-            delta = lastPos - pos;
+            delta = pos-lastPos;
         }
         else {
             delta = vec2f();
@@ -41,6 +42,20 @@ uint Input::HookMsg(const MSG* msg)
         break;
     }
     return 0;  //is not process here 1 is we ownded this event
+}
+
+void Input::Update(HWND hwnd) {
+    POINT p{};
+    GetCursorPos(&p);
+    if (hwnd) {
+        ScreenToClient(hwnd, &p);
+    }
+    pos = { (float)p.x, (float)p.y };
+    if (lastPos != pos) {
+        delta = pos - lastPos;
+    }
+    else delta = vec2f(0.f);
+    lastPos = pos;
 }
 
 void Input::DiscardEvents()

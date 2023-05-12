@@ -12,9 +12,12 @@ public:
 	void RenderFrame() override;
 
 protected:
+	TCamera* camera;
 	VertexBuffer* vbo;
 	IndexBuffer* ibo;
 	ConstantBuffer* cbo;
+	Shader* vs;
+	Shader* ps;
 
 
 	vec3f pos = {0,0,0};

@@ -21,6 +21,7 @@ class Input {
 public:
     Input() = default;
     static uint HookMsg(const MSG* msg);
+    static void Update(HWND hwnd);
     static void DiscardEvents();
     static uint type;
     static uint state;

@@ -31,6 +31,8 @@
     <ClInclude Include="Src\Graphics\Buffer.h" />
     <ClInclude Include="Src\Graphics\Shader.h" />
     <ClInclude Include="Src\Graphics\Format.h" />
+    <ClInclude Include="Src\Component\Camera.h" />
+    <ClInclude Include="Src\Component\TCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp" />
@@ -54,5 +56,7 @@
     <ClCompile Include="Src\Graphics\Buffer.cpp" />
     <ClCompile Include="Src\Graphics\Shader.cpp" />
     <ClCompile Include="Src\Graphics\Format.cpp" />
+    <ClCompile Include="Src\Component\Camera.cpp" />
+    <ClCompile Include="Src\Component\TCamera.cpp" />
   </ItemGroup>
 </Project>

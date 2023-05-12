@@ -53,7 +53,7 @@ int WndFrame::ExecFrame(Scene* scene)
 
 		if (PeekMessage(&msg, NULL, 0, 0,PM_REMOVE)) {
 			TranslateMessage(&msg);
-			Input::HookMsg(&msg);
+			//Input::HookMsg(&msg);
 			DispatchMessage(&msg);
 			if (msg.message == WM_KEYDOWN && msg.wParam == VK_ESCAPE)
 			{
@@ -68,7 +68,8 @@ int WndFrame::ExecFrame(Scene* scene)
 		if (mContext)
 		{
 			Timer::instance()->Update();
-			mContext->ClearBuffer(0.4f, 0.2f, 0.2f,1.0f);
+			Input::Update(*this);
+			mContext->ClearBuffer(0.2f, 0.2f, 0.2f,1.0f);
 			if (scene)
 			{
 				
