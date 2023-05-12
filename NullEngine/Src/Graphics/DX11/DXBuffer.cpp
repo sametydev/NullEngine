@@ -62,10 +62,20 @@ void DXVertexBuffer::Create(const VertexBufferDesc& desc)
 	}
 	temp += "}; float4 VS(VS_IN vs) : SV_POSITION {return vs.pos.xxxx;};";
 
-	uint a = 0;
 
+	ID3DBlob* err = nullptr;
+	ID3DBlob* blob = nullptr;
+
+	HR(D3DCompile(temp.c_str(),temp.size(),
+		nullptr,nullptr,nullptr,"VS","vs_5_0",0,0,&blob,&err));
+
+	if (err)
+	{
+		LOG_ERROR("Failed to Create Temp Vertex Shader!");
+	}
 	
-
+	gDXDevice->CreateInputLayout(inputs.data(), inputs.size(),
+		blob->GetBufferPointer(), blob->GetBufferSize(), &mLayout);
 
 	//make element with custom out element
 }
