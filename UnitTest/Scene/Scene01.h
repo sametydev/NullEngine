@@ -12,7 +12,7 @@ public:
 	void RenderFrame() override;
 
 protected:
-	Camera* camera;
+	TCamera* camera;
 	VertexBuffer* vbo;
 	IndexBuffer* ibo;
 	ConstantBuffer* cbo;

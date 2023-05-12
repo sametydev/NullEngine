@@ -8,7 +8,7 @@
 #include <Graphics/Texture.h>
 #include <Graphics/DX11/DXModel.h>
 #include <Graphics/DX11/DX11Config.h>
-#include <Component/Camera.h>
+#include <Component/TCamera.h>
 
 
 LPCSTR vsCode = R"(
@@ -105,7 +105,7 @@ bool Scene01::InitFrame()
 	
 	gContext->GetViewport(&vp);
 
-	camera = new Camera(45.f,vp.w/vp.h,0.01f,100.f);
+	camera = new TCamera(45.f,vp.w/vp.h,0.01f,100.f);
 
 	float i = 1.f;
 
@@ -154,13 +154,11 @@ bool Scene01::InitFrame()
 	vs = ShaderCache::CreateVertexShaderFromCode(vsTest);
 	ps = ShaderCache::CreatePixelShaderFromCode(psTest);
 
-	camera->LookAt({ 10,10,-10 }, vec3f(0.f));
-
+	//camera->LookAt({0,0,-10 }, vec3f(0.f));
+	camera->SetPosition({0,0,-10});
 	matrices.proj = camera->GetProjectionMatrix();
-	matrices.view = camera->GetViewMatrix();
-	matrices.model = mat4x4();
 
-	cbo->SubData(&matrices);
+
 
 	return true;
 }
@@ -169,6 +167,7 @@ void Scene01::UpdateFrame(float dt)
 {
 	camera->Update(dt);
 	matrices.view = camera->GetViewMatrix();
+
 	cbo->SubData(&matrices);
 }
 

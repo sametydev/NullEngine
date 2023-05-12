@@ -31,5 +31,8 @@ public:
 	vec3f mUp;
 	vec3f mForward;
 
+	float mYaw;
+	float mPitch;
+
 };
 

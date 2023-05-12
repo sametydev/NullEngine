@@ -24,7 +24,11 @@ void Camera::SetAspectRatio(float value)
 
 void Camera::Update(float dt)
 {
-	float Speed = 5.5f;
+	float Speed = 3.5f;
+
+	vec2f deltaMouse = Input::delta;
+
+
 
 	if (Input::IsKeyDown(Key::W))
 	{
@@ -34,6 +38,16 @@ void Camera::Update(float dt)
 	{
 		position -= mForward * Speed * dt;
 	}
+
+	if (Input::IsKeyDown(Key::A))
+	{
+		position += mRight * Speed * dt;
+	}
+	if (Input::IsKeyDown(Key::D))
+	{
+		position -= mRight * Speed * dt;
+	}
+
 
 	float x = -vec3f::dot(mRight, position);
 	float y = -vec3f::dot(mUp, position);
@@ -56,6 +70,7 @@ void Camera::LookAt(const vec3f& eye, const vec3f& target)
 	mRight = vec3f::cross({0,1,0}, mForward).normalized();
 
 	mUp = vec3f::cross(mForward, mRight).normalized();
+
 
 	//R-1 = Rt
 	//T-1 = Tt

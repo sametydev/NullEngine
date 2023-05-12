@@ -98,6 +98,7 @@ class VertexShader;
 class PixelShader;
 
 class Camera;
+class TCamera;
 
 //===============================================
 

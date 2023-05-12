@@ -168,6 +168,7 @@
     <ClInclude Include="Src\Wnd\WndFrame.h" />
     <ClInclude Include="Src\Engine\Timer.h" />
     <ClInclude Include="Src\Component\Transform.h" />
+    <ClInclude Include="Src\Component\TCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Component\Camera.cpp" />
@@ -194,6 +195,7 @@
     <ClCompile Include="Src\Wnd\WndFrame.cpp" />
     <ClCompile Include="Src\Engine\Timer.cpp" />
     <ClCompile Include="Src\Component\Transform.cpp" />
+    <ClCompile Include="Src\Component\TCamera.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
