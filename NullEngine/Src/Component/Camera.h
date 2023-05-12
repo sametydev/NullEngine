@@ -8,7 +8,7 @@ public:
 	void SetAspectRatio(float value);
 	void Update(float dt);
 
-	void LookAt(const vec3f& target);
+	void LookAt(const vec3f& eye, const vec3f& target);
 
 	mat4x4& GetViewMatrix();
 	mat4x4& GetProjectionMatrix();
@@ -23,5 +23,7 @@ public:
 
 	mat4x4 mView;
 	mat4x4 mProj;
+
+	vec3f mAxis[3];
 };
 
