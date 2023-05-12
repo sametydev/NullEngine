@@ -20,6 +20,8 @@ DXVertexBuffer::~DXVertexBuffer()
 
 void DXVertexBuffer::Create(const VertexBufferDesc& desc)
 {
+	mStride = desc.cbStride;
+
 	D3D11_BUFFER_DESC bd{};
 	bd.ByteWidth = desc.cbSize;
 	bd.Usage = D3D11_USAGE_DEFAULT;
@@ -57,17 +59,29 @@ void DXVertexBuffer::Create(const VertexBufferDesc& desc)
 		{
 			temp += "float" + std::to_string(nFormat) +
 				" param" + std::to_string(i - 1) +
-				" : POSITION" + std::to_string(i - 1) + "; ";
+				" : TEXCOORD" + std::to_string(i - 1) + "; ";
 		}
 	}
 	temp += "}; float4 VS(VS_IN vs) : SV_POSITION {return vs.pos.xxxx;};";
 
-	uint a = 0;
 
+	ID3DBlob* err = nullptr;
+	ID3DBlob* blob = nullptr;
+
+	HR(D3DCompile(temp.c_str(),temp.size(),
+		nullptr,nullptr,nullptr,"VS","vs_5_0",0,0,&blob,&err));
+
+	if (err)
+	{
+		LOG_ERROR("Failed to Create Temp Vertex Shader!");
+		SAFE_RELEASE(err);
+	}
 	
+	gDXDevice->CreateInputLayout(inputs.data(), inputs.size(),
+		blob->GetBufferPointer(), blob->GetBufferSize(), &mLayout);
 
-
-	//make element with custom out element
+	SAFE_RELEASE(err);
+	SAFE_RELEASE(blob);
 }
 
 void DXVertexBuffer::BindPipeline(uint slot)

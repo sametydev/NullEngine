@@ -18,8 +18,8 @@ cbuffer matrices : register(b0)
 };
 
 struct VS_IN{
-    float3 pos : POSITION;
-    float2 st : TEXCOORD;
+    float3 pos	: POSITION;
+    float2 st	: TEXCOORD0;
 };
 
 struct PS_IN{
