@@ -1,7 +1,6 @@
 #include <PCH.h>
 #include <Graphics/DX11/DXModel.h>
 #include <Core/FileSystem.h>
-#include <Graphics/Vertex.h>
 #include <Graphics/Buffer.h>
 #include <Graphics/Context.h>
 

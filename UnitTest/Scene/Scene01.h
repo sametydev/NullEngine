@@ -16,8 +16,6 @@ protected:
 	IndexBuffer* ibo;
 	ConstantBuffer* cbo;
 
-	IShader* mVS;
-	IShader* mPS;
 
 	vec3f pos = {0,0,0};
 	vec3f rot = { 0,0,0 };

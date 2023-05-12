@@ -128,14 +128,14 @@ enum class Format : int
     Uint,
     Short,
     Float,
-    Double
+    Double,
 };
+
 
 struct VertexAttrib {
     uint slot;
     Format format;
     uint nFormat;
-    uint stride;
     uint offset;
 };
 

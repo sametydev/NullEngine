@@ -137,6 +137,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Graphics\Format.h" />
+    <ClInclude Include="Src\Graphics\Shader.h" />
     <ClInclude Include="Src\Core\Type.h" />
     <ClInclude Include="Src\Graphics\Buffer.h" />
     <ClInclude Include="Src\Graphics\DX11\DXModel.h" />
@@ -163,11 +165,12 @@
     <ClInclude Include="Src\Wnd\Wnd.h" />
     <ClInclude Include="Src\Wnd\WndConfig.h" />
     <ClInclude Include="Src\Wnd\WndFrame.h" />
-    <ClInclude Include="Src\Graphics\Vertex.h" />
     <ClInclude Include="Src\Engine\Timer.h" />
     <ClInclude Include="Src\Component\Transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Graphics\Format.cpp" />
+    <ClCompile Include="Src\Graphics\Shader.cpp" />
     <ClCompile Include="Src\Graphics\Buffer.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXModel.cpp" />
     <ClCompile Include="Src\Graphics\Model.cpp" />
@@ -187,7 +190,6 @@
     </ClCompile>
     <ClCompile Include="Src\Wnd\Wnd.cpp" />
     <ClCompile Include="Src\Wnd\WndFrame.cpp" />
-    <ClCompile Include="Src\Graphics\Vertex.cpp" />
     <ClCompile Include="Src\Engine\Timer.cpp" />
     <ClCompile Include="Src\Component\Transform.cpp" />
   </ItemGroup>

@@ -1,26 +1,15 @@
 #pragma once
-////API Type
-//struct Viewport {
-//	float x, y, w, h;
-//};
-//
-//enum SamplerState {
-//	WRAP, CLAMP
-//};
-//
-//struct VertexBufferDesc {
-//    void* pData;
-//    uint cbSize;
-//    uint cbStride;
-//};
-//
-//struct IndexBufferDesc {
-//    void* pData;
-//    uint    cbSize;
-//    uint    nIndices;
-//};
-//
-//struct ConstantBufferDesc {
-//    void* pData;
-//    uint    cbSize;
-//};
+#include <Math/LinearMath.h>
+
+struct VertexPC
+{
+	vec3f position;
+	vec2f st;
+};
+
+struct VertexPNC
+{
+	vec3f position;
+	vec3f normal;
+	vec3f color;
+};

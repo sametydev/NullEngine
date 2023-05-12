@@ -2,7 +2,6 @@
 #include <Scene/Scene01.h>
 #include <Graphics/Buffer.h>
 #include <Graphics/DX11/DXShader.h>
-#include <Graphics/Vertex.h>
 #include <Engine/Input.h>
 #include <Graphics/Texture.h>
 #include <Graphics/Context.h>
@@ -79,16 +78,18 @@ bool Scene01::InitFrame()
 	};
 
 	VertexAttrib attbs[] = {
-		{0,Format::Float,3,sizeof(VertexPC),offsetof(VertexPC,vertices)}
+		{0,Format::Float,3,offsetof(VertexPC,VertexPC::position)},
+		{0,Format::Float,2,offsetof(VertexPC,VertexPC::st)}
 	};
-
 
 	matrices.proj = mat4x4::perspectiveLH(45.f, vp.w /vp.h,0.01f,100.f);
 	
 	VertexBufferDesc vd{};
-	vd.cbSize = sizeof(vertices);
+	vd.nAttrib = std::size(attbs);
+	vd.pAttrib = attbs;
 	vd.cbStride = sizeof(VertexPC);
 	vd.pData = vertices;
+	vd.cbSize = sizeof(vertices);
 
 	vbo = BufferCache::CreateVertexBuffer(vd);
 
@@ -162,11 +163,11 @@ void Scene01::UpdateFrame(float dt)
 void Scene01::RenderFrame()
 {
 
-	mVS->BindPipeline();
-	mPS->BindPipeline();
+	//mVS->BindPipeline();
+	//mPS->BindPipeline();
 
-	cbo->BindPipeline(0);
-	texture->BindPipeline(0);
+	//cbo->BindPipeline(0);
+	//texture->BindPipeline(0);
 
 	gContext->SetTopology(Topolgy::TRIANGLELIST);
 
