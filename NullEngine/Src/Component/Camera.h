@@ -1,6 +1,9 @@
 #pragma once
 class Camera
 {
+	enum Axis {
+		Right = 0,Up,Forward
+	};
 public:
 	Camera(float fov, float aspectRatio, float near, float far);
 
@@ -24,6 +27,9 @@ public:
 	mat4x4 mView;
 	mat4x4 mProj;
 
-	vec3f mAxis[3];
+	vec3f mRight;
+	vec3f mUp;
+	vec3f mForward;
+
 };
 

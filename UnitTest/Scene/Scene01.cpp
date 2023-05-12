@@ -8,6 +8,8 @@
 #include <Graphics/Texture.h>
 #include <Graphics/DX11/DXModel.h>
 #include <Graphics/DX11/DX11Config.h>
+#include <Component/Camera.h>
+
 
 LPCSTR vsCode = R"(
 cbuffer matrices : register(b0)
@@ -103,6 +105,8 @@ bool Scene01::InitFrame()
 	
 	gContext->GetViewport(&vp);
 
+	camera = new Camera(45.f,vp.w/vp.h,0.01f,100.f);
+
 	float i = 1.f;
 
 	//00-10
@@ -124,8 +128,6 @@ bool Scene01::InitFrame()
 		{0,Format::Float,3,offsetof(VertexPC,VertexPC::position)},
 		{0,Format::Float,2,offsetof(VertexPC,VertexPC::st)}
 	};
-
-	matrices.proj = mat4x4::perspectiveLH(45.f, vp.w /vp.h,0.01f,100.f);
 	
 	VertexBufferDesc vd{};
 	vd.nAttrib = std::size(attbs);
@@ -152,42 +154,21 @@ bool Scene01::InitFrame()
 	vs = ShaderCache::CreateVertexShaderFromCode(vsTest);
 	ps = ShaderCache::CreatePixelShaderFromCode(psTest);
 
+	camera->LookAt({ 10,10,-10 }, vec3f(0.f));
+
+	matrices.proj = camera->GetProjectionMatrix();
+	matrices.view = camera->GetViewMatrix();
+	matrices.model = mat4x4();
+
+	cbo->SubData(&matrices);
+
 	return true;
 }
 
 void Scene01::UpdateFrame(float dt)
 {
-	float speed = 128.3;
-	float keySpeed = 5.3f;
-	if (Input::type == MouseEvent::MOVE) {
-		//printf("move\n");
-		if (Input::state == Key::LMB) {
-			vec2f delta = Input::delta;
-			rot.x += -delta.x * speed * dt;
-			rot.y += -delta.y * speed * dt;
-			//LOG << delta << ENDL;
-		}
-	}
-
-
-	mat4x4 ry = mat4x4::rotateX(rot.y);		//yaw
-	mat4x4 rx = mat4x4::rotateY(rot.x);		//pitch
-
-	mat4x4 R = ry * rx;
-
-	matrices.model = mat4x4();
-
-	vec3f right = vec3f(R[0][0], R[1][0], R[2][0]);
-	vec3f forward = vec3f(R[0][2], R[1][2], R[2][2]);
-
-	mat4x4 T = mat4x4::translated(pos);
-	mat4x4 V = R * T;
-
-	mat4x4 I = V * R * T;
-	V = (T * R);
-	
-	matrices.view = V.inverted();
-
+	camera->Update(dt);
+	matrices.view = camera->GetViewMatrix();
 	cbo->SubData(&matrices);
 }
 
@@ -198,6 +179,8 @@ void Scene01::RenderFrame()
 	vbo->BindPipeline();
 	vs->BindPipeline();
 	ps->BindPipeline();
+
+
 
 	//texture->BindPipeline(0);
 

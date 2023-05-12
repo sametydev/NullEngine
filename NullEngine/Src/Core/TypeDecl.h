@@ -97,6 +97,8 @@ class Texture;
 class VertexShader;
 class PixelShader;
 
+class Camera;
+
 //===============================================
 
 

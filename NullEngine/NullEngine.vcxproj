@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Component\Camera.h" />
     <ClInclude Include="Src\Graphics\Format.h" />
     <ClInclude Include="Src\Graphics\Shader.h" />
     <ClInclude Include="Src\Core\Type.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="Src\Component\Transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Component\Camera.cpp" />
     <ClCompile Include="Src\Graphics\Format.cpp" />
     <ClCompile Include="Src\Graphics\Shader.cpp" />
     <ClCompile Include="Src\Graphics\Buffer.cpp" />
