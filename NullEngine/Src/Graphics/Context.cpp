@@ -1,5 +1,6 @@
 #include <PCH.h>
 #include <Graphics/Context.h>
+
 Context* Context::gInstance = nullptr;
 
 Context::Context(int cx, int cy, HWND hwnd) :
@@ -15,4 +16,14 @@ Context::Context(int cx, int cy, HWND hwnd) :
 	{
 		LOG_ERROR("Engine doesn't supports multiple graphic contexts!");
 	}
+}
+
+ID3D11DeviceContext* Context::GetDXContext()
+{
+	return nullptr;
+}
+
+ID3D11Device* Context::GetDXDevice()
+{
+	return nullptr;
 }

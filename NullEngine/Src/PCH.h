@@ -8,6 +8,7 @@
 #include <memory>
 
 #include <Core/TypeDecl.h>
+#include <Core/Type.h>
 #include <Core/Log.h>
 #include <Math/LinearMath.h>
 #include <Math/mat4x4.h>

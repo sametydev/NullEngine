@@ -137,11 +137,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Graphics\Format.h" />
+    <ClInclude Include="Src\Graphics\Shader.h" />
+    <ClInclude Include="Src\Core\Type.h" />
+    <ClInclude Include="Src\Graphics\Buffer.h" />
     <ClInclude Include="Src\Graphics\DX11\DXModel.h" />
     <ClInclude Include="Src\Graphics\Model.h" />
     <ClInclude Include="Src\Core\FileSystem.h" />
     <ClInclude Include="Src\Graphics\DX11\DXTexture.h" />
-    <ClInclude Include="Src\Engine\InputSystem2.h" />
     <ClInclude Include="Src\Engine\Input.h" />
     <ClInclude Include="Src\Graphics\DX11\DXShader.h" />
     <ClInclude Include="Src\Engine\Scene.h" />
@@ -162,16 +165,17 @@
     <ClInclude Include="Src\Wnd\Wnd.h" />
     <ClInclude Include="Src\Wnd\WndConfig.h" />
     <ClInclude Include="Src\Wnd\WndFrame.h" />
-    <ClInclude Include="Src\Graphics\Vertex.h" />
     <ClInclude Include="Src\Engine\Timer.h" />
     <ClInclude Include="Src\Component\Transform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Graphics\Format.cpp" />
+    <ClCompile Include="Src\Graphics\Shader.cpp" />
+    <ClCompile Include="Src\Graphics\Buffer.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXModel.cpp" />
     <ClCompile Include="Src\Graphics\Model.cpp" />
     <ClCompile Include="Src\Core\FileSystem.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXTexture.cpp" />
-    <ClCompile Include="Src\Engine\InputSystem2.cpp" />
     <ClCompile Include="Src\Engine\Input.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXShader.cpp" />
     <ClCompile Include="Src\Engine\Scene.cpp" />
@@ -186,7 +190,6 @@
     </ClCompile>
     <ClCompile Include="Src\Wnd\Wnd.cpp" />
     <ClCompile Include="Src\Wnd\WndFrame.cpp" />
-    <ClCompile Include="Src\Graphics\Vertex.cpp" />
     <ClCompile Include="Src\Engine\Timer.cpp" />
     <ClCompile Include="Src\Component\Transform.cpp" />
   </ItemGroup>

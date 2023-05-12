@@ -1,37 +1,25 @@
 #include <PCH.h>
 #include <Graphics/Context.h>
+#include <Graphics/Shader.h>
 #include <Graphics/DX11/DXBuffer.h>
-#include <Graphics/DX11/DXContext.h>
+#include <Graphics/DX11/DX11Config.h>
+#include <Graphics/Format.h>
 
-//	TODO: DXBuffer Abstract Class
+//remember if u need dx function include DXConfig!
+//if u need dxContext include only Context!
 
-//	DXVertexBuffer -> Devirred From DXBuffer;
-//	DXIndexBuffer -> Devirred From DXBuffer;
-//	DXConstantBuffer -> Devirred From DXBuffer;
+DXVertexBuffer::DXVertexBuffer() : mBuffer(nullptr), mStride(0) {
 
-DXBuffer::DXBuffer() : mId(0)
-{
-	static uint mCounter = 0;
-
-
-	mId = mCounter;
-	mCounter++;
 }
 
-DXBuffer::~DXBuffer()
+DXVertexBuffer::~DXVertexBuffer()
 {
 	SAFE_RELEASE(mBuffer);
 }
 
 
-DXVertexBuffer::DXVertexBuffer() : mStride(0) {
-
-}
-
-void DXVertexBuffer::Create(const BufferDesc& desc)
+void DXVertexBuffer::Create(const VertexBufferDesc& desc)
 {
-	mStride = desc.stride;
-
 	D3D11_BUFFER_DESC bd{};
 	bd.ByteWidth = desc.cbSize;
 	bd.Usage = D3D11_USAGE_DEFAULT;
@@ -41,8 +29,45 @@ void DXVertexBuffer::Create(const BufferDesc& desc)
 	D3D11_SUBRESOURCE_DATA sd{};
 	sd.pSysMem = desc.pData;
 
-
 	HR(gDXDevice->CreateBuffer(&bd, &sd, &mBuffer));
+
+	//make temp shader
+	std::vector<D3D11_INPUT_ELEMENT_DESC> inputs(desc.nAttrib);
+	std::string temp;
+	temp += "struct VS_IN {";
+	for (uint i = 0; i < desc.nAttrib; i++)
+	{
+		D3D11_INPUT_ELEMENT_DESC& input = inputs[i];
+		VertexAttrib& attr = desc.pAttrib[i];
+		input.SemanticName = (i == 0) ? "POSITION" : "TEXCOORD";
+		input.SemanticIndex = (i == 0) ? 0 : (i - 0);
+		input.Format = format::FormatToDX(attr.nFormat, attr.format);
+		input.InputSlot = attr.slot;
+		input.AlignedByteOffset = attr.offset;
+		input.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+		input.InstanceDataStepRate = 0;
+
+		//temp shader side
+		uint nFormat = attr.nFormat;
+		if (i == 0)
+		{
+			temp += "float" + std::to_string(nFormat) + " pos : POSITION; ";
+		}
+		else
+		{
+			temp += "float" + std::to_string(nFormat) +
+				" param" + std::to_string(i - 1) +
+				" : POSITION" + std::to_string(i - 1) + "; ";
+		}
+	}
+	temp += "}; float4 VS(VS_IN vs) : SV_POSITION {return vs.pos.xxxx;};";
+
+	uint a = 0;
+
+	
+
+
+	//make element with custom out element
 }
 
 void DXVertexBuffer::BindPipeline(uint slot)
@@ -50,12 +75,16 @@ void DXVertexBuffer::BindPipeline(uint slot)
 	uint offset = 0;
 	gDXContext->IASetVertexBuffers(slot, 1, &mBuffer, &mStride, &offset);
 }
-DXIndexBuffer::DXIndexBuffer() {
+DXIndexBuffer::DXIndexBuffer() : mBuffer(nullptr) {
 
 }
-void DXIndexBuffer::Create(const BufferDesc& desc)
+DXIndexBuffer::~DXIndexBuffer()
 {
-	mIndices = desc.indices;
+	SAFE_RELEASE(mBuffer);
+}
+void DXIndexBuffer::Create(const IndexBufferDesc& desc)
+{
+	indices = desc.nIndices;
 
 	D3D11_BUFFER_DESC bd{};
 	bd.ByteWidth = desc.cbSize;
@@ -74,11 +103,16 @@ void DXIndexBuffer::BindPipeline(uint offset)
 	gDXContext->IASetIndexBuffer(mBuffer, DXGI_FORMAT_R32_UINT, offset);
 }
 
-DXConstantBuffer::DXConstantBuffer()
+DXConstantBuffer::DXConstantBuffer() : mBuffer(nullptr)
 {
 }
 
-void DXConstantBuffer::Create(const BufferDesc& desc)
+DXConstantBuffer::~DXConstantBuffer()
+{
+	SAFE_RELEASE(mBuffer);
+}
+
+void DXConstantBuffer::Create(const ConstantBufferDesc& desc)
 {
 	D3D11_BUFFER_DESC bd{};
 	bd.ByteWidth = desc.cbSize;
@@ -89,7 +123,8 @@ void DXConstantBuffer::Create(const BufferDesc& desc)
 	D3D11_SUBRESOURCE_DATA sd{};
 	sd.pSysMem = desc.pData;
 
-	gDXDevice->CreateBuffer(&bd,&sd,&mBuffer);
+	HR(gDXDevice->CreateBuffer(&bd, &sd, &mBuffer));
+
 }
 
 void DXConstantBuffer::BindPipeline(uint slot)
@@ -104,43 +139,3 @@ void DXConstantBuffer::SubData(void* pData)
 	gDXContext->UpdateSubresource(mBuffer, NULL, NULL, pData, NULL, NULL);
 }
 
-DXConstantMapBuffer::DXConstantMapBuffer() {
-
-}
-
-void DXConstantMapBuffer::Create(const BufferDesc& desc)
-{
-	D3D11_BUFFER_DESC bd{};
-	bd.ByteWidth = desc.cbSize;
-	bd.Usage = D3D11_USAGE_DYNAMIC;
-	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-
-	D3D11_SUBRESOURCE_DATA sd{};
-	sd.pSysMem = desc.pData;
-
-	gDXDevice->CreateBuffer(&bd, &sd, &mBuffer);
-}
-
-void DXConstantMapBuffer::BindPipeline(uint slot)
-{
-	gDXContext->VSSetConstantBuffers(slot, 1, &mBuffer);
-}
-
-void DXConstantMapBuffer::Map(void* pData, uint size)
-{
-	D3D11_MAPPED_SUBRESOURCE ms{};
-
-	HR(gDXContext->Map(mBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms));
-
-	memcpy_s(ms.pData, size, &pData, size);
-
-	gDXContext->Unmap(mBuffer, NULL);
-}
-
-uint DXIndexBuffer::GetIndices()
-{
-	return mIndices;
-}
-
-std::vector<std::shared_ptr<DXBuffer>> BufferCache::mCache = {};

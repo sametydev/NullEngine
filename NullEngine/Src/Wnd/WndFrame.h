@@ -1,7 +1,5 @@
 #pragma once
 #include <Wnd/Wnd.h>
-#include <Graphics/DX11/DXContext.h>
-
 
 class WndFrame : public Wnd
 {

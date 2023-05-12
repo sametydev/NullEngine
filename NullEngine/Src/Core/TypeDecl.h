@@ -1,6 +1,6 @@
 #pragma once
-//Win32
 
+//Win32
 #define CALLBACK		__stdcall
 #define WINAPI			__stdcall
 #define APIENTRY		WINAPI
@@ -47,36 +47,113 @@ typedef UINT			uint;
 typedef unsigned char	byte;
 typedef const char* LPCSTR;
 
-//User declare
+
+
+//==================DirectX 11===================
+struct ID3D11Device;
+struct ID3D11DeviceContext;
+struct ID3D11Device1;
+struct ID3D11DeviceContext1;
+struct IDXGISwapChain1;
+struct ID3D11RenderTargetView;
+struct ID3D11DepthStencilView;
+struct ID3D11Texture2D;
+struct ID3D11RasterizerState;
+
+
+struct ID3D11Buffer;
+struct ID3D11InputLayout;
+struct ID3D11VertexShader;
+struct ID3D11PixelShader;
+struct ID3D11ShaderResourceView;
+struct ID3D11SamplerState;
+
+struct ID3D10Blob;
+typedef ID3D10Blob ID3DBlob;
+
+struct D3D11_INPUT_ELEMENT_DESC;
+//===============================================
+
+//=================USER==========================
 class Context;
 class Scene;
 
-//DirectX 11
-struct ID3D11Device;
-struct ID3D11DeviceContext;
+//class DXBuffer;
+//class DXVertexBuffer;
+//class DXIndexBuffer;
+//class DXConstantMapBuffer;
+//class DXConstantBuffer;
+//class DXTexture;
+//class DXModel;
 
-class DXBuffer;
-class DXVertexBuffer;
-class DXIndexBuffer;
-class DXConstantMapBuffer;
-class DXConstantBuffer;
-class DXTexture;
+class IndexBuffer;
+class VertexBuffer;
+class ConstantBuffer;
+
 class DXModel;
-
 class Texture;
 class IShader;
 class VertexShader;
 class PixelShader;
 
+//===============================================
+
+
 //API Type
 struct Viewport {
-	float x, y, w, h;
+    float x, y, w, h;
+};
+
+enum class SamplerState {
+    WRAP, CLAMP
+};
+
+enum class Topolgy {
+    UNDEFINED = 0,POINTLIST, LINELIST,LINESTRIP,TRIANGLELIST,TRIANGLESTRIP
+};
+
+enum class ShaderType : uint
+{
+    Vertex,
+    Pixel,
+    Hull,
+    Geometry,
+    Compute
+};
+
+enum class Format : int
+{
+    Byte,
+    Int,
+    Uint,
+    Short,
+    Float,
+    Double,
 };
 
 
-struct BufferDesc {
-	void* pData;
-	uint cbSize;
-	uint stride;
-	uint indices;
+struct VertexAttrib {
+    uint slot;
+    Format format;
+    uint nFormat;
+    uint offset;
+};
+
+struct VertexBufferDesc {
+    void* pData;
+    uint cbSize;
+    uint cbStride;
+    VertexAttrib*   pAttrib;
+    uint            nAttrib;
+};
+
+struct IndexBufferDesc {
+    void* pData;
+    uint    cbSize;
+    uint    nIndices;
+};
+
+struct ConstantBufferDesc {
+    void* pData;
+    uint    cbSize;
 };

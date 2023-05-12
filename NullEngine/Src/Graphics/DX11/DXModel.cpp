@@ -1,9 +1,8 @@
 #include <PCH.h>
 #include <Graphics/DX11/DXModel.h>
 #include <Core/FileSystem.h>
-#include <Graphics/Vertex.h>
-#include <Graphics/DX11/DXBuffer.h>
-#include <Graphics/DX11/DXContext.h>
+#include <Graphics/Buffer.h>
+#include <Graphics/Context.h>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -84,19 +83,21 @@ void DXModel::Load(LPCSTR filename)
 		}
 	}
 
-	BufferDesc desc{};
+	VertexBufferDesc vd{};
 
-	desc.cbSize		= sizeof(VertexPC) * vertices.size();
-	desc.stride = sizeof(VertexPC);
-	desc.pData = vertices.data();
+	vd.cbSize		= sizeof(VertexPC) * vertices.size();
+	vd.cbStride = sizeof(VertexPC);
+	vd.pData = vertices.data();
 	//desc.indices	= indices.size();
 
-	vbo = BufferCache::Create<DXVertexBuffer>(desc);
-	
-	desc.cbSize = indices.size() * sizeof(uint);
-	desc.indices = indices.size();
-	desc.pData = indices.data();
-	ibo = BufferCache::Create<DXIndexBuffer>(desc);
+	vbo = BufferCache::CreateVertexBuffer(vd);
+
+	IndexBufferDesc id{};
+	id.cbSize = indices.size() * sizeof(uint);
+	id.nIndices = indices.size();
+	id.pData = indices.data();
+
+	ibo = BufferCache::CreateIndexBuffer(id);
 
 }
 
@@ -113,6 +114,6 @@ void DXModel::Render()
 
 		}
 
-		gDXContext->DrawIndexed(node->indicesNum, node->indicesOffset, 0);
+		//gDXContext->DrawIndexed(node->indicesNum, node->indicesOffset, 0);
 	}
 }
