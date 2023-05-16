@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Graphics\DX11\DXRenderState.h" />
     <ClInclude Include="Src\Component\Camera.h" />
     <ClInclude Include="Src\Graphics\Format.h" />
     <ClInclude Include="Src\Graphics\Shader.h" />
@@ -171,6 +172,7 @@
     <ClInclude Include="Src\Component\TCamera.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Graphics\DX11\DXRenderState.cpp" />
     <ClCompile Include="Src\Component\Camera.cpp" />
     <ClCompile Include="Src\Graphics\Format.cpp" />
     <ClCompile Include="Src\Graphics\Shader.cpp" />

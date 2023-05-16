@@ -1,13 +1,6 @@
 #pragma once
 #include <Graphics/Model.h>
 
-struct ModelNode {
-
-    uint nIndices;
-    uint nIndicesOffset;
-    void* texture;
-};
-
 class DXModel :
     public Model
 {
@@ -19,8 +12,6 @@ public:
 
     VertexBuffer* vbo;
     IndexBuffer*  ibo;
-
-    std::vector<ModelNode> mNode;
 
 };
 

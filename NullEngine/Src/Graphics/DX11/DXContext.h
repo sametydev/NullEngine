@@ -1,5 +1,6 @@
 #pragma once
 #include <Graphics/Context.h>
+#include <Graphics/DX11/DXRenderState.h>
 
 class DXContext : public Context
 {
@@ -12,8 +13,6 @@ public:
 	void CreateDevice();
 	void ResizeRenderBuffer(uint cx, uint cy) override;
 	void CreateSwapChain();
-	void CreateStates();
-	void CreateSampler();
 	//end protected
 
 	ID3D11Device1*			mDevice;
@@ -25,11 +24,7 @@ public:
 	ID3D11DepthStencilView* mDepthStencilView;
 	ID3D11Texture2D*		mDepthStencilBuffer;
 
-	//State
-	ID3D11RasterizerState* mRSState[2]{};
-
-	//Sampler
-	ID3D11SamplerState* mSamplerState[2]{};
+	DXRenderState mStates;
 
 	virtual ID3D11DeviceContext* GetDXContext();
 	virtual ID3D11Device* GetDXDevice();
@@ -42,5 +37,7 @@ public:
 	virtual void ClearBuffer(float r, float g, float b, float a);
 	virtual void SwapBuffer();
 	virtual void DrawIndexed(uint indices, uint offset, uint base);
+	virtual void SetCullMode(CullMode mode);
+	virtual void SetBlendState(BlendState state);
 
 };

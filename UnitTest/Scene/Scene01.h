@@ -28,7 +28,7 @@ protected:
 
 	
 
-	DXModel* mModel;
+	Model* tree;
 	Texture* texture;
 };
 

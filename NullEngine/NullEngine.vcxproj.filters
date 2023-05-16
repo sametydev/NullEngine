@@ -33,6 +33,7 @@
     <ClInclude Include="Src\Graphics\Format.h" />
     <ClInclude Include="Src\Component\Camera.h" />
     <ClInclude Include="Src\Component\TCamera.h" />
+    <ClInclude Include="Src\Graphics\DX11\DXRenderState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp" />
@@ -58,5 +59,6 @@
     <ClCompile Include="Src\Graphics\Format.cpp" />
     <ClCompile Include="Src\Component\Camera.cpp" />
     <ClCompile Include="Src\Component\TCamera.cpp" />
+    <ClCompile Include="Src\Graphics\DX11\DXRenderState.cpp" />
   </ItemGroup>
 </Project>
