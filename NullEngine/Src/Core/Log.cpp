@@ -28,11 +28,12 @@ void Log::__error(LPCSTR code, LPCSTR filename, int line, ...)
 {
 	va_list args;
 	va_start(args,code);
-	TCHAR codeBuffer[128];
-	vsnprintf(codeBuffer, -1, code, args);
+	TCHAR codeBuffer[128]{};
+
+	vsnprintf_s(codeBuffer, -1, code, args);
 
 	filename = (::strchr(filename,'\\')+1);
-	TCHAR totalBuffer[256];
+	TCHAR totalBuffer[256]{};
 
 	sprintf_s(totalBuffer,"%s\nfile: %s\n line %d\n\n",codeBuffer,filename,line);
 	va_end(args);
@@ -48,17 +49,19 @@ void Log::__warn(LPCSTR code, LPCSTR filename, int line, ...)
 {
 	va_list args;
 	va_start(args, code);
-	TCHAR codeBuffer[128];
+	TCHAR codeBuffer[128]{};
 
-	vsnprintf(codeBuffer, -1, code, args);
+	vsnprintf_s(codeBuffer, -1, code, args);
 	filename = (::strchr(filename, '\\') + 1);
-	TCHAR totalBuffer[256];
+	TCHAR totalBuffer[256]{};
 
 	sprintf_s(totalBuffer, "%s\nfile: %s\n line %d\n\n", codeBuffer, filename, line);
 	va_end(args);
 
-	uint res = MessageBox(NULL, codeBuffer, "Warning", MB_OK | MB_ICONWARNING);
-	if (res == IDOK)
+	uint res = MessageBox(NULL, codeBuffer, "Warning", MB_CANCELTRYCONTINUE | MB_ICONWARNING);
+	
+	
+	if (res == IDCANCEL)
 	{
 		ExitProcess(0);
 	}

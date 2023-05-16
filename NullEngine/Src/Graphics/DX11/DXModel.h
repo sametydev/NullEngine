@@ -3,10 +3,8 @@
 
 struct ModelNode {
 
-    uint indicesNum;
-    uint indicesOffset;
-    uint textureIndex;
-    uint baseVertex; //100 + 100
+    uint nIndices;
+    uint nIndicesOffset;
     void* texture;
 };
 

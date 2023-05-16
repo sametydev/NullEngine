@@ -28,7 +28,7 @@ uint Input::HookMsg(const MSG* msg)
     case WM_MOUSEMOVE: {
         type = MouseEvent::MOVE;
         pos = { (float)GET_X_LPARAM(msg->lParam), (float)GET_X_LPARAM(msg->lParam) };
-        state = msg->wParam;
+        state = (uint)msg->wParam;
         if (lastPos != pos) {
             delta = pos-lastPos;
         }

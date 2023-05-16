@@ -8,7 +8,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-DXModel::DXModel()
+DXModel::DXModel():ibo(nullptr),vbo(nullptr)
 {
 
 }
@@ -36,7 +36,7 @@ void DXModel::Load(LPCSTR filename)
 		LOG_ERROR("Failed to load model scene");
 	}
 
-	std::vector<VertexPC> vertices;
+	std::vector<VertexPNS> vertices;
 	std::vector<uint>	  indices;
 
 	uint numMesh = scene->mNumMeshes;
@@ -49,8 +49,9 @@ void DXModel::Load(LPCSTR filename)
 
 		for (int i = 0; i < nVertices; i++){
 
-			VertexPC vtx;
+			VertexPNS vtx;
 			memcpy(&vtx.position, &mesh->mVertices[i], sizeof(vec3f));
+			memcpy(&vtx.normal, &mesh->mNormals[i], sizeof(vec3f));
 
 			if (mesh->mTextureCoords[0])
 			{
@@ -62,33 +63,29 @@ void DXModel::Load(LPCSTR filename)
 		uint nIndices = mesh->mNumFaces * 3;
 		ModelNode* nodes = mNode.data();
 
-		nodes[index].baseVertex += mesh->mNumVertices;
-		//node.indicesOffset += //first must be 0
-		//	index == 0 ? 0 : ()
 		
-		nodes[index].indicesOffset += (index > 0) ? nodes[index - 1].indicesNum :
-			0;
-		nodes[index].indicesNum = nIndices;
+		nodes[index].nIndicesOffset += (index > 0) ? nodes[index - 1].nIndices : 0;
+		nodes[index].nIndices = nIndices;
+		int offset = nodes[index].nIndicesOffset;
+
 		for (int i = 0; i < mesh->mNumFaces; i++)
 		{
-			//face indices couldnt over 3
 			const aiFace* face = &mesh->mFaces[i];
 			if (face->mNumIndices > 3)
 			{
-				LOG_ERROR("Mesh is not trangular");
+				LOG_ERROR("Mesh is not triangular");
 			}
-			indices.emplace_back(face->mIndices[0]);
-			indices.emplace_back(face->mIndices[1]);
-			indices.emplace_back(face->mIndices[2]);
+			indices.emplace_back(face->mIndices[0] + offset);
+			indices.emplace_back(face->mIndices[1] + offset);
+			indices.emplace_back(face->mIndices[2] + offset);
 		}
 	}
 
 	VertexBufferDesc vd{};
 
-	vd.cbSize		= sizeof(VertexPC) * vertices.size();
-	vd.cbStride = sizeof(VertexPC);
-	vd.pData = vertices.data();
-	//desc.indices	= indices.size();
+	vd.cbSize		= sizeof(VertexPNS) * (uint)vertices.size();
+	vd.cbStride		= sizeof(VertexPNS);
+	vd.pData		= vertices.data();
 
 	vbo = BufferCache::CreateVertexBuffer(vd);
 
@@ -114,6 +111,6 @@ void DXModel::Render()
 
 		}
 
-		//gDXContext->DrawIndexed(node->indicesNum, node->indicesOffset, 0);
+		gContext->DrawIndexed(node->nIndices, node->nIndicesOffset, 0);
 	}
 }

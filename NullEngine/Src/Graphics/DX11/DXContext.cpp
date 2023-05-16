@@ -243,6 +243,11 @@ void DXContext::SwapBuffer()
 	mSwapChain->Present(0, 0);
 }
 
+void DXContext::DrawIndexed(uint indices, uint offset, uint base)
+{
+	mDeviceContext->DrawIndexed(indices, offset, base);
+}
+
 ID3D11DeviceContext* DXContext::GetDXContext()
 {
 	return mDeviceContext;
@@ -260,24 +265,24 @@ void DXContext::SetTopology(Topolgy topology)
 
 	switch (topology)
 	{
-	case Topolgy::UNDEFINED:
-		id = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
-		break;
-	case Topolgy::POINTLIST:
-		id = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
-		break;
-	case Topolgy::LINELIST:
-		id = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
-		break;
-	case Topolgy::LINESTRIP:
-		id = D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP;
-		break;
-	case Topolgy::TRIANGLELIST:
-		id = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-		break;
-	case Topolgy::TRIANGLESTRIP:
-		id = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
-		break;
+		case Topolgy::UNDEFINED:
+			id = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED;
+			break;
+		case Topolgy::POINTLIST:
+			id = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;
+			break;
+		case Topolgy::LINELIST:
+			id = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+			break;
+		case Topolgy::LINESTRIP:
+			id = D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP;
+			break;
+		case Topolgy::TRIANGLELIST:
+			id = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+			break;
+		case Topolgy::TRIANGLESTRIP:
+			id = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+			break;
 	}
 	mDeviceContext->IASetPrimitiveTopology((D3D11_PRIMITIVE_TOPOLOGY)id);
 }

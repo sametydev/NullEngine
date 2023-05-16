@@ -17,6 +17,7 @@ public:
 	virtual void GetViewport(Viewport* vp) {};
 	virtual void SetSampler(SamplerState sampler) {};
 	virtual void SetTopology(Topolgy topology) {};
+	virtual void DrawIndexed(uint indices, uint offset, uint base) = 0;
 
 	HWND mHwnd;
 	int width;

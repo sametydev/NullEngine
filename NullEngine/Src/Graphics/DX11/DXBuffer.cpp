@@ -87,6 +87,7 @@ void DXVertexBuffer::Create(const VertexBufferDesc& desc)
 void DXVertexBuffer::BindPipeline(uint slot)
 {
 	uint offset = 0;
+	gDXContext->IASetInputLayout(mLayout);
 	gDXContext->IASetVertexBuffers(slot, 1, &mBuffer, &mStride, &offset);
 }
 DXIndexBuffer::DXIndexBuffer() : mBuffer(nullptr) {

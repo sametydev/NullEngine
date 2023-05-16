@@ -1,15 +1,17 @@
 #pragma once
 #include <Math/LinearMath.h>
 
-struct VertexPC
+//POS ST
+struct VertexPS
 {
 	vec3f position;
 	vec2f st;
 };
 
-struct VertexPNC
+//POS NORMAL ST
+struct VertexPNS
 {
 	vec3f position;
 	vec3f normal;
-	vec3f color;
+	vec2f st;
 };

@@ -11,49 +11,7 @@
 #include <Component/TCamera.h>
 
 
-LPCSTR vsCode = R"(
-cbuffer matrices : register(b0)
-{
-    matrix proj;
-    matrix view;
-    matrix model;   //world
-};
 
-struct VS_IN{
-    float3 pos	: POSITION;
-    float2 st	: TEXCOORD0;
-};
-
-struct PS_IN{
-    float4 pos : SV_POSITION;
-    float2 st : TEXCOORD;
-};
-
-PS_IN VS(VS_IN vs){
-    PS_IN ps;
-    ps.pos = mul(float4(vs.pos,1),model);
-    ps.pos = mul(ps.pos, view);
-    ps.pos = mul(ps.pos, proj);
-    ps.st = vs.st;
-    return ps;
-};
-)";
-
-LPCSTR psCode = R"(
-Texture2D Texture01 : register(t0);
-SamplerState Sampler01 : register(s0);
-struct PS_IN{
-	float4 pos : SV_POSITION;
-	float2 st  : TEXCOORD;
-};
-
-float4 PS(PS_IN ps) : SV_TARGET
-{
-	float4 albedo = Texture01.Sample(Sampler01,ps.st);
-
-	return albedo;
-};
-)";
 
 LPCSTR vsTest = R"(
 cbuffer matrices : register(b0) {
@@ -65,11 +23,13 @@ cbuffer matrices : register(b0) {
 
 struct VS_IN {
 	float3 pos : POSITION;
-	float2 uv  : TEXCOORD0;
+	float3 normal : TEXCORRD0;
+	float2 uv  : TEXCOORD1;
 };
 
 struct PS_IN {
 	float4 pos : SV_POSITION;
+	float3 normal : NORMAL;
 	float2 uv  : TEXCOORD;
 };
 
@@ -78,7 +38,7 @@ PS_IN VS(VS_IN vs) {
 	ps.pos = mul(float4(vs.pos,1),model);
 	ps.pos = mul(ps.pos,view);
 	ps.pos = mul(ps.pos,proj);
-
+	ps.normal = vs.normal;
 	ps.uv  = vs.uv;
 	
 	return ps;
@@ -89,12 +49,13 @@ PS_IN VS(VS_IN vs) {
 LPCSTR psTest = R"(
 struct PS_IN {
 	float4 pos : SV_POSITION;
+	float3 normal : NORMAL;
 	float2 uv  : TEXCOORD;
 };
 
 float4 PS(PS_IN ps) : SV_TARGET {
 	
-	return ps.pos;
+	return float4(ps.normal,1);
 };
 )";
 
@@ -107,35 +68,37 @@ bool Scene01::InitFrame()
 
 	camera = new TCamera(45.f,vp.w/vp.h,0.01f,100.f);
 
-	HRESULT hr = E_INVALIDARG;
-	//HR(hr);
-	LOG_WARN("Test");
-	float i = 1.f;
+	float i = 10.f;
 
 	//00-10
 	//01-11
 
-	VertexPC vertices[] = {
-		{{-i,-i,0},  {0,1}},
-		{{0,i,0},    {0.5f,0}},
-		{{i,-i,0},   {1,1}}
+	//-1 0 -1 (0)
+	//-1 0 1 (1)
+	//1 0 1 (2)
+	//1 0 -1 (3)
+
+	VertexPNS vertices[] = {
+		{{-i,0,-i},		{0,1.f,0},	{0.f,1.f}},
+		{{-i,0,i},		{0,1.f,0},	{0.0f,0.f}},
+		{{i,0,i},		{0,1.f,0},	{1.f,0.f}},
+		{{i,0,-i},		{0,1.f,0},	{1.f,1.f}}
 	};
 
 	uint indices[] = {
-		{0},
-		{1},
-		{2}
+		0,1,2,0,2,3
 	};
 
 	VertexAttrib attbs[] = {
-		{0,Format::Float,3,offsetof(VertexPC,VertexPC::position)},
-		{0,Format::Float,2,offsetof(VertexPC,VertexPC::st)}
+		{0,Format::Float,3,offsetof(VertexPNS,VertexPNS::position)},
+		{0,Format::Float,3,offsetof(VertexPNS,VertexPNS::normal)},
+		{0,Format::Float,2,offsetof(VertexPNS,VertexPNS::st)}
 	};
 	
 	VertexBufferDesc vd{};
 	vd.nAttrib = std::size(attbs);
 	vd.pAttrib = attbs;
-	vd.cbStride = sizeof(VertexPC);
+	vd.cbStride = sizeof(VertexPNS);
 	vd.pData = vertices;
 	vd.cbSize = sizeof(vertices);
 
@@ -179,15 +142,18 @@ void Scene01::RenderFrame()
 
 	cbo->BindPipeline(0);
 	vbo->BindPipeline();
+
+
 	vs->BindPipeline();
 	ps->BindPipeline();
-
+	ibo->BindPipeline();
 
 
 	//texture->BindPipeline(0);
 
 	gContext->SetTopology(Topolgy::TRIANGLELIST);
 
-	gDXContext->Draw(3, 0);
+	//gDXContext->Draw(3, 0);
 	//mModel->Render();
+	gContext->DrawIndexed(ibo->indices, 0, 0);
 }
