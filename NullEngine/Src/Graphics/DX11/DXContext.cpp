@@ -14,16 +14,12 @@ DXContext::DXContext(int cx, int cy, HWND hwnd) :
 	CreateDevice();
 	CreateSwapChain();
 	ResizeRenderBuffer(cx, cy);
+
+	mStates.Create();
 }
 
 DXContext::~DXContext()
 {
-	mDeviceContext->ClearState();
-
-	for (uint i = 0; i < ARRAYSIZE(mRSState); i++)
-	{
-		SAFE_RELEASE(mRSState[i]);
-	}
 
 	SAFE_RELEASE(mDepthStencilBuffer);
 	SAFE_RELEASE(mDepthStencilView);
@@ -182,52 +178,6 @@ void DXContext::CreateSwapChain()
 
 }
 
-void DXContext::CreateStates()
-{
-	D3D11_RASTERIZER_DESC rd{};
-	rd.CullMode              = D3D11_CULL_BACK;
-	rd.FillMode              = D3D11_FILL_SOLID;
-	rd.FrontCounterClockwise = false;
-	rd.DepthClipEnable       = true;
-	rd.MultisampleEnable     = mIsMsaaEnable;
-	rd.AntialiasedLineEnable = false;
-
-	HR(mDevice->CreateRasterizerState(&rd, &mRSState[0]));
-	rd.FillMode = D3D11_FILL_WIREFRAME;
-	HR(mDevice->CreateRasterizerState(&rd, &mRSState[1]));
-
-	mDeviceContext->RSSetState(mRSState[0]);
-
-}
-
-void DXContext::CreateSampler()
-{
-	D3D11_SAMPLER_DESC sd{};
-	sd.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
-	sd.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	sd.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	sd.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	sd.BorderColor[0] = { 0 };
-	sd.BorderColor[1] = { 0 };
-	sd.BorderColor[2] = { 0 };
-	sd.BorderColor[3] = { 0 };
-	sd.MinLOD = 0;
-	sd.MaxAnisotropy = D3D11_MAX_MAXANISOTROPY;
-	sd.ComparisonFunc = D3D11_COMPARISON_NEVER;
-
-
-	//Wrap sampler to default 
-	HR(gDXDevice->CreateSamplerState(&sd, &mSamplerState[0]));
-	sd.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-	sd.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-	sd.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
-	//Clamp
-	HR(gDXDevice->CreateSamplerState(&sd, &mSamplerState[1]));
-
-	//Default Sampler Set;
-	mDeviceContext->PSSetSamplers(0, 1, &mSamplerState[0]);
-
-}
 
 void DXContext::ClearBuffer(float r, float g, float b, float a)
 {
@@ -246,6 +196,46 @@ void DXContext::SwapBuffer()
 void DXContext::DrawIndexed(uint indices, uint offset, uint base)
 {
 	mDeviceContext->DrawIndexed(indices, offset, base);
+}
+
+void DXContext::SetCullMode(CullMode mode)
+{
+	switch (mode)
+	{
+		case CullMode::BACK:
+			mDeviceContext->RSSetState(mStates.RSCullBack);
+			break;
+		case CullMode::FRONT:
+			mDeviceContext->RSSetState(mStates.RSCullFront);
+			break;
+		case CullMode::FRONT_AND_BACK:
+			mDeviceContext->RSSetState(mStates.RSCullFrontAndBack);
+			break;
+		case CullMode::WIREFRAME:
+			mDeviceContext->RSSetState(mStates.RSWireFrame);
+			break;
+		default:
+			break;
+	}
+}
+
+void DXContext::SetBlendState(BlendState state)
+{
+	const float factor[4] = { 0.f,0.f ,0.f ,0.f };
+	switch (state)
+	{
+	case BlendState::Transparent:
+		mDeviceContext->OMSetBlendState(mStates.BSTransparent, factor, 0xFFFFFFFF);
+		break;
+	case BlendState::Disable:
+		mDeviceContext->OMSetBlendState(mStates.BSBlendDisable, factor, 0xFFFFFFFF);
+		break;
+	case BlendState::Inverse:
+		mDeviceContext->OMSetBlendState(mStates.BSBlend, factor, 0xFFFFFFFF);
+		break;
+	default:
+		break;
+	}
 }
 
 ID3D11DeviceContext* DXContext::GetDXContext()
@@ -306,13 +296,10 @@ void DXContext::SetSampler(SamplerState sampler)
 	switch (sampler)
 	{
 		case SamplerState::WRAP:
-			mDeviceContext->PSSetSamplers(0, 1, &mSamplerState[0]);
+			mDeviceContext->PSSetSamplers(0, 1, &mStates.SSWrap);
 			break;
 		case SamplerState::CLAMP:
-			mDeviceContext->PSSetSamplers(0, 1, &mSamplerState[1]);
-			break;
-		default:
-			LOG_ERROR("Wrong Sampler Type!");
+			mDeviceContext->PSSetSamplers(0, 1, &mStates.SSClamp);
 			break;
 	}
 }

@@ -18,6 +18,8 @@ public:
 	virtual void SetSampler(SamplerState sampler) {};
 	virtual void SetTopology(Topolgy topology) {};
 	virtual void DrawIndexed(uint indices, uint offset, uint base) = 0;
+	virtual void SetCullMode(CullMode mode) = 0;
+	virtual void SetBlendState(BlendState state) = 0;
 
 	HWND mHwnd;
 	int width;

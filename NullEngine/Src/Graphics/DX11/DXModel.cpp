@@ -3,7 +3,7 @@
 #include <Core/FileSystem.h>
 #include <Graphics/Buffer.h>
 #include <Graphics/Context.h>
-
+#include <Graphics/Texture.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -40,7 +40,7 @@ void DXModel::Load(LPCSTR filename)
 	std::vector<uint>	  indices;
 
 	uint numMesh = scene->mNumMeshes;
-	mNode.resize(numMesh);
+	mNodes.resize(numMesh);
 
 	for (int index = 0; index < numMesh; index++)
 	{
@@ -61,7 +61,7 @@ void DXModel::Load(LPCSTR filename)
 			vertices.emplace_back(vtx);
 		}
 		uint nIndices = mesh->mNumFaces * 3;
-		ModelNode* nodes = mNode.data();
+		ModelNode* nodes = mNodes.data();
 
 		
 		nodes[index].nIndicesOffset += (index > 0) ? nodes[index - 1].nIndices : 0;
@@ -81,11 +81,22 @@ void DXModel::Load(LPCSTR filename)
 		}
 	}
 
+	
+	VertexAttrib attrb[] = {
+
+		{0,Format::Float,3,offsetof(VertexPNS,VertexPNS::position)},
+		{0,Format::Float,3,offsetof(VertexPNS,VertexPNS::normal)},
+		{0,Format::Float,2,offsetof(VertexPNS,VertexPNS::st)}
+
+	};
+
 	VertexBufferDesc vd{};
 
 	vd.cbSize		= sizeof(VertexPNS) * (uint)vertices.size();
 	vd.cbStride		= sizeof(VertexPNS);
 	vd.pData		= vertices.data();
+	vd.pAttrib		= attrb;
+	vd.nAttrib		= std::size(attrb);
 
 	vbo = BufferCache::CreateVertexBuffer(vd);
 
@@ -93,6 +104,7 @@ void DXModel::Load(LPCSTR filename)
 	id.cbSize = indices.size() * sizeof(uint);
 	id.nIndices = indices.size();
 	id.pData = indices.data();
+	
 
 	ibo = BufferCache::CreateIndexBuffer(id);
 
@@ -103,14 +115,13 @@ void DXModel::Render()
 	vbo->BindPipeline(0);
 	ibo->BindPipeline(0);
 
-	for (int i = 0; i < mNode.size(); i++)
+	for (int i = 0; i < GetNodeCount(); i++)
 	{
-		auto node = &mNode[i];
+		ModelNode*  node = GetNode(i);
 		if (node->texture)
 		{
-
+			node->texture->BindPipeline(0);
 		}
-
 		gContext->DrawIndexed(node->nIndices, node->nIndicesOffset, 0);
 	}
 }

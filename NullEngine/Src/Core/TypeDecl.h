@@ -50,23 +50,30 @@ typedef const char* LPCSTR;
 
 
 //==================DirectX 11===================
+//Device
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 struct ID3D11Device1;
 struct ID3D11DeviceContext1;
 struct IDXGISwapChain1;
+
+//Texture
 struct ID3D11RenderTargetView;
 struct ID3D11DepthStencilView;
 struct ID3D11Texture2D;
-struct ID3D11RasterizerState;
 
 
+//Object
 struct ID3D11Buffer;
 struct ID3D11InputLayout;
 struct ID3D11VertexShader;
 struct ID3D11PixelShader;
 struct ID3D11ShaderResourceView;
+
+//States
+struct ID3D11RasterizerState;
 struct ID3D11SamplerState;
+struct ID3D11BlendState;
 
 struct ID3D10Blob;
 typedef ID3D10Blob ID3DBlob;
@@ -78,13 +85,6 @@ struct D3D11_INPUT_ELEMENT_DESC;
 class Context;
 class Scene;
 
-//class DXBuffer;
-//class DXVertexBuffer;
-//class DXIndexBuffer;
-//class DXConstantMapBuffer;
-//class DXConstantBuffer;
-//class DXTexture;
-//class DXModel;
 
 class IndexBuffer;
 class VertexBuffer;
@@ -92,7 +92,7 @@ class ConstantBuffer;
 
 class Shader;
 
-class DXModel;
+class Model;
 class Texture;
 class VertexShader;
 class PixelShader;
@@ -110,6 +110,15 @@ struct Viewport {
 
 enum class SamplerState {
     WRAP, CLAMP
+};
+
+enum class CullMode {
+    BACK,FRONT,FRONT_AND_BACK,WIREFRAME
+};
+
+//TODO : with equations
+enum class BlendState {
+    Transparent,Disable,Inverse
 };
 
 enum class Topolgy {

@@ -6,7 +6,7 @@
 #include <Graphics/Texture.h>
 #include <Graphics/Context.h>
 #include <Graphics/Texture.h>
-#include <Graphics/DX11/DXModel.h>
+#include <Graphics/Model.h>
 #include <Graphics/DX11/DX11Config.h>
 #include <Component/TCamera.h>
 
@@ -23,14 +23,14 @@ cbuffer matrices : register(b0) {
 
 struct VS_IN {
 	float3 pos : POSITION;
-	float3 normal : TEXCORRD0;
-	float2 uv  : TEXCOORD1;
+	float3 normal : TEXCOORD0;
+	float2 st  : TEXCOORD1;
 };
 
 struct PS_IN {
 	float4 pos : SV_POSITION;
 	float3 normal : NORMAL;
-	float2 uv  : TEXCOORD;
+	float2 st  : TEXCOORD;
 };
 
 PS_IN VS(VS_IN vs) {
@@ -39,7 +39,7 @@ PS_IN VS(VS_IN vs) {
 	ps.pos = mul(ps.pos,view);
 	ps.pos = mul(ps.pos,proj);
 	ps.normal = vs.normal;
-	ps.uv  = vs.uv;
+	ps.st  = vs.st;
 	
 	return ps;
 };
@@ -47,15 +47,19 @@ PS_IN VS(VS_IN vs) {
 )";
 
 LPCSTR psTest = R"(
+Texture2D Texture0 : register(t0);
+SamplerState Sampler0 : register(s0);
+
 struct PS_IN {
 	float4 pos : SV_POSITION;
 	float3 normal : NORMAL;
-	float2 uv  : TEXCOORD;
+	float2 st  : TEXCOORD;
 };
 
 float4 PS(PS_IN ps) : SV_TARGET {
-	
-	return float4(ps.normal,1);
+	float4 albedo = Texture0.Sample(Sampler0,ps.st);
+	clip(albedo.a-0.1);
+	return albedo;
 };
 )";
 
@@ -121,10 +125,13 @@ bool Scene01::InitFrame()
 	ps = ShaderCache::CreatePixelShaderFromCode(psTest);
 
 	//camera->LookAt({0,0,-10 }, vec3f(0.f));
-	camera->SetPosition({0,0,-10});
+	camera->SetPosition({0,0.5f,-5});
 	matrices.proj = camera->GetProjectionMatrix();
 
-
+	tree = ModelCache::LoadFromFile("../data/tree01.obj");
+	texture = TextureCache::Load("../data/style.jpg");
+	tree->mNodes[0].texture = TextureCache::Load("../data/tree01.png");
+	tree->mNodes[1].texture = TextureCache::Load("../data/tree00.png");
 
 	return true;
 }
@@ -143,17 +150,21 @@ void Scene01::RenderFrame()
 	cbo->BindPipeline(0);
 	vbo->BindPipeline();
 
+	texture->BindPipeline(0);
 
 	vs->BindPipeline();
 	ps->BindPipeline();
 	ibo->BindPipeline();
 
 
-	//texture->BindPipeline(0);
-
 	gContext->SetTopology(Topolgy::TRIANGLELIST);
 
-	//gDXContext->Draw(3, 0);
-	//mModel->Render();
+	gContext->SetCullMode(CullMode::BACK);
+	gContext->SetBlendState(BlendState::Disable);
 	gContext->DrawIndexed(ibo->indices, 0, 0);
+
+	gContext->SetCullMode(CullMode::FRONT_AND_BACK);
+	gContext->SetBlendState(BlendState::Transparent);
+
+	tree->Render();
 }

@@ -24,7 +24,7 @@ void TCamera::SetAspectRatio(float value)
 
 void TCamera::Update(float dt)
 {
-	constexpr float movementSpeed = 6.6f;
+	constexpr float movementSpeed = 4.2f;
 	constexpr float mouseSpeed = 0.19999f;
 
 	if (Input::IsKeyDown(Key::LMB)) {
