@@ -226,7 +226,7 @@ inline mat4x4 mat4x4::inverted()
 	if (det == 0)
 		return mat4x4();
 
-	det = 1.0 / det;
+	det = 1.0f / det;
 
 	mat4x4 mat{};
 	for (i = 0; i < 16; i++)

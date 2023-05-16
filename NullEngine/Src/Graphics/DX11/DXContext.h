@@ -41,5 +41,6 @@ public:
 	virtual void SetSampler(SamplerState sampler) override;
 	virtual void ClearBuffer(float r, float g, float b, float a);
 	virtual void SwapBuffer();
+	virtual void DrawIndexed(uint indices, uint offset, uint base);
 
 };

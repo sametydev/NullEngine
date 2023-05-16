@@ -25,12 +25,12 @@ void TCamera::SetAspectRatio(float value)
 void TCamera::Update(float dt)
 {
 	constexpr float movementSpeed = 6.6f;
-	constexpr float mouseSpeed = 26.6f;
+	constexpr float mouseSpeed = 0.19999f;
 
 	if (Input::IsKeyDown(Key::LMB)) {
 		vec2f delta = Input::delta;
-		mRot.y += delta.x * mouseSpeed * dt;
-		mRot.x += delta.y * mouseSpeed * dt;
+		mRot.y += delta.x * mouseSpeed;
+		mRot.x += delta.y * mouseSpeed;
 	}
 
 	mat4x4 R = mat4x4::RotationYawPitchRoll(mRot.y, mRot.x, mRot.z);
