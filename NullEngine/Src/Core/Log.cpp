@@ -2,7 +2,7 @@
 #include <Core/Log.h>
 #include <Wnd/WndConfig.h>
 
-void Log::__hr(HRESULT hr)
+void Log::__hr(HRESULT hr, LPCSTR filename, int line)
 {
 	if (FAILED(hr)) {
 		char* buffer = {};
@@ -13,23 +13,51 @@ void Log::__hr(HRESULT hr)
 			(LPSTR)&buffer,0,NULL
 		);
 		LocalFree(buffer);
-		char code[256];
-		sprintf_s(code,"%s\n",buffer);
+		TCHAR totalCuffer[256];
+		filename = (::strrchr(filename,'\\') + 1);
+		sprintf_s(totalCuffer,"%s\nfile: %s\n line %d\n\n",buffer,filename,line);
 
-		MessageBox(NULL, code, "HRESULT Error", MB_OK);
+		if (MessageBox(NULL, totalCuffer, "HRESULT Error", MB_OK)) {
+			ExitProcess(0);
+		}
+
 	}
 }
 
-void Log::__error(LPCSTR code, ...)
+void Log::__error(LPCSTR code, LPCSTR filename, int line, ...)
 {
 	va_list args;
 	va_start(args,code);
 	TCHAR codeBuffer[128];
-
 	vsnprintf(codeBuffer, -1, code, args);
+
+	filename = (::strchr(filename,'\\')+1);
+	TCHAR totalBuffer[256];
+
+	sprintf_s(totalBuffer,"%s\nfile: %s\n line %d\n\n",codeBuffer,filename,line);
 	va_end(args);
 
-	uint res = MessageBox(NULL, codeBuffer, "Error", MB_OK);
+	uint res = MessageBox(NULL, codeBuffer, "Error", MB_OK | MB_ICONERROR);
+	if (res == IDOK)
+	{
+		ExitProcess(0);
+	}
+}
+
+void Log::__warn(LPCSTR code, LPCSTR filename, int line, ...)
+{
+	va_list args;
+	va_start(args, code);
+	TCHAR codeBuffer[128];
+
+	vsnprintf(codeBuffer, -1, code, args);
+	filename = (::strchr(filename, '\\') + 1);
+	TCHAR totalBuffer[256];
+
+	sprintf_s(totalBuffer, "%s\nfile: %s\n line %d\n\n", codeBuffer, filename, line);
+	va_end(args);
+
+	uint res = MessageBox(NULL, codeBuffer, "Warning", MB_OK | MB_ICONWARNING);
 	if (res == IDOK)
 	{
 		ExitProcess(0);

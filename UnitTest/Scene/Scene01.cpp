@@ -107,6 +107,9 @@ bool Scene01::InitFrame()
 
 	camera = new TCamera(45.f,vp.w/vp.h,0.01f,100.f);
 
+	HRESULT hr = E_INVALIDARG;
+	//HR(hr);
+	LOG_WARN("Test");
 	float i = 1.f;
 
 	//00-10
