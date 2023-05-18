@@ -140,6 +140,7 @@
     <ClInclude Include="Src\Graphics\DX11\DXRenderState.h" />
     <ClInclude Include="Src\Component\Camera.h" />
     <ClInclude Include="Src\Graphics\Format.h" />
+    <ClInclude Include="Src\Graphics\GL46\GLConfig.h" />
     <ClInclude Include="Src\Graphics\Shader.h" />
     <ClInclude Include="Src\Core\Type.h" />
     <ClInclude Include="Src\Graphics\Buffer.h" />
