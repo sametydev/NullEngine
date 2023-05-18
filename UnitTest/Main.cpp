@@ -2,7 +2,7 @@
 #include <Wnd/WndFrame.h>
 #include <Graphics/DX11/DXBuffer.h>
 #include <PCH.h>
-#include <Scene/Scene01.h>
+#include <Scene/GLTestScene.h>
 #include <Engine/Timer.h>
 
 int main(int args, char* argv[]) {
@@ -13,7 +13,7 @@ int main(int args, char* argv[]) {
 	desc.api = GraphicAPI::OpenGL46;
 
 	WndFrame wnd(desc);
-	Scene01 scene01;
+	GLTestScene scene01;
 	
 
 	return wnd.ExecFrame(nullptr);

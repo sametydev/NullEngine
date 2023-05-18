@@ -15,7 +15,6 @@ public:
 	GLVertexShader() {};
 	virtual ~GLVertexShader() {};
 
-
 	virtual void Create(LPCSTR code);
 };
 
