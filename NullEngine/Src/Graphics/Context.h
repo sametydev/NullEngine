@@ -28,6 +28,9 @@ public:
 	bool mIsMsaaEnable;
 	uint Msaa;
 	bool mFlipModel;
+	bool mVSync = false;
+
+	GraphicAPI mApiType;
 
 	virtual ID3D11DeviceContext* GetDXContext();
 	virtual ID3D11Device* GetDXDevice();

@@ -13,55 +13,6 @@
 
 
 
-LPCSTR vsTest = R"(
-cbuffer matrices : register(b0) {
-	matrix proj;
-	matrix view;
-	matrix model;
-};
-
-
-struct VS_IN {
-	float3 pos : POSITION;
-	float3 normal : TEXCOORD0;
-	float2 st  : TEXCOORD1;
-};
-
-struct PS_IN {
-	float4 pos : SV_POSITION;
-	float3 normal : NORMAL;
-	float2 st  : TEXCOORD;
-};
-
-PS_IN VS(VS_IN vs) {
-	PS_IN ps;
-	ps.pos = mul(float4(vs.pos,1),model);
-	ps.pos = mul(ps.pos,view);
-	ps.pos = mul(ps.pos,proj);
-	ps.normal = vs.normal;
-	ps.st  = vs.st;
-	
-	return ps;
-};
-
-)";
-
-LPCSTR psTest = R"(
-Texture2D Texture0 : register(t0);
-SamplerState Sampler0 : register(s0);
-
-struct PS_IN {
-	float4 pos : SV_POSITION;
-	float3 normal : NORMAL;
-	float2 st  : TEXCOORD;
-};
-
-float4 PS(PS_IN ps) : SV_TARGET {
-	float4 albedo = Texture0.Sample(Sampler0,ps.st);
-	clip(albedo.a-0.1);
-	return albedo;
-};
-)";
 
 
 bool Scene01::InitFrame()
@@ -120,6 +71,9 @@ bool Scene01::InitFrame()
 	cd.pData = &matrices;
 
 	cbo = BufferCache::CreateConstantBuffer(cd);
+
+	char* vsTest;
+	char* psTest;
 
 	vs = ShaderCache::CreateVertexShaderFromCode(vsTest);
 	ps = ShaderCache::CreatePixelShaderFromCode(psTest);
