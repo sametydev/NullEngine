@@ -105,10 +105,8 @@ void GLTestScene::UpdateFrame(float dt)
 void GLTestScene::RenderFrame()
 {
 
-	cbo->BindPipeline(0);
-	vbo->BindPipeline();
 
-	texture->BindPipeline(0);
+	vbo->BindPipeline();
 
 	vs->BindPipeline();
 	ps->BindPipeline();
@@ -123,6 +121,4 @@ void GLTestScene::RenderFrame()
 
 	gContext->SetCullMode(CullMode::FRONT_AND_BACK);
 	gContext->SetBlendState(BlendState::Transparent);
-
-	tree->Render();
 }

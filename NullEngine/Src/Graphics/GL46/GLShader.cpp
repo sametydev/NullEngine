@@ -21,20 +21,18 @@ uint Compile(LPCSTR code, uint type) {
 	return shader;
 }
 
-GLVertexShader::GLVertexShader() : mShader(0)
+
+GLShader::~GLShader()
 {
+	if(mShader)glDeleteProgram(mShader);
 }
 
-GLVertexShader::~GLVertexShader()
-{
-	if (mShader) glDeleteProgram(mShader);
-}
-
-void GLVertexShader::BindPipeline()
+void GLShader::BindPipeline()
 {
 	glUseProgram(mShader);
 }
 
+//Vertex Shader
 void GLVertexShader::Create(LPCSTR code)
 {
 
@@ -55,3 +53,22 @@ void GLVertexShader::Create(LPCSTR code)
 	glDeleteShader(VS);
 }
 
+//Pixel Shader
+void GLPixelShader::Create(LPCSTR code)
+{
+	auto PS = Compile(code, GL_FRAGMENT_SHADER);
+
+	mShader = glCreateProgram();
+	glAttachShader(mShader, PS);
+	glLinkProgram(mShader);
+
+	GLint sucess = 0;
+	GLchar err[256]{};
+
+	glGetProgramiv(mShader, GL_LINK_STATUS, &sucess);
+	if (!sucess) {
+		glGetProgramInfoLog(mShader, 256, nullptr, err);
+		LOG_ERROR("GL shader link error %s\n", err);
+	}
+	glDeleteShader(PS);
+}

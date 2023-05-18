@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Graphics\GL46\GLShader.h" />
     <ClInclude Include="Src\Graphics\GL46\GLBuffer.h" />
     <ClInclude Include="Src\Graphics\GL46\GLConfig.h" />
     <ClInclude Include="Src\Graphics\GL46\GLContext.h" />
@@ -176,6 +177,7 @@
     <ClInclude Include="Src\Component\TCamera.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Graphics\GL46\GLShader.cpp" />
     <ClCompile Include="Src\Graphics\GL46\GLBuffer.cpp" />
     <ClCompile Include="Src\Graphics\GL46\GLContext.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXRenderState.cpp" />
