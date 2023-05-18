@@ -1,9 +1,5 @@
 #pragma once
 
-#if (_MSC_VER >= 1915)
-#define no_init_all deprecated
-#endif
-
 #pragma comment(lib, "opengl32")
 //#define GL_GLEXT_PROTOTYPES 1
 
