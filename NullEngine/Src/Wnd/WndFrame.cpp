@@ -4,12 +4,13 @@
 #include <Engine/Timer.h>
 #include <Engine/Input.h>
 #include <Graphics/DX11/DXContext.h>
+#include <Graphics/GL46/GLContext.h>
 #include <Wnd/WndConfig.h>
 
-WndFrame::WndFrame(Wnd* parent, uint width, uint heigth) : Wnd(parent, 0, 0, width, heigth)
+WndFrame::WndFrame(const WndDesc& desc) : Wnd(nullptr, 0, 0, desc.width, desc.heigth),mApiType(desc.api)
 {
-	geo.x = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
-	geo.y = (GetSystemMetrics(SM_CYSCREEN) - heigth) / 2;
+	geo.x = (GetSystemMetrics(SM_CXSCREEN) - desc.width) / 2;
+	geo.y = (GetSystemMetrics(SM_CYSCREEN) - desc.heigth) / 2;
 	Create();
 }
 
@@ -26,9 +27,19 @@ void WndFrame::OnCreate()
 
 	uint w = rc.right - rc.left;
 	uint h = rc.bottom - rc.top;
+	switch (mApiType)
+	{
+	case GraphicAPI::DirectX11:
+		mContext = std::make_shared<DXContext>(w, h, *this);
+		break;
+	case GraphicAPI::OpenGL46:
+		mContext = std::make_shared<GLContext>(w, h, *this);
+		break;
+	default:
+		LOG_ERROR("Failed to load Graphics API");
+		break;
+	}
 
-
-	mContext = std::make_shared<DXContext>(w, h, *this);
 }
 
 void WndFrame::OnReSize(uint cx, uint cy)
@@ -39,10 +50,7 @@ void WndFrame::OnReSize(uint cx, uint cy)
 int WndFrame::ExecFrame(Scene* scene)
 {
 	if (scene) {
-		if (!scene->InitFrame())
-		{
-			LOG_ERROR("Failed to init scene");
-		}
+		scene->InitFrame();
 	}
 
 
@@ -60,10 +68,6 @@ int WndFrame::ExecFrame(Scene* scene)
 				PostQuitMessage(0);
 			}
 			
-		}
-		else
-		{
-			Input::DiscardEvents();
 		}
 		if (mContext)
 		{

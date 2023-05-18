@@ -142,11 +142,15 @@ void DXConstantBuffer::Create(const ConstantBufferDesc& desc)
 
 }
 
-void DXConstantBuffer::BindPipeline(uint slot)
+void DXConstantBuffer::BindPS(uint slot)
+{
+	gDXContext->PSSetConstantBuffers(slot, 1, &mBuffer);
+}
+
+void DXConstantBuffer::BindVS(uint slot)
 {
 	gDXContext->VSSetConstantBuffers(slot, 1, &mBuffer);
 }
-
 
 
 void DXConstantBuffer::SubData(void* pData)

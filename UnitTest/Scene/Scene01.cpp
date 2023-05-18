@@ -12,7 +12,6 @@
 
 
 
-
 LPCSTR vsTest = R"(
 cbuffer matrices : register(b0) {
 	matrix proj;
@@ -64,7 +63,8 @@ float4 PS(PS_IN ps) : SV_TARGET {
 )";
 
 
-bool Scene01::InitFrame()
+
+void Scene01::InitFrame()
 {
 	Viewport vp{};
 	
@@ -121,6 +121,7 @@ bool Scene01::InitFrame()
 
 	cbo = BufferCache::CreateConstantBuffer(cd);
 
+
 	vs = ShaderCache::CreateVertexShaderFromCode(vsTest);
 	ps = ShaderCache::CreatePixelShaderFromCode(psTest);
 
@@ -132,8 +133,6 @@ bool Scene01::InitFrame()
 	texture = TextureCache::Load("../data/style.jpg");
 	tree->mNodes[0].texture = TextureCache::Load("../data/tree01.png");
 	tree->mNodes[1].texture = TextureCache::Load("../data/tree00.png");
-
-	return true;
 }
 
 void Scene01::UpdateFrame(float dt)

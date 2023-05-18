@@ -137,9 +137,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Graphics\GL46\GLShader.h" />
+    <ClInclude Include="Src\Graphics\GL46\GLBuffer.h" />
+    <ClInclude Include="Src\Graphics\GL46\GLConfig.h" />
+    <ClInclude Include="Src\Graphics\GL46\GLContext.h" />
     <ClInclude Include="Src\Graphics\DX11\DXRenderState.h" />
     <ClInclude Include="Src\Component\Camera.h" />
     <ClInclude Include="Src\Graphics\Format.h" />
+    <ClInclude Include="Src\Graphics\GL46\GLExtension\GLExtension.h" />
     <ClInclude Include="Src\Graphics\Shader.h" />
     <ClInclude Include="Src\Core\Type.h" />
     <ClInclude Include="Src\Graphics\Buffer.h" />
@@ -172,9 +177,13 @@
     <ClInclude Include="Src\Component\TCamera.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Graphics\GL46\GLShader.cpp" />
+    <ClCompile Include="Src\Graphics\GL46\GLBuffer.cpp" />
+    <ClCompile Include="Src\Graphics\GL46\GLContext.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXRenderState.cpp" />
     <ClCompile Include="Src\Component\Camera.cpp" />
     <ClCompile Include="Src\Graphics\Format.cpp" />
+    <ClCompile Include="Src\Graphics\GL46\GLExtension\GLExtension.cpp" />
     <ClCompile Include="Src\Graphics\Shader.cpp" />
     <ClCompile Include="Src\Graphics\Buffer.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXModel.cpp" />

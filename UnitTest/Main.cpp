@@ -2,13 +2,19 @@
 #include <Wnd/WndFrame.h>
 #include <Graphics/DX11/DXBuffer.h>
 #include <PCH.h>
-#include <Scene/Scene01.h>
+#include <Scene/GLTestScene.h>
 #include <Engine/Timer.h>
 
 int main(int args, char* argv[]) {
 
-	WndFrame wnd(nullptr, 860, 640);
-	Scene01 scene01;
+	WndDesc desc{};
+	desc.width = 1024;
+	desc.heigth = 680;
+	desc.api = GraphicAPI::OpenGL46;
 
-	return wnd.ExecFrame(&scene01);
+	WndFrame wnd(desc);
+	GLTestScene scene01;
+	
+
+	return wnd.ExecFrame(nullptr);
 }

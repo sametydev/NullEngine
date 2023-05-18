@@ -11,6 +11,8 @@ DXContext::DXContext(int cx, int cy, HWND hwnd) :
 	mDepthStencilView{nullptr},
 	mDepthStencilBuffer{nullptr}
 {
+	mApiType = GraphicAPI::DirectX11;
+
 	CreateDevice();
 	CreateSwapChain();
 	ResizeRenderBuffer(cx, cy);

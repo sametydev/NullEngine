@@ -34,20 +34,36 @@ typedef long			HRESULT;
 
 
 typedef void* HANDLE;
-struct HWND__; typedef HWND__* HWND;
+struct HWND__;      typedef HWND__* HWND;
 struct HINSTANCE__; typedef HINSTANCE__* HINSTANCE;
-struct HDC__; typedef HDC__* HDC;
+struct HDC__;       typedef HDC__* HDC;
+struct HGLRC__;      typedef HGLRC__* HGLRC;
 
 
-//DirectX
 
-
-//Rype
+//Type
 typedef UINT			uint;
 typedef unsigned char	byte;
 typedef const char* LPCSTR;
 
 
+//==================OpenGL46===================
+typedef unsigned int GLenum;
+typedef unsigned char GLboolean;
+typedef unsigned int GLbitfield;
+typedef signed char GLbyte;
+typedef short GLshort;
+typedef int GLint;
+typedef int GLsizei;
+typedef unsigned char GLubyte;
+typedef unsigned short GLushort;
+typedef unsigned int GLuint;
+typedef float GLfloat;
+typedef float GLclampf;
+typedef double GLdouble;
+typedef double GLclampd;
+typedef void GLvoid;
+//===============================================
 
 //==================DirectX 11===================
 //Device
@@ -83,6 +99,7 @@ struct D3D11_INPUT_ELEMENT_DESC;
 
 //=================USER==========================
 class Context;
+
 class Scene;
 
 
@@ -104,6 +121,21 @@ class TCamera;
 
 
 //API Type
+
+
+enum class GraphicAPI {
+    DirectX11,OpenGL46
+};
+
+struct WndDesc {
+    GraphicAPI api;
+    uint width;
+    uint heigth;
+    bool vsync;
+    bool msaa;
+};
+
+
 struct Viewport {
     float x, y, w, h;
 };
