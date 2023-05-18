@@ -32,6 +32,7 @@ public:
 
 	GraphicAPI mApiType;
 
+
 	virtual ID3D11DeviceContext* GetDXContext();
 	virtual ID3D11Device* GetDXDevice();
 	static Context* gInstance;

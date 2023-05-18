@@ -5,10 +5,16 @@
 GLContext::GLContext(int cx, int cy, HWND hwnd) : Context(cx,cy,hwnd),mDC(nullptr),mRC(nullptr)
 {
 	mApiType = GraphicAPI::OpenGL46;
+    GL::LoadGLExtension();
+    CreateDevice();
 }
 
 GLContext::~GLContext()
 {
+    if (!mHwnd) return;
+    wglMakeCurrent(nullptr, nullptr);
+    wglDeleteContext(mRC);
+    ReleaseDC(mHwnd, mDC);
 }
 
 void GLContext::CreateDevice()
@@ -44,14 +50,14 @@ void GLContext::CreateDevice()
         if (!wglChoosePixelFormatARB(mDC, pixelFormatAttribs,
             pixelFormatFloatAttribs, 1, &pixelFormat, (unsigned int*)&numFormats))
         {
-            assert(0 && "failed to find pixel format from attribs");
+            LOG_ERROR("failed to find pixel format from attribs");
         }
 
         PIXELFORMATDESCRIPTOR pfd{};        //get more infomation of pixel format
         DescribePixelFormat(mDC, pixelFormat, sizeof(PIXELFORMATDESCRIPTOR), &pfd);
 
         if (!SetPixelFormat(mDC, pixelFormat, &pfd)) {
-            assert(0 && "failed to set pixel format");
+            LOG_ERROR("failed to set pixel format");
         }
 
 
@@ -65,7 +71,7 @@ void GLContext::CreateDevice()
         const char* glslVer = (char*)glGetString(GL_SHADING_LANGUAGE_VERSION);
 
         char apiInfo[128]{};
-        sprintf_s(apiInfo, "API  : OpenGL %s\nGLSL : %s\nHW   : %s\n", version, glslVer, hardware);
+        sprintf_s(apiInfo, "--API  : OpenGL %s\nGLSL : %s\nHW   : %s\n", version, glslVer, hardware);
         printf(apiInfo);
         if (GL_ARB_clip_control) {
             //https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_clip_control.txt
@@ -74,13 +80,13 @@ void GLContext::CreateDevice()
             glDepthRange(0.0f, 1.0f);
         }
         if (GL_ARB_direct_state_access) {
-            printf("DSA is supported\n");
+            printf("--DSA is supported\n");
         }
 
        
         wglSwapIntervalEXT(mVSync ? 1 : 0);
     
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
         glEnable(GL_STENCIL_TEST);
@@ -90,4 +96,23 @@ void GLContext::CreateDevice()
         glFrontFace(GL_CW);
 
 	}
+}
+
+void GLContext::ClearBuffer(float r, float g, float b, float a)
+{
+    glClearColor(r, g, b, a);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void GLContext::SwapBuffer()
+{
+    if (mDC)
+    {
+        SwapBuffers(mDC);
+    }
+}
+
+void GLContext::ResizeRenderBuffer(uint cx, uint cy)
+{
+    glViewport(0, 0, cx, cy);
 }

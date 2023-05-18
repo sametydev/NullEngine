@@ -7,7 +7,12 @@
 
 int main(int args, char* argv[]) {
 
-	WndFrame wnd(nullptr, 860, 640);
+	WndDesc desc{};
+	desc.width = 1024;
+	desc.heigth = 680;
+	desc.api = GraphicAPI::OpenGL46;
+
+	WndFrame wnd(desc);
 	Scene01 scene01;
 
 	return wnd.ExecFrame(&scene01);

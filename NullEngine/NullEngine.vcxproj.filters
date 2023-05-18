@@ -34,7 +34,7 @@
     <ClInclude Include="Src\Component\Camera.h" />
     <ClInclude Include="Src\Component\TCamera.h" />
     <ClInclude Include="Src\Graphics\DX11\DXRenderState.h" />
-    <ClInclude Include="Src\Graphics\GL46\GLExtension.h" />
+    <ClInclude Include="Src\Graphics\GL46\GLExtension\GLExtension.h" />
     <ClInclude Include="Src\Graphics\GL46\GLContext.h" />
     <ClInclude Include="Src\Graphics\GL46\GLConfig.h" />
   </ItemGroup>
@@ -63,7 +63,7 @@
     <ClCompile Include="Src\Component\Camera.cpp" />
     <ClCompile Include="Src\Component\TCamera.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXRenderState.cpp" />
-    <ClCompile Include="Src\Graphics\GL46\GLExtension.cpp" />
+    <ClCompile Include="Src\Graphics\GL46\GLExtension\GLExtension.cpp" />
     <ClCompile Include="Src\Graphics\GL46\GLContext.cpp" />
   </ItemGroup>
 </Project>

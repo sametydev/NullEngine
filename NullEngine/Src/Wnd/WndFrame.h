@@ -5,15 +5,13 @@ class WndFrame : public Wnd
 {
 
 public:
-	WndFrame(Wnd* parent,uint height,uint width);
+	WndFrame(const WndDesc& desc);
 	virtual ~WndFrame();
 
 	void OnCreate() override;
 	void OnReSize(uint cx, uint cy) override;
 
-	//TODO : Graphics Context
-	//Input Event
-	//Event Drive Execute
+	GraphicAPI mApiType;
 	std::shared_ptr<Context> mContext;
 
 	int ExecFrame(Scene* scene = nullptr);

@@ -37,7 +37,7 @@ typedef void* HANDLE;
 struct HWND__;      typedef HWND__* HWND;
 struct HINSTANCE__; typedef HINSTANCE__* HINSTANCE;
 struct HDC__;       typedef HDC__* HDC;
-struct HGLRC_;      typedef HGLRC_* HGLRC;
+struct HGLRC__;      typedef HGLRC__* HGLRC;
 
 
 
@@ -99,6 +99,7 @@ struct D3D11_INPUT_ELEMENT_DESC;
 
 //=================USER==========================
 class Context;
+
 class Scene;
 
 
@@ -121,9 +122,19 @@ class TCamera;
 
 //API Type
 
+
 enum class GraphicAPI {
     DirectX11,OpenGL46
 };
+
+struct WndDesc {
+    GraphicAPI api;
+    uint width;
+    uint heigth;
+    bool vsync;
+    bool msaa;
+};
+
 
 struct Viewport {
     float x, y, w, h;
