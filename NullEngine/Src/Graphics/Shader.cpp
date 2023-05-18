@@ -1,6 +1,8 @@
 #include <PCH.h>
 #include <Graphics/Shader.h>
+#include <Graphics/Context.h>
 #include <Graphics/DX11/DXShader.h>
+#include <Graphics/GL46/GLShader.h>
 
 
 std::unordered_map<std::string, std::shared_ptr<Shader>> ShaderCache::mCache;
@@ -29,7 +31,20 @@ Shader* ShaderCache::CreatePixelShaderFromCode(LPCSTR code)
 		return it->second.get();
 	}
 
-	std::shared_ptr<Shader> shader = std::make_shared<DXPixelShader>();
+
+
+	std::shared_ptr<Shader> shader = nullptr;
+
+	auto type = gContext->mApiType;
+	switch (type)
+	{
+	case GraphicAPI::DirectX11:
+		shader = std::make_shared<DXPixelShader>();
+		break;
+	case GraphicAPI::OpenGL46:
+		shader = std::make_shared<GLShader>();
+		break;
+	}
 	shader->Create(code);
 
 	mCache.insert(std::make_pair(code, shader));

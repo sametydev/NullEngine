@@ -14,6 +14,7 @@ int main(int args, char* argv[]) {
 
 	WndFrame wnd(desc);
 	Scene01 scene01;
+	
 
 	return wnd.ExecFrame(nullptr);
 }
