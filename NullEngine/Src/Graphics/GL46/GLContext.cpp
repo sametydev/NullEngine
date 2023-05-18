@@ -2,7 +2,8 @@
 #include <Graphics/GL46/GLContext.h>
 #include <Graphics/GL46/GLConfig.h>
 
-GLContext::GLContext(int cx, int cy, HWND hwnd) : Context(cx,cy,hwnd),mDC(nullptr),mRC(nullptr)
+GLContext::GLContext(int cx, int cy, HWND hwnd) : Context(cx,cy,hwnd),
+mDC(nullptr),mRC(nullptr)
 {
 	mApiType = GraphicAPI::OpenGL46;
     GL::LoadGLExtension();
