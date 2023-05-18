@@ -1,9 +1,10 @@
 #include <PCH.h>
 #include <Graphics/GL46/GLContext.h>
 #include <Graphics/GL46/GLConfig.h>
+#include <Graphics/Format.h>
 
 GLContext::GLContext(int cx, int cy, HWND hwnd) : Context(cx,cy,hwnd),
-mDC(nullptr),mRC(nullptr)
+mDC(nullptr),mRC(nullptr),mTopolgy(GL_TRIANGLES)
 {
 	mApiType = GraphicAPI::OpenGL46;
     GL::LoadGLExtension();
@@ -115,5 +116,16 @@ void GLContext::SwapBuffer()
 
 void GLContext::ResizeRenderBuffer(uint cx, uint cy)
 {
+    //TODO :  RESIZE BUFFER
     glViewport(0, 0, cx, cy);
+}
+
+void GLContext::SetTopology(Topolgy topology)
+{
+    mTopolgy = format::TopologyToGL(topology);
+}
+
+void GLContext::DrawIndexed(uint indices, uint offset, uint base)
+{
+    glDrawElements(mTopolgy, indices, GL_UNSIGNED_INT, NULL);
 }

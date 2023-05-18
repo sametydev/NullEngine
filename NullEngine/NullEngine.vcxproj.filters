@@ -37,6 +37,7 @@
     <ClInclude Include="Src\Graphics\GL46\GLExtension\GLExtension.h" />
     <ClInclude Include="Src\Graphics\GL46\GLContext.h" />
     <ClInclude Include="Src\Graphics\GL46\GLConfig.h" />
+    <ClInclude Include="Src\Graphics\GL46\GLBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp" />
@@ -65,5 +66,6 @@
     <ClCompile Include="Src\Graphics\DX11\DXRenderState.cpp" />
     <ClCompile Include="Src\Graphics\GL46\GLExtension\GLExtension.cpp" />
     <ClCompile Include="Src\Graphics\GL46\GLContext.cpp" />
+    <ClCompile Include="Src\Graphics\GL46\GLBuffer.cpp" />
   </ItemGroup>
 </Project>

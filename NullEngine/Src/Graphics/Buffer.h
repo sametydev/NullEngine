@@ -5,6 +5,7 @@ public:
 	Buffer() {};
 	virtual ~Buffer() {};
 	virtual void BindPipeline(uint slot) = 0;
+	virtual void UnBind() {};
 	//virtual void Create(const VertexBufferDesc& desc) = 0;
 };
 
@@ -32,7 +33,8 @@ class ConstantBuffer : public Buffer
 public:
 	ConstantBuffer() {};
 	virtual ~ConstantBuffer() {};
-	virtual void BindPipeline(uint slot = 0) = 0;
+	virtual void BindPS(uint slot = 0) = 0;
+	virtual void BindVS(uint slot = 0) = 0;
 	virtual void Create(const ConstantBufferDesc& desc) = 0;
 	virtual void SubData(void* pData) = 0;
 };

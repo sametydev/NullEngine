@@ -1,6 +1,7 @@
 #include <PCH.h>
 #include <Graphics/Format.h>
 #include <Graphics/DX11/DX11Config.h>
+#include <Graphics/GL46/GLConfig.h>
 
 DXGI_FORMAT format::FormatToDX(uint count, Format format)
 {
@@ -90,4 +91,59 @@ DXGI_FORMAT format::FormatToDX(uint count, Format format)
 		break;
 	}
 	return DXGI_FORMAT_UNKNOWN;
+}
+
+GLenum format::FormatToGL(Format format)
+{
+
+	switch (format)
+	{
+	case Format::Byte:
+		return GL_BYTE;
+		break;
+	case Format::Int:
+		return GL_INT;
+		break;
+	case Format::Uint:
+		return GL_UNSIGNED_INT;
+		break;
+	case Format::Float:
+		return GL_FLOAT;
+		break;
+	default:
+		assert(0 && "Failed to transform format!");
+		break;
+	}
+		
+
+	
+	return GLenum();
+}
+
+GLenum format::TopologyToGL(Topolgy topolgy)
+{
+	switch (topolgy)
+	{
+	case Topolgy::TRIANGLELIST:
+		return GL_TRIANGLES;
+		break;
+
+	case Topolgy::POINTLIST:
+		return GL_POINTS;
+		break;
+	case Topolgy::LINELIST:
+		return GL_LINES;
+		break;
+	case Topolgy::LINESTRIP:
+		return GL_LINE_STRIP;
+		break;
+
+	case Topolgy::TRIANGLESTRIP:
+		return GL_TRIANGLE_STRIP;
+		break;
+	case Topolgy::UNDEFINED:
+		return GLenum();
+		break;
+	}
+	return GLenum();
 }
