@@ -29,9 +29,10 @@ class DXConstantBuffer : public ConstantBuffer {
 public:
 	DXConstantBuffer();
 	virtual~DXConstantBuffer();
+	void BindPipeline(uint slot = 0) override;
+	void BindPS(uint slot = 0) override;
+	void BindVS(uint slot = 0) override;
 	void Create(const ConstantBufferDesc& desc) override;
-	void BindVS(uint slot) override;
-	void BindPS(uint slot) override;
 	void SubData(void* pData) override;
 
 	ID3D11Buffer* mBuffer;
