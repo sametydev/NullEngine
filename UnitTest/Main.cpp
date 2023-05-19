@@ -5,7 +5,8 @@
 #include <Scene/GLTestScene.h>
 #include <Scene/Scene01.h>
 #include <Engine/Timer.h>
-#pragma comment(lib, "opengl32")
+#include <Core/FileSystem.h>
+
 int main(int args, char* argv[]) {
 
 	WndDesc desc{};
@@ -14,7 +15,7 @@ int main(int args, char* argv[]) {
 	desc.api = GraphicAPI::DirectX11;
 
 	WndFrame wnd(desc);
-	GLTestScene scene01;
-
-	return wnd.ExecFrame(nullptr);
+	Scene01 scene01;
+	std::cout << FileSystem::GetExtension("../test.hlsl");
+	return wnd.ExecFrame(&scene01);
 }

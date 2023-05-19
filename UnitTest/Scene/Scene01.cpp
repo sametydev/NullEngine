@@ -145,8 +145,8 @@ void Scene01::UpdateFrame(float dt)
 
 void Scene01::RenderFrame()
 {
-
-	cbo->BindPipeline(0);
+	cbo->BindVS(0);
+	cbo->BindPS(0);
 	vbo->BindPipeline();
 
 	texture->BindPipeline(0);

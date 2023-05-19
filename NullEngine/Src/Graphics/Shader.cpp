@@ -8,6 +8,18 @@
 std::unordered_map<std::string, std::shared_ptr<Shader>> ShaderCache::mCache;
 std::vector<std::shared_ptr<Shader>> ShaderCache::mShaders;
 
+Shader* ShaderCache::LoadVS(LPCSTR filename)
+{
+
+	return nullptr;
+}
+
+Shader* ShaderCache::LoadPS(LPCSTR filename)
+{
+
+	return nullptr;
+}
+
 Shader* ShaderCache::CreateVertexShaderFromCode(LPCSTR code)
 {
 	auto it = mCache.find(code);
@@ -19,6 +31,7 @@ Shader* ShaderCache::CreateVertexShaderFromCode(LPCSTR code)
 	std::shared_ptr<Shader> shader = nullptr;
 
 	auto type = gContext->mApiType;
+
 	switch (type)
 	{
 	case GraphicAPI::DirectX11:
