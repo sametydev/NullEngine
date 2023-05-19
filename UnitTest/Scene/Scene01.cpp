@@ -91,7 +91,7 @@ struct PS_IN {
 };
 
 float4 PS(PS_IN ps) : SV_TARGET {
-	float4 albedo = Texture1.Sample(Sampler0,ps.st);
+	float4 albedo = Texture0.Sample(Sampler0,ps.st);
 	return albedo;
 };
 )";
@@ -240,8 +240,7 @@ void Scene01::RenderFrame()
 	fbo->EndFrame();
 
 	//2 rednderpass
-	//fbo->BindRenderPass();
-	fbo->GetTexture(1)->Bind(1);
+	fbo->BindRenderPass();
 	//------ps writeing
 	//Draw Screen
 	f_vbo->BindPipeline(0);
