@@ -107,6 +107,8 @@ class IndexBuffer;
 class VertexBuffer;
 class ConstantBuffer;
 
+class FrameBuffer;
+
 class Shader;
 
 class Model;

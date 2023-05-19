@@ -85,7 +85,7 @@ void DXTexture::Bind(uint slot)
 	gDXContext->PSSetShaderResources(mSlot, 1, &mSRV);
 }
 
-void DXTexture::UnBind(uint slot = 0)
+void DXTexture::UnBind()
 {
 	ID3D11ShaderResourceView* clearView = nullptr;
 	gDXContext->PSSetShaderResources(mSlot, 1, &clearView);

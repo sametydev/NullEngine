@@ -5,6 +5,10 @@ FrameBuffer::FrameBuffer() : bDepthStencil(false)
 {
 }
 
+FrameBuffer::~FrameBuffer()
+{
+}
+
 uint FrameBuffer::GetTextureSize()
 {
 	return (uint)mRenderPass.size();

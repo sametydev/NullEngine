@@ -120,7 +120,7 @@ void DXModel::Render()
 		ModelNode*  node = GetNode(i);
 		if (node->texture)
 		{
-			node->texture->BindPipeline(0);
+			node->texture->Bind(0);
 		}
 		gContext->DrawIndexed(node->nIndices, node->nIndicesOffset, 0);
 	}
