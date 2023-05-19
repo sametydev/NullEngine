@@ -33,6 +33,7 @@ class ConstantBuffer : public Buffer
 public:
 	ConstantBuffer() {};
 	virtual ~ConstantBuffer() {};
+	virtual void BindPipeline(uint slot = 0) = 0;
 	virtual void BindPS(uint slot = 0) = 0;
 	virtual void BindVS(uint slot = 0) = 0;
 	virtual void Create(const ConstantBufferDesc& desc) = 0;

@@ -2,13 +2,14 @@
 
 #pragma comment(lib, "opengl32")
 //#define GL_GLEXT_PROTOTYPES 1
-
-#include <GL\glcorearb.h>
 #include <Windows.h>
+#include <GL\glcorearb.h>
+//#include <GL\glext.h>
 #include <GL\wglext.h>
 #include <GL\GL.h> //[GL_VERSION_1_1]
 #include <stdio.h>
 #include <stdlib.h>
+
 
 #define GL_EXT_PROC(type, func) \
 do{\
