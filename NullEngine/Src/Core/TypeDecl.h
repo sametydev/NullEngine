@@ -107,6 +107,8 @@ class IndexBuffer;
 class VertexBuffer;
 class ConstantBuffer;
 
+class FrameBuffer;
+
 class Shader;
 
 class Model;
@@ -176,6 +178,13 @@ enum class Format : int
     Double,
 };
 
+//TODO with TextureFormat
+struct FrameBufferDesc {
+    uint width;
+    uint height;
+    uint nRenderPass;
+    bool bDepthStencil;
+};
 
 struct VertexAttrib {
     uint slot;

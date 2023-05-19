@@ -79,7 +79,7 @@ void DXTexture::Load(LPCSTR filename)
 	stbi_image_free(buffers);
 }
 
-void DXTexture::BindPipeline(uint slot)
+void DXTexture::Bind(uint slot)
 {
 	mSlot = slot;
 	gDXContext->PSSetShaderResources(mSlot, 1, &mSRV);

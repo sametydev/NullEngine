@@ -22,7 +22,7 @@ const char* FileSystem::ReadAllLinesFromFile(const char* path)
     FILE* f;
     struct stat fs;
     char* buf;
-
+    //is have a problem on UTF-8 BOM
     stat(path, &fs);
     buf = (char*)malloc(fs.st_size);
 
@@ -31,4 +31,9 @@ const char* FileSystem::ReadAllLinesFromFile(const char* path)
     fclose(f);
     
     return buf;
+}
+
+std::string FileSystem::GetExtension(std::string path)
+{
+    return (path.substr(path.find_last_of(".") + 1));
 }

@@ -100,6 +100,7 @@ void GLUniformBuffer::Create(const ConstantBufferDesc& desc)
 	glBindBuffer(GL_UNIFORM_BUFFER, NULL);
 }
 
+
 void GLUniformBuffer::BindPS(uint slot)
 {
 	glBindBufferBase(GL_UNIFORM_BUFFER, slot, ubo);

@@ -9,7 +9,7 @@ public:
 	virtual ~DXTexture();
 
 	virtual void Load(LPCSTR filename);
-	virtual void BindPipeline(uint slot = 0);
+	virtual void Bind(uint slot = 0);
 	virtual void UnBind();
 
 	uint width;

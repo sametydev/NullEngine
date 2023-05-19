@@ -1,12 +1,24 @@
 #include <PCH.h>
 #include <Graphics/Buffer.h>
 #include <Graphics/DX11/DXBuffer.h>
-
+#include <Graphics/GL46/GLBuffer.h>
+#include <Graphics/Context.h>
 std::vector<std::shared_ptr<Buffer>> BufferCache::mCache;
 
 VertexBuffer* BufferCache::CreateVertexBuffer(const VertexBufferDesc& desc)
 {
-	auto buffer = std::make_shared<DXVertexBuffer>();
+	std::shared_ptr<VertexBuffer> buffer = nullptr;
+	switch (gContext->mApiType)
+	{
+	case GraphicAPI::DirectX11:
+		buffer = std::make_shared<DXVertexBuffer>();
+		break;
+	case GraphicAPI::OpenGL46:
+		buffer = std::make_shared<GLVertexBuffer>();
+		break;
+	default:
+		break;
+	}
 	buffer->Create(desc);
 	mCache.emplace_back(buffer);
 	return buffer.get();
@@ -14,7 +26,19 @@ VertexBuffer* BufferCache::CreateVertexBuffer(const VertexBufferDesc& desc)
 
 IndexBuffer* BufferCache::CreateIndexBuffer(const IndexBufferDesc& desc)
 {
-	auto buffer = std::make_shared<DXIndexBuffer>();
+
+	std::shared_ptr<IndexBuffer> buffer = nullptr;
+	switch (gContext->mApiType)
+	{
+	case GraphicAPI::DirectX11:
+		buffer = std::make_shared<DXIndexBuffer>();
+		break;
+	case GraphicAPI::OpenGL46:
+		buffer = std::make_shared<GLIndexBuffer>();
+		break;
+	default:
+		break;
+	}
 	buffer->Create(desc);
 	mCache.emplace_back(buffer);
 	return buffer.get();
@@ -22,7 +46,18 @@ IndexBuffer* BufferCache::CreateIndexBuffer(const IndexBufferDesc& desc)
 
 ConstantBuffer* BufferCache::CreateConstantBuffer(const ConstantBufferDesc& desc)
 {
-	auto buffer = std::make_shared<DXConstantBuffer>();
+	std::shared_ptr<ConstantBuffer> buffer = nullptr;
+	switch (gContext->mApiType)
+	{
+	case GraphicAPI::DirectX11:
+		buffer = std::make_shared<DXConstantBuffer>();
+		break;
+	case GraphicAPI::OpenGL46:
+		buffer = std::make_shared<GLUniformBuffer>();
+		break;
+	default:
+		break;
+	}
 	buffer->Create(desc);
 	mCache.emplace_back(buffer);
 	return buffer.get();

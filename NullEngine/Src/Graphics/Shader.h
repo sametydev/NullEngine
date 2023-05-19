@@ -16,6 +16,9 @@ public:
 class ShaderCache {
 public:
 	/*static Shader* Create(ShaderDesc* desc);*/
+	static Shader* LoadVS(LPCSTR filename);
+	static Shader* LoadPS(LPCSTR filename);
+
 	static Shader* CreateVertexShaderFromCode(LPCSTR code);
 	static Shader* CreatePixelShaderFromCode(LPCSTR code);
 

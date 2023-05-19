@@ -12,12 +12,41 @@
 
 
 
-LPCSTR vsTest = R"(
+LPCSTR gvsTest = R"(
+#version 450 core
 
+layout(location = 0) in vec3 pos;
+layout(location = 1) in vec3 normal;
+layout(location = 2) in vec2 st;
+
+out struct PS{
+	vec3 normal;
+	vec2 st;
+}ps;
+
+void main(){
+	gl_Position = vec4(pos,1);
+	ps.normal = normal;
+	ps.st = st;
+};
 
 )";
 
-LPCSTR psTest = R"(
+LPCSTR gpsTest = R"(
+#version 450 core
+
+in struct PS{
+	vec3 normal;
+	vec2 st;
+}ps;
+
+out vec4 result;
+
+void main(){
+
+	result = vec4(1,1,1,1);
+
+};
 
 )";
 
@@ -31,21 +60,13 @@ void GLTestScene::InitFrame()
 
 	camera = new TCamera(45.f, vp.w / vp.h, 0.01f, 100.f);
 
-	float i = 10.f;
+	float i = 0.5f;
 
-	//00-10
-	//01-11
-
-	//-1 0 -1 (0)
-	//-1 0 1 (1)
-	//1 0 1 (2)
-	//1 0 -1 (3)
 
 	VertexPNS vertices[] = {
-		{{-i,0,-i},		{0,1.f,0},	{0.f,1.f}},
-		{{-i,0,i},		{0,1.f,0},	{0.0f,0.f}},
-		{{i,0,i},		{0,1.f,0},	{1.f,0.f}},
-		{{i,0,-i},		{0,1.f,0},	{1.f,1.f}}
+		{{-i,-i,0},		{0,1.f,0},	{0.f,1.f}},
+		{{0,i,0},		{0,1.f,0},	{0.0f,0.f}},
+		{{i,-i,0},		{0,1.f,0},	{1.f,0.f}},
 	};
 
 	uint indices[] = {
@@ -74,51 +95,27 @@ void GLTestScene::InitFrame()
 
 	ibo = BufferCache::CreateIndexBuffer(id);
 
-	ConstantBufferDesc cd{};
-	cd.cbSize = sizeof(matrices);
-	cd.pData = &matrices;
-
-	cbo = BufferCache::CreateConstantBuffer(cd);
 
 
-	vs = ShaderCache::CreateVertexShaderFromCode(vsTest);
-	ps = ShaderCache::CreatePixelShaderFromCode(psTest);
+	vs = ShaderCache::CreateVertexShaderFromCode(gvsTest);
+	ps = ShaderCache::CreatePixelShaderFromCode(gpsTest);
 
 	//camera->LookAt({0,0,-10 }, vec3f(0.f));
 	camera->SetPosition({ 0,0.5f,-5 });
-	matrices.proj = camera->GetProjectionMatrix();
-
-	tree = ModelCache::LoadFromFile("../data/tree01.obj");
-	texture = TextureCache::Load("../data/style.jpg");
-	tree->mNodes[0].texture = TextureCache::Load("../data/tree01.png");
-	tree->mNodes[1].texture = TextureCache::Load("../data/tree00.png");
 }
 
 void GLTestScene::UpdateFrame(float dt)
 {
 	camera->Update(dt);
-	matrices.view = camera->GetViewMatrix();
-
-	cbo->SubData(&matrices);
 }
 
 void GLTestScene::RenderFrame()
 {
-
-
 	vbo->BindPipeline();
 
 	vs->BindPipeline();
 	ps->BindPipeline();
 	ibo->BindPipeline();
-
-
 	gContext->SetTopology(Topolgy::TRIANGLELIST);
-
-	gContext->SetCullMode(CullMode::BACK);
-	gContext->SetBlendState(BlendState::Disable);
-	gContext->DrawIndexed(ibo->indices, 0, 0);
-
-	gContext->SetCullMode(CullMode::FRONT_AND_BACK);
-	gContext->SetBlendState(BlendState::Transparent);
+	gContext->DrawIndexed(3, 0, 0);
 }

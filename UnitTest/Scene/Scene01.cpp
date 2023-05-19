@@ -7,12 +7,13 @@
 #include <Graphics/Context.h>
 #include <Graphics/Texture.h>
 #include <Graphics/Model.h>
+#include <Graphics/DX11/DXFrameBuffer.h>
 #include <Graphics/DX11/DX11Config.h>
 #include <Component/TCamera.h>
 
 
 
-LPCSTR vsTest = R"(
+LPCSTR gBuffer = R"(
 cbuffer matrices : register(b0) {
 	matrix proj;
 	matrix view;
@@ -43,34 +44,65 @@ PS_IN VS(VS_IN vs) {
 	return ps;
 };
 
+Texture2D GTexture : register(t0);
+SamplerState GSampler : register(s0);
+
+struct PS_Out{
+	float4 pos : SV_TARGET0;
+	float4 normal : SV_TARGET1;
+};
+
+PS_Out PS(PS_IN ps) : SV_TARGET
+{
+	PS_Out output;
+	output.pos = GTexture.Sample(GSampler, ps.st);
+	output.normal = float4(ps.normal, 1);
+	return output;
+};
 )";
 
-LPCSTR psTest = R"(
+LPCSTR vsNDC = R"(
+struct VS_IN {
+	float3 pos : POSITION;
+	float2 st  : TEXCOORD0;
+};
+
+struct PS_IN {
+	float4 pos : SV_POSITION;
+	float2 st  : TEXCOORD;
+};
+
+PS_IN VS(VS_IN vs) {
+	PS_IN ps;
+	ps.pos = float4(vs.pos,1);
+	ps.st = vs.st;
+	return ps;
+};
+)";
+
+LPCSTR psNDC = R"(
 Texture2D Texture0 : register(t0);
+Texture2D Texture1 : register(t1);
 SamplerState Sampler0 : register(s0);
 
 struct PS_IN {
 	float4 pos : SV_POSITION;
-	float3 normal : NORMAL;
 	float2 st  : TEXCOORD;
 };
 
 float4 PS(PS_IN ps) : SV_TARGET {
 	float4 albedo = Texture0.Sample(Sampler0,ps.st);
-	clip(albedo.a-0.1);
 	return albedo;
 };
 )";
 
-
-
 void Scene01::InitFrame()
 {
 	Viewport vp{};
-	
+
 	gContext->GetViewport(&vp);
 
-	camera = new TCamera(45.f,vp.w/vp.h,0.01f,100.f);
+	camera = new TCamera(45.f, vp.w / vp.h, 0.01f, 100.f);
 
 	float i = 10.f;
 
@@ -98,7 +130,7 @@ void Scene01::InitFrame()
 		{0,Format::Float,3,offsetof(VertexPNS,VertexPNS::normal)},
 		{0,Format::Float,2,offsetof(VertexPNS,VertexPNS::st)}
 	};
-	
+
 	VertexBufferDesc vd{};
 	vd.nAttrib = std::size(attbs);
 	vd.pAttrib = attbs;
@@ -122,17 +154,52 @@ void Scene01::InitFrame()
 	cbo = BufferCache::CreateConstantBuffer(cd);
 
 
-	vs = ShaderCache::CreateVertexShaderFromCode(vsTest);
-	ps = ShaderCache::CreatePixelShaderFromCode(psTest);
-
 	//camera->LookAt({0,0,-10 }, vec3f(0.f));
-	camera->SetPosition({0,0.5f,-5});
+	camera->SetPosition({ 0,0.5f,-5 });
 	matrices.proj = camera->GetProjectionMatrix();
 
 	tree = ModelCache::LoadFromFile("../data/tree01.obj");
 	texture = TextureCache::Load("../data/style.jpg");
 	tree->mNodes[0].texture = TextureCache::Load("../data/tree01.png");
 	tree->mNodes[1].texture = TextureCache::Load("../data/tree00.png");
+
+	fbo = new DXFrameBuffer();
+	FrameBufferDesc fd{};
+	fd.width = vp.w;
+	fd.height = vp.h;
+	fd.nRenderPass = 2;
+	fd.bDepthStencil = false;
+
+	fbo->Create(fd);
+
+	//00 10
+	//01 11
+	VertexPS f_vertices[] = {
+		{{-1,-1,0},	{0.f,1.f}},
+		{{-1,1,0},	{0.0f,0.f}},
+		{{1,1,0},	{1.f,0.f}},
+		{{1,-1,0},	{1.f,1.f}}
+	};
+
+	VertexAttrib f_attbs[] = {
+		{0,Format::Float,3,offsetof(VertexPS,VertexPS::position)},
+		{0,Format::Float,2,offsetof(VertexPS,VertexPS::st)}
+	};
+
+	vd.nAttrib = std::size(f_attbs);
+	vd.pAttrib = f_attbs;
+	vd.cbStride = sizeof(VertexPS);
+	vd.pData = f_vertices;
+	vd.cbSize = sizeof(f_vertices);
+
+	f_vbo = BufferCache::CreateVertexBuffer(vd);
+	f_ibo = BufferCache::CreateIndexBuffer(id);
+
+	f_vs = ShaderCache::CreateVertexShaderFromCode(vsNDC);
+	f_ps = ShaderCache::CreatePixelShaderFromCode(psNDC);
+
+	frameShaderVS = ShaderCache::CreateVertexShaderFromCode(gBuffer);
+	frameShaderPS = ShaderCache::CreatePixelShaderFromCode(gBuffer);
 }
 
 void Scene01::UpdateFrame(float dt)
@@ -146,24 +213,41 @@ void Scene01::UpdateFrame(float dt)
 void Scene01::RenderFrame()
 {
 
-	cbo->BindPipeline(0);
-	vbo->BindPipeline();
+	//Bind frame buffer
+	//--------------------------
+	fbo->BeginFrame();
+	fbo->Clear(0.f, 0.f, 0.f, 1.f);
 
-	texture->BindPipeline(0);
-
-	vs->BindPipeline();
-	ps->BindPipeline();
-	ibo->BindPipeline();
-
+	frameShaderVS->BindPipeline();
+	frameShaderPS->BindPipeline();
 
 	gContext->SetTopology(Topolgy::TRIANGLELIST);
 
-	gContext->SetCullMode(CullMode::BACK);
-	gContext->SetBlendState(BlendState::Disable);
+	cbo->BindVS(0);
+	cbo->BindPS(0);
+	vbo->BindPipeline();
+
+	texture->Bind(0);
+
+	//vs->BindPipeline();
+	//ps->BindPipeline();
+	ibo->BindPipeline();
+
+	//Draw Model
 	gContext->DrawIndexed(ibo->indices, 0, 0);
-
-	gContext->SetCullMode(CullMode::FRONT_AND_BACK);
-	gContext->SetBlendState(BlendState::Transparent);
-
 	tree->Render();
+	//-----------------------
+	fbo->EndFrame();
+
+	//2 rednderpass
+	fbo->BindRenderPass();
+	//------ps writeing
+	//Draw Screen
+	f_vbo->BindPipeline(0);
+	f_ibo->BindPipeline(0);
+	f_vs->BindPipeline();
+	f_ps->BindPipeline();
+
+	gContext->DrawIndexed(f_ibo->indices, 0, 0);
+
 }

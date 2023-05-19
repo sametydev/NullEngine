@@ -11,7 +11,7 @@ public:
 	virtual ~Texture();
 
 	virtual void Load(LPCSTR filename) = 0;
-	virtual void BindPipeline(uint slot = 0) = 0;
+	virtual void Bind(uint slot = 0) = 0;
 	virtual void UnBind() {};
 
 	uint bytePerPixel = 0; //Optional;

@@ -127,11 +127,6 @@ DXConstantBuffer::~DXConstantBuffer()
 	SAFE_RELEASE(mBuffer);
 }
 
-void DXConstantBuffer::BindPipeline(uint slot)
-{
-	this->BindVS(slot);
-	this->BindPS(slot);
-}
 
 void DXConstantBuffer::Create(const ConstantBufferDesc& desc)
 {

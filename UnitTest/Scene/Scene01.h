@@ -19,6 +19,15 @@ protected:
 	Shader* vs;
 	Shader* ps;
 
+	Shader* frameShaderVS;
+	Shader* frameShaderPS;
+
+	VertexBuffer* f_vbo;
+	IndexBuffer* f_ibo;
+
+	Shader* f_vs;
+	Shader* f_ps;
+
 
 	vec3f pos = {0,0,0};
 	vec3f rot = { 0,0,0 };
@@ -26,6 +35,7 @@ protected:
 	
 	struct{ mat4x4 proj, view, model; }matrices;
 
+	FrameBuffer* fbo;
 	
 
 	Model* tree;
