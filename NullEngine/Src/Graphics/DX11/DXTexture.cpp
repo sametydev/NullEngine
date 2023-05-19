@@ -79,13 +79,13 @@ void DXTexture::Load(LPCSTR filename)
 	stbi_image_free(buffers);
 }
 
-void DXTexture::BindPipeline(uint slot)
+void DXTexture::Bind(uint slot)
 {
 	mSlot = slot;
 	gDXContext->PSSetShaderResources(mSlot, 1, &mSRV);
 }
 
-void DXTexture::UnBind()
+void DXTexture::UnBind(uint slot = 0)
 {
 	ID3D11ShaderResourceView* clearView = nullptr;
 	gDXContext->PSSetShaderResources(mSlot, 1, &clearView);

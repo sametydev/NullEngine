@@ -9,6 +9,21 @@ DXFrameBuffer::DXFrameBuffer()
 
 }
 
+DXFrameBuffer::~DXFrameBuffer()
+{
+	for (int i = 0; i < mTexture2D.size(); i++)
+	{
+		SAFE_RELEASE(mTexture2D[i]);
+	}
+	for (int i = 0; i < mRenderTargetViews.size(); i++)
+	{
+		SAFE_RELEASE(mRenderTargetViews[i]);
+	}
+
+	SAFE_RELEASE(mDepthTexture2D);
+	SAFE_RELEASE(mDepthStencilView);
+}
+
 void DXFrameBuffer::Create(const FrameBufferDesc& desc)
 {
 	width = desc.width;
@@ -90,8 +105,47 @@ void DXFrameBuffer::Create(const FrameBufferDesc& desc)
 
 void DXFrameBuffer::BeginFrame()
 {
+
+	//============= SAVE ==================
+
+	gDXContext->OMGetRenderTargets(1, &mPrevRTV, &mPrevDTV);
+
+	//============= CLEAR ==================
+
+	const float color[4] = { 0.f,0.f,0.f,0.f };
+	for (auto rtv : mRenderTargetViews)
+	{
+		gDXContext->ClearRenderTargetView(rtv, color);
+	}
+	if (mDepthStencilView)
+	{
+		gDXContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH, 1.f, 0);
+	}
+
+	//============= SET ==================
+	gDXContext->OMSetRenderTargets(mRenderTargetViews.size(), mRenderTargetViews.data(),mDepthStencilView);
+
 }
 
 void DXFrameBuffer::EndFrame()
 {
+	//TODO Previous RTV and DRV
+	gDXContext->OMSetRenderTargets(1, &mPrevRTV, mPrevDTV);
+
+}
+
+void DXFrameBuffer::BindRenderPass()
+{
+	for (int i = 0; i < mRenderPass.size(); i++)
+	{
+		mRenderPass[i]->Bind(i);
+	}
+}
+
+void DXFrameBuffer::UnBindRenderPass()
+{
+	for (int i = 0; i < mRenderPass.size(); i++)
+	{
+		mRenderPass[i]->UnBind(i);
+	}
 }
