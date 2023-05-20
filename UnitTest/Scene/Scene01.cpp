@@ -13,88 +13,6 @@
 
 
 
-LPCSTR gBuffer = R"(
-cbuffer matrices : register(b0) {
-	matrix proj;
-	matrix view;
-	matrix model;
-};
-
-
-struct VS_IN {
-	float3 pos : POSITION;
-	float3 normal : TEXCOORD0;
-	float2 st  : TEXCOORD1;
-};
-
-struct PS_IN {
-	float4 pos : SV_POSITION;
-	float3 normal : NORMAL;
-	float2 st  : TEXCOORD;
-};
-
-PS_IN VS(VS_IN vs) {
-	PS_IN ps;
-	ps.pos = mul(float4(vs.pos,1),model);
-	ps.pos = mul(ps.pos,view);
-	ps.pos = mul(ps.pos,proj);
-	ps.normal = vs.normal;
-	ps.st  = vs.st;
-	
-	return ps;
-};
-
-Texture2D GTexture : register(t0);
-SamplerState GSampler : register(s0);
-
-struct PS_Out{
-	float4 pos : SV_TARGET0;
-	float4 normal : SV_TARGET1;
-};
-
-PS_Out PS(PS_IN ps) : SV_TARGET
-{
-	PS_Out output;
-	output.pos = GTexture.Sample(GSampler, ps.st);
-	output.normal = float4(ps.normal, 1);
-	return output;
-};
-)";
-
-LPCSTR vsNDC = R"(
-struct VS_IN {
-	float3 pos : POSITION;
-	float2 st  : TEXCOORD0;
-};
-
-struct PS_IN {
-	float4 pos : SV_POSITION;
-	float2 st  : TEXCOORD;
-};
-
-PS_IN VS(VS_IN vs) {
-	PS_IN ps;
-	ps.pos = float4(vs.pos,1);
-	ps.st = vs.st;
-	return ps;
-};
-)";
-
-LPCSTR psNDC = R"(
-Texture2D Texture0 : register(t0);
-Texture2D Texture1 : register(t1);
-SamplerState Sampler0 : register(s0);
-
-struct PS_IN {
-	float4 pos : SV_POSITION;
-	float2 st  : TEXCOORD;
-};
-
-float4 PS(PS_IN ps) : SV_TARGET {
-	float4 albedo = Texture0.Sample(Sampler0,ps.st);
-	return albedo;
-};
-)";
 
 void Scene01::InitFrame()
 {
@@ -195,11 +113,11 @@ void Scene01::InitFrame()
 	f_vbo = BufferCache::CreateVertexBuffer(vd);
 	f_ibo = BufferCache::CreateIndexBuffer(id);
 
-	f_vs = ShaderCache::CreateVertexShaderFromCode(vsNDC);
-	f_ps = ShaderCache::CreatePixelShaderFromCode(psNDC);
+	f_vs = ShaderCache::LoadVSBuiltIn("ndcVS");
+	f_ps = ShaderCache::LoadPSBuiltIn("ndcPS");
 
-	frameShaderVS = ShaderCache::CreateVertexShaderFromCode(gBuffer);
-	frameShaderPS = ShaderCache::CreatePixelShaderFromCode(gBuffer);
+	frameShaderVS = ShaderCache::LoadVSBuiltIn("GBuffer");
+	frameShaderPS = ShaderCache::LoadPSBuiltIn("GBuffer");
 }
 
 void Scene01::UpdateFrame(float dt)

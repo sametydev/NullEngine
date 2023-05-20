@@ -2,6 +2,9 @@
 #include <Core/FileSystem.h>
 #include <filesystem>
 #include <sstream>
+#include <streambuf>
+#include <fstream>
+
 
 
 std::string FileSystem::GetNameFromPath(std::string path)
@@ -15,22 +18,21 @@ bool FileSystem::IsExistsFile(const std::string& file)
 	return std::filesystem::exists(file);
 }
 
-const char* FileSystem::ReadAllLinesFromFile(const char* path)
+std::string FileSystem::ReadAllLinesFromFile(std::string path)
 {
     if (!FileSystem::IsExistsFile(path)) LOG_ERROR("File is not exists \n%s", path);
 
-    FILE* f;
-    struct stat fs;
-    char* buf;
-    //is have a problem on UTF-8 BOM
-    stat(path, &fs);
-    buf = (char*)malloc(fs.st_size);
+    std::ifstream t(path);
+    std::string str;
 
-    fopen_s(&f,path, "rb");
-    fread(buf, fs.st_size, 1, f);
-    fclose(f);
+    t.seekg(0, std::ios::end);
+    str.reserve(t.tellg());
+    t.seekg(0, std::ios::beg);
+
+    str.assign((std::istreambuf_iterator<char>(t)),
+        std::istreambuf_iterator<char>());
     
-    return buf;
+    return str;
 }
 
 std::string FileSystem::GetExtension(std::string path)
