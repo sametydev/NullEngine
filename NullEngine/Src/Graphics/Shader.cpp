@@ -3,21 +3,46 @@
 #include <Graphics/Context.h>
 #include <Graphics/DX11/DXShader.h>
 #include <Graphics/GL46/GLShader.h>
-
+#include <Core/FileSystem.h>
 
 std::unordered_map<std::string, std::shared_ptr<Shader>> ShaderCache::mCache;
 std::vector<std::shared_ptr<Shader>> ShaderCache::mShaders;
 
-Shader* ShaderCache::LoadVS(LPCSTR filename)
+Shader* ShaderCache::LoadVSBuiltIn(LPCSTR filename)
 {
+	std::string data;
+	std::string fullPath;
+	switch (gContext->mApiType)
+	{
+	case GraphicAPI::DirectX11:
+		fullPath = std::string("../Shader/HLSL/") + filename + std::string(".hlsl");
+		break;
+	case GraphicAPI::OpenGL46:
+		fullPath = std::string("../Shader/GLSL/") + filename + std::string(".glsl");
+		break;
+	}
+	data = FileSystem::ReadAllLinesFromFile(fullPath);
 
-	return nullptr;
+	
+	return CreateVertexShaderFromCode(data.c_str());
 }
 
-Shader* ShaderCache::LoadPS(LPCSTR filename)
+Shader* ShaderCache::LoadPSBuiltIn(LPCSTR filename)
 {
+	std::string data;
+	std::string fullPath;
+	switch (gContext->mApiType)
+	{
+	case GraphicAPI::DirectX11:
+		fullPath = std::string("../Shader/HLSL/") + filename + std::string(".hlsl");
+		break;
+	case GraphicAPI::OpenGL46:
+		fullPath = std::string("../Shader/GLSL/") + filename + std::string(".glsl");
+		break;
+	}
+	data = FileSystem::ReadAllLinesFromFile(fullPath);
 
-	return nullptr;
+	return CreatePixelShaderFromCode(data.c_str());
 }
 
 Shader* ShaderCache::CreateVertexShaderFromCode(LPCSTR code)
