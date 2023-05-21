@@ -63,10 +63,12 @@ namespace NullEditor
             FileInfo finfo = new FileInfo(projectFileJson);
             project.Path = finfo.FullName;
             ProjectManager.Instance.CreateProject(project);
-            
+
             //Copy Default project
 
             //Go To Editor;
+
+            MessageBox.Show("Project is created!");
         }
 
         public void UpdateProjectListView()
