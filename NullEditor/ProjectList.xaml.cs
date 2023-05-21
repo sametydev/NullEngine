@@ -54,7 +54,10 @@ namespace NullEditor
             }
 
             //If everything is ok;
-            File.Create(string.Format("Projects/{0}.json", projectName));
+            Directory.CreateDirectory(string.Format("Projects/{0}", projectName));
+            File.Create(string.Format("Projects/{0}/{0}.json", projectName));
+            ProjectManager.Instance.CreateProject(project);
+            ProjectManager.Instance.SaveProjectList();
             //Copy Default Template of Project (In Future)
             //File.Copy()
 
