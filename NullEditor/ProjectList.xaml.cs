@@ -23,14 +23,16 @@ namespace NullEditor
         public ProjectList()
         {
             InitializeComponent();
-            
+            UpdateProjectListView();
+
+            ProjectManager.Instance.OnProjectCreated += UpdateProjectListView;
         }
 
         private void CreateProjectButtonOnClick(object sender, RoutedEventArgs e)
         {
             string projectName = projectNameTextBox.Text;
 
-            if (!Regex.IsMatch(projectName, "^[a-zA-Z0-9]*$"))
+            if (!Regex.IsMatch(projectName, Global.PROJECT_NAME_REGEX))
             {
                 MessageBox.Show("Project Name Contains Spaces or Special Characters!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -54,14 +56,27 @@ namespace NullEditor
             }
 
             //If everything is ok;
+            string projectFileJson = string.Format("Projects/{0}/{0}.json", projectName);
+
             Directory.CreateDirectory(string.Format("Projects/{0}", projectName));
-            File.Create(string.Format("Projects/{0}/{0}.json", projectName));
+            File.Create(projectFileJson);
+            FileInfo finfo = new FileInfo(projectFileJson);
+            project.Path = finfo.FullName;
             ProjectManager.Instance.CreateProject(project);
-            ProjectManager.Instance.SaveProjectList();
-            //Copy Default Template of Project (In Future)
-            //File.Copy()
+            
+            //Copy Default project
 
             //Go To Editor;
+        }
+
+        public void UpdateProjectListView()
+        {
+            // Populate list
+            foreach (var item in ProjectManager.Instance.GetProjectList().Projects)
+            {
+                this.projectListView.Items.Add(item);
+            }
+            
         }
     }
 }

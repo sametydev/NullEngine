@@ -5,6 +5,9 @@
     <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+	<OutputPath>$(SolutionDir)bin</OutputPath>
+    <BaseOutputPath>$(SolutionDir)bin</BaseOutputPath>
+	<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
 
 </Project>
