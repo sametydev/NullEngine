@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace NullEditor.Core
 {
-    public class Singleton<T>
+    public class Singleton<T> where T : class, new()
     {
         public Singleton() { }
-        static Singleton() { }
-        private static Singleton<T> _instance = new Singleton<T>();
-        public static Singleton<T> Instance { get { return _instance; } }
+
+        private static readonly Lazy<T> instance = new Lazy<T>(() => new T());
+
+        public static T Instance { get { return instance.Value; } }
     }
 }

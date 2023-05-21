@@ -13,13 +13,17 @@
                 <DropShadowEffect/>
             </Button.Effect>
         </Button>
-        <ListView d:ItemsSource="{d:SampleData ItemCount=1}" Margin="0,51,0,0" Background="#FF373737" Foreground="White" BorderBrush="#FF6C6D6F">
+        <ListView x:Name="projectListView"  d:ItemsSource="{d:SampleData ItemCount=1}" Margin="0,51,0,0" Background="#FF373737" Foreground="#FFF9F9F9" BorderBrush="#FF6C6D6F">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn/>
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}"/>
+                    <GridViewColumn Header="Description" DisplayMemberBinding="{Binding Description}"/>
+                    <GridViewColumn Header="Version" DisplayMemberBinding="{Binding Version}"/>
+                    <GridViewColumn Header="Path" DisplayMemberBinding="{Binding Path}"/>
                 </GridView>
             </ListView.View>
         </ListView>
+        
 
     </Grid>
 </Window>
