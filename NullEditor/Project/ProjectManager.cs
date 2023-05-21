@@ -7,15 +7,16 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using System.IO;
 using System.Text.Json.Serialization;
-
+using NullEditor.Engine;
 
 namespace NullEditor.Project
 {
     public class Project {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Version { get; set; }
-        public string Path { get; set; }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public string? Version { get; set; }
+        public EngineConfig @EngineConfig { get; set; }
+        public string? Path { get; set; }
 
     }
 
@@ -50,9 +51,7 @@ namespace NullEditor.Project
         {
             projectList.Projects.Clear();
 
-            //Update Act:
             LoadProjectList();
-
         }
 
     }
