@@ -5,7 +5,7 @@ struct PSIn
 };
 
 
-float4 main(PSIn ps) : SV_TARGET
+float4 PS(PSIn ps) : SV_TARGET
 {
     float depth;
     depth = ps.depthPos.z / ps.depthPos.w;

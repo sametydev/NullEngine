@@ -16,7 +16,7 @@ struct PSIn
     float4 depthPos : TEXCOORD0;
 };
 
-PSIn main( VSIn vs )
+PSIn VS( VSIn vs )
 {
     PSIn ps;
     ps.pos = mul(float4(vs.pos, 1), model);

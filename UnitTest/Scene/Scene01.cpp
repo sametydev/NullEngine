@@ -112,7 +112,7 @@ void Scene01::RenderDepth()
 	matrices.model = mat4x4();
 
 	mCBO->SubData(&matrices);
-	mCBO->BindVS();
+	mCBO->BindVS(0);
 
 	mShadowPass->Bind();
 	
@@ -125,4 +125,6 @@ void Scene01::RenderDepth()
 	texture->Bind(0);
 	mScreenVp->Render();
 	texture->UnBind();
+
+
 }
