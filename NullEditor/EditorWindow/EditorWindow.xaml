@@ -1,0 +1,35 @@
+﻿<Window x:Class="NullEditor.EditorWindow.EditorWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NullEditor.EditorWindow"
+        mc:Ignorable="d"
+        Title="EditorWindow" Height="720" Width="1024">
+    <Grid>
+        <DockPanel LastChildFill = "True">
+            <Canvas x:Name="InspectorCanvas" Width="250" Height="Auto" DockPanel.Dock="Left" Background="DimGray">
+                <Label x:Name ="labelInspector" Content="Inspector" FontFamily="Bahnschrift" FontSize="16" FontWeight="Bold" Width="{Binding ActualWidth, ElementName=InspectorCanvas}" Background="SlateGray" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            </Canvas>
+            <Canvas x:Name="FileBrowserCanvas" Width="Auto" Height="300" DockPanel.Dock="Bottom" Background="DarkGray" VerticalAlignment="Bottom">
+                <Label x:Name = "labelFileBrowserText" Content="File Browser" FontFamily="Bahnschrift" FontSize="16" FontWeight="Bold" Background="SlateGray" Width="{Binding ActualWidth, ElementName=FileBrowserCanvas}"/>
+            </Canvas>
+
+            <Canvas x:Name="ToolCanvas" Width="Auto" Height="{Binding ActualHeight, ElementName=labelInspector}" DockPanel.Dock="Top" Background="DarkSlateGray" VerticalAlignment="Top">
+
+                <Grid Height="Auto" Width="{Binding ActualWidth, ElementName=ToolCanvas}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Row="1" Grid.Column="0" Content="PLAY" Width="100" Margin="5,5,5,5" FontFamily="Bahnschrift" FontSize="14"/>
+                    <Button Grid.Row="1" Grid.Column="1" Content="STOP" Width="100" Margin="5,5,5,5" FontFamily="Bahnschrift" FontSize="14"/>
+                </Grid>
+
+            </Canvas>
+            <Canvas x:Name="GameViewCanvas" Width="Auto" Height="Auto" DockPanel.Dock="Right" Background="Black"/>
+        </DockPanel>
+
+    </Grid>
+</Window>

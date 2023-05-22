@@ -22,6 +22,11 @@
                     <GridViewColumn Header="Path" DisplayMemberBinding="{Binding Path}"/>
                 </GridView>
             </ListView.View>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ProjectListItemClick" />
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
         
 

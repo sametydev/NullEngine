@@ -14,6 +14,8 @@ using System.Windows.Shapes;
 using System.Text.RegularExpressions;
 using NullEditor.Project;
 using System.IO;
+using NullEditor.Engine;
+using NullEditor.Other;
 
 namespace NullEditor
 {
@@ -25,52 +27,16 @@ namespace NullEditor
             InitializeComponent();
             UpdateProjectListView();
 
-            ProjectManager.Instance.OnProjectCreated += UpdateProjectListView;
+            ProjectManager.Instance.OnProjectCreated += OnProjectCreated;
+            ProjectManager.Instance.OnProjectListLoaded += UpdateProjectListView;
         }
+
+
 
         private void CreateProjectButtonOnClick(object sender, RoutedEventArgs e)
-        {
-            string projectName = projectNameTextBox.Text;
+        => ProjectManager.Instance.CreateProjectOnDisk(projectNameTextBox.Text);
 
-            if (!Regex.IsMatch(projectName, Global.PROJECT_NAME_REGEX))
-            {
-                MessageBox.Show("Project Name Contains Spaces or Special Characters!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            Project.Project project = new Project.Project();
-            project.Name = projectName;
-            project.Description = "A NullEngine Project";
-            project.Version = Global.ENGINE_VERSION;
-
-            //If Projects Directory is not exists!
-            if (!Directory.Exists("Projects"))
-            {
-                Directory.CreateDirectory("Projects");
-            }
-            //If project exists from disk not memory
-            if (File.Exists(string.Format("Projects/{0}.json",projectName)))
-            {
-                MessageBox.Show("Project Exists on Disk!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            //If everything is ok;
-            string projectFileJson = string.Format("Projects/{0}/{0}.json", projectName);
-
-            Directory.CreateDirectory(string.Format("Projects/{0}", projectName));
-            File.Create(projectFileJson);
-            FileInfo finfo = new FileInfo(projectFileJson);
-            project.Path = finfo.FullName;
-            ProjectManager.Instance.CreateProject(project);
-
-            //Copy Default project
-
-            //Go To Editor;
-
-            MessageBox.Show("Project is created!");
-        }
-
+        //Callbacks;
         public void UpdateProjectListView()
         {
             // Populate list
@@ -78,7 +44,32 @@ namespace NullEditor
             {
                 this.projectListView.Items.Add(item);
             }
-            
+        }
+        void OpenEditor(Project.Project project)
+        {
+            this.Hide();
+            EditorWindow.EditorWindow editorWindow = new EditorWindow.EditorWindow(project);
+            editorWindow.Show();
+        }
+        private void OnProjectCreated(Project.Project project) => OpenEditor(project);
+
+        private void ProjectListItemClick(object sender, MouseButtonEventArgs e)
+        {
+            var item = (sender as ListViewItem);
+            if (item != null && item.IsSelected)
+            {
+
+                Project.Project project = (Project.Project)item.Content;
+
+                OpenEditor(project);
+            }
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+
+            Application.Current.Shutdown();
         }
     }
 }
