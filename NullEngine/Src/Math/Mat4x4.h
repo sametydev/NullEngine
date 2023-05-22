@@ -373,18 +373,18 @@ inline mat4x4 mat4x4::perspectiveLH(float fovY, float ratioX, float znear, float
 
 inline mat4x4 mat4x4::LookAt(const vec3f& pos, const vec3f& center, const vec3f& worldUp)
 {
-	vec3f forward = (pos-center).normalized();
-	vec3f right   = vec3f::cross(worldUp , forward).normalized();
-	vec3f up      = vec3f::cross(forward, right).normalized();
+	vec3f f = (center-pos).normalized();
+	vec3f r   = vec3f::cross(worldUp , f).normalized();
+	vec3f u      = vec3f::cross(f, r).normalized();
 
-	float x = vec3f::dot(right,pos);
-	float y = vec3f::dot(up, pos);
-	float z = vec3f::dot(forward, pos);
+	float x = -vec3f::dot(r,pos);
+	float y = -vec3f::dot(u, pos);
+	float z = -vec3f::dot(f, pos);
 
 	mat4x4 m = {
-		right.x,up.x,forward.x,-x,
-		right.y,up.y,forward.y,-y,
-		right.z,up.z,forward.z,-z,
+		r.x,r.y,r.z,x,
+		u.x,u.y,u.y,y,
+		f.x,f.y,f.z,z,
 		0,0,0,1
 	};
 

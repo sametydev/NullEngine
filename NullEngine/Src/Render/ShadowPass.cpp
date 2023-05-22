@@ -45,14 +45,13 @@ void ShadowPass::Create(uint width, uint height)
 	srd.Texture2D.MostDetailedMip = 0;
 	srd.Texture2D.MipLevels = 1;
 
-	auto colorPtr = std::make_shared<DXTexture>();
-	colorPtr->width = width;
-	colorPtr->height = height;
+	std::shared_ptr<DXTexture> depthPtr = std::make_shared<DXTexture>();
+	depthPtr->width = width;
+	depthPtr->height = height;
 	
 
-	HR(gDXDevice->CreateShaderResourceView(tex2d, &srd, &colorPtr->mSRV));
-	
-	mTexture = colorPtr;
+	HR(gDXDevice->CreateShaderResourceView(tex2d, &srd, &depthPtr->mSRV));
+	mTexture = depthPtr;
 
 
 	D3D11_TEXTURE2D_DESC depthDesc{};
@@ -111,7 +110,7 @@ void ShadowPass::Bind()
 	gContext->GetDXContext()->OMSetRenderTargets(1, &mRtv, mDsv);
 
 	// Clear Render Buffer
-	const float rgba[4] = { 1.0f,1.0f,1.0f,1.0f };
+	const float rgba[4] = { 0.0f,0.0f,0.0f,0.0f };
 	gDXContext->ClearRenderTargetView(mRtv, rgba);
 	gDXContext->ClearDepthStencilView(mDsv, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
