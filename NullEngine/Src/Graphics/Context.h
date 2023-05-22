@@ -15,6 +15,7 @@ public:
 
 	//API Function
 	virtual void GetViewport(Viewport* vp) {};
+	virtual void SetViewport(Viewport* vp) = 0;
 	virtual void SetSampler(SamplerState sampler) {};
 	virtual void SetTopology(Topolgy topology) {};
 	virtual void DrawIndexed(uint indices, uint offset, uint base) = 0;

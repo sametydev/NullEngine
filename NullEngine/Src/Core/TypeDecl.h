@@ -120,6 +120,9 @@ class PixelShader;
 class Camera;
 class TCamera;
 
+class ScreenViewport;
+class ShadowPass;
+
 //===============================================
 
 
@@ -140,7 +143,7 @@ struct WndDesc {
 
 
 struct Viewport {
-    float x, y, w, h;
+    float x, y, w, h,minDepth,maxDepth;
 };
 
 enum class SamplerState {

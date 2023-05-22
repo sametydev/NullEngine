@@ -10,8 +10,8 @@
 #include <Graphics/DX11/DXFrameBuffer.h>
 #include <Graphics/DX11/DX11Config.h>
 #include <Component/TCamera.h>
-
-
+#include <Render/ScreenViewport.h>
+#include <Render/ShadowPass.h>
 
 
 void Scene01::InitFrame()
@@ -22,146 +22,107 @@ void Scene01::InitFrame()
 
 	camera = new TCamera(45.f, vp.w / vp.h, 0.01f, 100.f);
 
+	mShadowPass = std::make_shared<ShadowPass>();
+	mShadowPass->Create(1024, 1024);
+
 	float i = 10.f;
 
-	//00-10
-	//01-11
-
-	//-1 0 -1 (0)
-	//-1 0 1 (1)
-	//1 0 1 (2)
-	//1 0 -1 (3)
-
-	VertexPNS vertices[] = {
-		{{-i,0,-i},		{0,1.f,0},	{0.f,1.f}},
-		{{-i,0,i},		{0,1.f,0},	{0.0f,0.f}},
-		{{i,0,i},		{0,1.f,0},	{1.f,0.f}},
-		{{i,0,-i},		{0,1.f,0},	{1.f,1.f}}
-	};
-
-	uint indices[] = {
-		0,1,2,0,2,3
-	};
-
-	VertexAttrib attbs[] = {
-		{0,Format::Float,3,offsetof(VertexPNS,VertexPNS::position)},
-		{0,Format::Float,3,offsetof(VertexPNS,VertexPNS::normal)},
-		{0,Format::Float,2,offsetof(VertexPNS,VertexPNS::st)}
-	};
-
-	VertexBufferDesc vd{};
-	vd.nAttrib = std::size(attbs);
-	vd.pAttrib = attbs;
-	vd.cbStride = sizeof(VertexPNS);
-	vd.pData = vertices;
-	vd.cbSize = sizeof(vertices);
-
-	vbo = BufferCache::CreateVertexBuffer(vd);
-
-	IndexBufferDesc id{};
-	id.cbSize = sizeof(indices);
-	id.nIndices = std::size(indices);
-	id.pData = indices;
-
-	ibo = BufferCache::CreateIndexBuffer(id);
-
+	mPlane = ModelCache::CreatePlane(i);
+	mPlane->SetTexture(0, TextureCache::Load("../data/checker.jpg"));
 	ConstantBufferDesc cd{};
 	cd.cbSize = sizeof(matrices);
 	cd.pData = &matrices;
 
-	cbo = BufferCache::CreateConstantBuffer(cd);
+	mCBO = BufferCache::CreateConstantBuffer(cd);
 
+	cd.cbSize = sizeof(lightMatrices);
+	cd.pData = &lightMatrices;
+
+	mLightCBO = BufferCache::CreateConstantBuffer(cd);
 
 	//camera->LookAt({0,0,-10 }, vec3f(0.f));
 	camera->SetPosition({ 0,0.5f,-5 });
 	matrices.proj = camera->GetProjectionMatrix();
 
-	tree = ModelCache::LoadFromFile("../data/tree01.obj");
-	texture = TextureCache::Load("../data/style.jpg");
-	tree->mNodes[0].texture = TextureCache::Load("../data/tree01.png");
-	tree->mNodes[1].texture = TextureCache::Load("../data/tree00.png");
+	mTree = ModelCache::LoadFromFile("../data/tree01.obj");
+	mTree->mNodes[0].texture = TextureCache::Load("../data/tree01.png");
+	mTree->mNodes[1].texture = TextureCache::Load("../data/tree00.png");
 
-	fbo = new DXFrameBuffer();
+	mFrameBuffer = std::make_shared<DXFrameBuffer>();
 	FrameBufferDesc fd{};
 	fd.width = vp.w;
 	fd.height = vp.h;
-	fd.nRenderPass = 2;
-	fd.bDepthStencil = false;
+	fd.nRenderPass = 3;
+	fd.bDepthStencil = true;
 
-	fbo->Create(fd);
+	mFrameBuffer->Create(fd);
 
 	//00 10
 	//01 11
-	VertexPS f_vertices[] = {
-		{{-1,-1,0},	{0.f,1.f}},
-		{{-1,1,0},	{0.0f,0.f}},
-		{{1,1,0},	{1.f,0.f}},
-		{{1,-1,0},	{1.f,1.f}}
-	};
+	mScreenVp = std::make_shared<ScreenViewport>();
+	mScreenVp->Create();
 
-	VertexAttrib f_attbs[] = {
-		{0,Format::Float,3,offsetof(VertexPS,VertexPS::position)},
-		{0,Format::Float,2,offsetof(VertexPS,VertexPS::st)}
-	};
+	mFrameShader = ShaderCache::CreateShader("GBufferVS","GBufferPS");
 
-	vd.nAttrib = std::size(f_attbs);
-	vd.pAttrib = f_attbs;
-	vd.cbStride = sizeof(VertexPS);
-	vd.pData = f_vertices;
-	vd.cbSize = sizeof(f_vertices);
-
-	f_vbo = BufferCache::CreateVertexBuffer(vd);
-	f_ibo = BufferCache::CreateIndexBuffer(id);
-
-	f_vs = ShaderCache::CreateShader("ndcVS","ndcPS");
-
-	frameShaderVS = ShaderCache::CreateShader("GBuffer","GBuffer");
+	gContext->SetTopology(Topolgy::TRIANGLELIST);
 }
 
 void Scene01::UpdateFrame(float dt)
 {
 	camera->Update(dt);
+	matrices.proj = camera->GetProjectionMatrix();
 	matrices.view = camera->GetViewMatrix();
+	matrices.model = mat4x4();
+	mCBO->SubData(&matrices);
 
-	cbo->SubData(&matrices);
+	lightMatrices.proj = mShadowPass->projection;
+	lightMatrices.view = mShadowPass->view;
+	lightMatrices.pos = mShadowPass->lightPosition;
+
+	mLightCBO->SubData(&lightMatrices);
 }
 
 void Scene01::RenderFrame()
 {
+	RenderDepth();
+	//mCBO->BindVS(0);
+	//mFrameBuffer->BeginFrame();
+	//mFrameShader->Bind();
 
-	//Bind frame buffer
-	//--------------------------
-	fbo->BeginFrame();
-	fbo->Clear(0.f, 0.f, 0.f, 1.f);
+	//tree->Render();
+	//mPlane->Render();
 
-	frameShaderVS->Bind();
 
-	gContext->SetTopology(Topolgy::TRIANGLELIST);
+	//mFrameBuffer->EndFrame();
+	////Bind texture from 0 to 1
+	//mFrameBuffer->BindRenderPass();
 
-	cbo->BindVS(0);
-	cbo->BindPS(0);
-	vbo->BindPipeline();
+	//mScreenVp->Render();
 
+	////We need unbind
+	//mFrameBuffer->UnBindRenderPass();
+
+
+}
+
+void Scene01::RenderDepth()
+{
+	matrices.proj = mShadowPass->projection;
+	matrices.view = mShadowPass->view;
+	matrices.model = mat4x4();
+
+	mCBO->SubData(&matrices);
+	mCBO->BindVS();
+
+	mShadowPass->Bind();
+	
+	mTree->Render();
+	mPlane->Render();
+
+	mShadowPass->UnBind();
+
+	auto texture = mShadowPass->GetDepthMap();
 	texture->Bind(0);
-
-	//vs->BindPipeline();
-	//ps->BindPipeline();
-	ibo->BindPipeline();
-
-	//Draw Model
-	gContext->DrawIndexed(ibo->indices, 0, 0);
-	tree->Render();
-	//-----------------------
-	fbo->EndFrame();
-
-	//2 rednderpass
-	fbo->BindRenderPass();
-	//------ps writeing
-	//Draw Screen
-	f_vbo->BindPipeline(0);
-	f_ibo->BindPipeline(0);
-	f_vs->Bind();
-
-	gContext->DrawIndexed(f_ibo->indices, 0, 0);
-
+	mScreenVp->Render();
+	texture->UnBind();
 }

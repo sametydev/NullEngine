@@ -11,34 +11,26 @@ public:
 	void UpdateFrame(float dt) override;
 	void RenderFrame() override;
 
+	void RenderDepth();
+
 protected:
 	TCamera* camera;
-	VertexBuffer* vbo;
-	IndexBuffer* ibo;
-	ConstantBuffer* cbo;
-	Shader* vs;
-	Shader* ps;
+	ConstantBuffer* mCBO;
+	ConstantBuffer* mLightCBO;
 
-	Shader* frameShaderVS;
-	Shader* frameShaderPS;
+	Shader* mFrameShader;
 
-	VertexBuffer* f_vbo;
-	IndexBuffer* f_ibo;
+	std::shared_ptr<ScreenViewport> mScreenVp;
+	std::shared_ptr<FrameBuffer> mFrameBuffer;
 
-	Shader* f_vs;
-	Shader* f_ps;
+	struct{ mat4x4 proj, view, model; } matrices;
+	struct { mat4x4 proj, view; vec3f pos; } lightMatrices;
 
-
-	vec3f pos = {0,0,0};
-	vec3f rot = { 0,0,0 };
-	float angle = 0;
 	
-	struct{ mat4x4 proj, view, model; }matrices;
+	std::shared_ptr<ShadowPass> mShadowPass;
 
-	FrameBuffer* fbo;
-	
-
-	Model* tree;
+	Model* mTree;
+	Model* mPlane;
 	Texture* texture;
 };
 

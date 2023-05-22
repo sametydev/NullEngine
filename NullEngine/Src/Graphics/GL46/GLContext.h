@@ -17,7 +17,7 @@ public:
 	virtual void ClearBuffer(float r, float g, float b, float a);
 	virtual void SwapBuffer();
 	virtual void ResizeRenderBuffer(uint cx, uint cy) override;
-
+	virtual void SetViewport(Viewport* vp) override;
 	virtual void GetViewport(Viewport* vp) {};
 	virtual void SetSampler(SamplerState sampler) {};
 	virtual void SetTopology(Topolgy topology);

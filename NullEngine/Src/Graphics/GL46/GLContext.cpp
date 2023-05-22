@@ -120,6 +120,10 @@ void GLContext::ResizeRenderBuffer(uint cx, uint cy)
     glViewport(0, 0, cx, cy);
 }
 
+void GLContext::SetViewport(Viewport* vp)
+{
+}
+
 void GLContext::SetTopology(Topolgy topology)
 {
     mTopolgy = format::TopologyToGL(topology);
