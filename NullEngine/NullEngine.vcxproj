@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Render\ShadowPass.h" />
     <ClInclude Include="Src\Render\ScreenViewport.h" />
     <ClInclude Include="Src\Graphics\DX11\DXFrameBuffer.h" />
     <ClInclude Include="Src\Graphics\FrameBuffer.h" />
@@ -180,6 +181,7 @@
     <ClInclude Include="Src\Component\TCamera.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Render\ShadowPass.cpp" />
     <ClCompile Include="Src\Render\ScreenViewport.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXFrameBuffer.cpp" />
     <ClCompile Include="Src\Graphics\FrameBuffer.cpp" />

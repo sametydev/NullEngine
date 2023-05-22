@@ -79,5 +79,31 @@ void ShadowPass::Create(uint width, uint height)
 	SAFE_RELEASE(tex2d);
 	SAFE_RELEASE(depth2d);
 
-	//first we need view matrix and projection matrix
+	//Creating Matrix;
+	lightPosition = { -5.f , 8.f, -5.f };
+	view = CreateLightView(lightPosition, vec3f(0.f));
+	projection = CreateLightProjection(1.f, 100.f);
+
+	//Creating Shader;
 }
+
+void ShadowPass::Bind()
+{
+}
+
+void ShadowPass::UnBind()
+{
+}
+
+mat4x4 ShadowPass::CreateLightView(const vec3f& pos, const vec3f& center)
+{
+	return mat4x4::LookAt(pos, center, vec3f(0.f, 1.f, 0.f));
+}
+
+mat4x4 ShadowPass::CreateLightProjection(float znear, float zfar)
+{
+	float fov = M_PI / 2.f * DEGREES;
+	float aspect = 1.0f;
+	return mat4x4::perspectiveLH(fov,aspect,znear,zfar);
+}
+

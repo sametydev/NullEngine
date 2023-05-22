@@ -27,6 +27,7 @@ protected:
 	
 	struct{ mat4x4 proj, view, model; }matrices;
 	
+	std::shared_ptr<ShadowPass> mShadowPass;
 
 	Model* tree;
 	Model* mPlane;

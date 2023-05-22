@@ -1,8 +1,6 @@
 #pragma once
 #include <Math/LinearMath.h>
 #include <iomanip>
-# define M_PI			3.14159265358979323846f
-# define RADIANS		(M_PI / 180.f)
 
 
 __declspec(align(16))
@@ -384,9 +382,9 @@ inline mat4x4 mat4x4::LookAt(const vec3f& pos, const vec3f& center, const vec3f&
 	float z = vec3f::dot(forward, pos);
 
 	mat4x4 m = {
-		right.x,up.x,forward.x,x,
-		right.y,up.y,forward.y,y,
-		right.z,up.z,forward.z,z,
+		right.x,up.x,forward.x,-x,
+		right.y,up.y,forward.y,-y,
+		right.z,up.z,forward.z,-z,
 		0,0,0,1
 	};
 

@@ -11,7 +11,7 @@
 #include <Graphics/DX11/DX11Config.h>
 #include <Component/TCamera.h>
 #include <Render/ScreenViewport.h>
-
+#include <Render/ShadowPass.h>
 
 
 void Scene01::InitFrame()
@@ -21,6 +21,9 @@ void Scene01::InitFrame()
 	gContext->GetViewport(&vp);
 
 	camera = new TCamera(45.f, vp.w / vp.h, 0.01f, 100.f);
+
+	mShadowPass = std::make_shared<ShadowPass>();
+	mShadowPass->Create(1024, 1024);
 
 	float i = 10.f;
 
