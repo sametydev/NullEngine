@@ -9,6 +9,6 @@ struct PS_IN {
 };
 
 float4 PS(PS_IN ps) : SV_TARGET {
-	float4 albedo = Texture2.Sample(Sampler0,ps.st);
+	float4 albedo = Texture0.Sample(Sampler0,ps.st);
 	return albedo;
 };

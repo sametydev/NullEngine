@@ -81,5 +81,7 @@
   <ItemGroup>
     <FxCompile Include="Shader\HLSL\GBufferPS.hlsl" />
     <FxCompile Include="Shader\HLSL\ScenePS.hlsl" />
+    <FxCompile Include="Shader\HLSL\DepthPS.hlsl" />
+    <FxCompile Include="Shader\HLSL\DepthVS.hlsl" />
   </ItemGroup>
 </Project>

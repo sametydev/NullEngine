@@ -6,7 +6,7 @@ public:
 	ShadowPass();
 	void Create(uint width, uint height);
 
-	Texture* GetDepthMap();
+	Texture* GetDepthMap() const;
 
 	void Bind();
 	void UnBind();

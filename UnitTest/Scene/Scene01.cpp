@@ -33,16 +33,20 @@ void Scene01::InitFrame()
 	cd.cbSize = sizeof(matrices);
 	cd.pData = &matrices;
 
-	cbo = BufferCache::CreateConstantBuffer(cd);
+	mCBO = BufferCache::CreateConstantBuffer(cd);
 
+	cd.cbSize = sizeof(lightMatrices);
+	cd.pData = &lightMatrices;
+
+	mLightCBO = BufferCache::CreateConstantBuffer(cd);
 
 	//camera->LookAt({0,0,-10 }, vec3f(0.f));
 	camera->SetPosition({ 0,0.5f,-5 });
 	matrices.proj = camera->GetProjectionMatrix();
 
-	tree = ModelCache::LoadFromFile("../data/tree01.obj");
-	tree->mNodes[0].texture = TextureCache::Load("../data/tree01.png");
-	tree->mNodes[1].texture = TextureCache::Load("../data/tree00.png");
+	mTree = ModelCache::LoadFromFile("../data/tree01.obj");
+	mTree->mNodes[0].texture = TextureCache::Load("../data/tree01.png");
+	mTree->mNodes[1].texture = TextureCache::Load("../data/tree00.png");
 
 	mFrameBuffer = std::make_shared<DXFrameBuffer>();
 	FrameBufferDesc fd{};
@@ -69,29 +73,56 @@ void Scene01::UpdateFrame(float dt)
 	matrices.proj = camera->GetProjectionMatrix();
 	matrices.view = camera->GetViewMatrix();
 	matrices.model = mat4x4();
+	mCBO->SubData(&matrices);
 
-	cbo->SubData(&matrices);
+	lightMatrices.proj = mShadowPass->projection;
+	lightMatrices.view = mShadowPass->view;
+	lightMatrices.pos = mShadowPass->lightPosition;
+
+	mLightCBO->SubData(&lightMatrices);
 }
 
 void Scene01::RenderFrame()
 {
+	RenderDepth();
+	//mCBO->BindVS(0);
+	//mFrameBuffer->BeginFrame();
+	//mFrameShader->Bind();
 
-	cbo->BindVS(0);
-	mFrameBuffer->BeginFrame();
-	mFrameShader->Bind();
+	//tree->Render();
+	//mPlane->Render();
 
-	tree->Render();
+
+	//mFrameBuffer->EndFrame();
+	////Bind texture from 0 to 1
+	//mFrameBuffer->BindRenderPass();
+
+	//mScreenVp->Render();
+
+	////We need unbind
+	//mFrameBuffer->UnBindRenderPass();
+
+
+}
+
+void Scene01::RenderDepth()
+{
+	matrices.proj = mShadowPass->projection;
+	matrices.view = mShadowPass->view;
+	matrices.model = mat4x4();
+
+	mCBO->SubData(&matrices);
+	mCBO->BindVS();
+
+	mShadowPass->Bind();
+	
+	mTree->Render();
 	mPlane->Render();
 
+	mShadowPass->UnBind();
 
-	mFrameBuffer->EndFrame();
-	//Bind texture from 0 to 1
-	mFrameBuffer->BindRenderPass();
-
+	auto texture = mShadowPass->GetDepthMap();
+	texture->Bind(0);
 	mScreenVp->Render();
-
-	//We need unbind
-	mFrameBuffer->UnBindRenderPass();
-
-
+	texture->UnBind();
 }

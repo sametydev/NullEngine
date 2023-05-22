@@ -91,7 +91,7 @@ void ShadowPass::Create(uint width, uint height)
 	mViewport = { 0.f,0.f,(float)width,(float)height,0.f,1.f };
 }
 
-Texture* ShadowPass::GetDepthMap()
+Texture* ShadowPass::GetDepthMap() const
 {
 	return mTexture.get();
 }
