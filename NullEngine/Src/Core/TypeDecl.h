@@ -120,6 +120,8 @@ class PixelShader;
 class Camera;
 class TCamera;
 
+class ScreenViewport;
+
 //===============================================
 
 

@@ -13,8 +13,6 @@ public:
 
 protected:
 	TCamera* camera;
-	VertexBuffer* vbo;
-	IndexBuffer* ibo;
 	ConstantBuffer* cbo;
 	Shader* vs;
 	Shader* ps;
@@ -22,11 +20,10 @@ protected:
 	Shader* frameShaderVS;
 	Shader* frameShaderPS;
 
-	VertexBuffer* f_vbo;
-	IndexBuffer* f_ibo;
 
 	Shader* f_vs;
 	Shader* f_ps;
+	std::shared_ptr<ScreenViewport> mScreenVp;
 
 
 	vec3f pos = {0,0,0};
@@ -39,6 +36,7 @@ protected:
 	
 
 	Model* tree;
+	Model* mPlane;
 	Texture* texture;
 };
 

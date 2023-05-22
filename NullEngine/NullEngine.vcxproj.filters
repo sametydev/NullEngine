@@ -41,6 +41,7 @@
     <ClInclude Include="Src\Graphics\GL46\GLShader.h" />
     <ClInclude Include="Src\Graphics\FrameBuffer.h" />
     <ClInclude Include="Src\Graphics\DX11\DXFrameBuffer.h" />
+    <ClInclude Include="Src\Render\ScreenViewport.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp" />
@@ -73,5 +74,9 @@
     <ClCompile Include="Src\Graphics\GL46\GLShader.cpp" />
     <ClCompile Include="Src\Graphics\FrameBuffer.cpp" />
     <ClCompile Include="Src\Graphics\DX11\DXFrameBuffer.cpp" />
+    <ClCompile Include="Src\Render\ScreenViewport.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shader\HLSL\GBufferPS.hlsl" />
   </ItemGroup>
 </Project>

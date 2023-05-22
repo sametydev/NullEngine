@@ -10,7 +10,7 @@
 #include <Graphics/DX11/DXFrameBuffer.h>
 #include <Graphics/DX11/DX11Config.h>
 #include <Component/TCamera.h>
-
+#include <Render/ScreenViewport.h>
 
 
 
@@ -24,46 +24,10 @@ void Scene01::InitFrame()
 
 	float i = 10.f;
 
-	//00-10
-	//01-11
+	mScreenVp = std::make_shared<ScreenViewport>();
+	mScreenVp->Create();
 
-	//-1 0 -1 (0)
-	//-1 0 1 (1)
-	//1 0 1 (2)
-	//1 0 -1 (3)
-
-	VertexPNS vertices[] = {
-		{{-i,0,-i},		{0,1.f,0},	{0.f,1.f}},
-		{{-i,0,i},		{0,1.f,0},	{0.0f,0.f}},
-		{{i,0,i},		{0,1.f,0},	{1.f,0.f}},
-		{{i,0,-i},		{0,1.f,0},	{1.f,1.f}}
-	};
-
-	uint indices[] = {
-		0,1,2,0,2,3
-	};
-
-	VertexAttrib attbs[] = {
-		{0,Format::Float,3,offsetof(VertexPNS,VertexPNS::position)},
-		{0,Format::Float,3,offsetof(VertexPNS,VertexPNS::normal)},
-		{0,Format::Float,2,offsetof(VertexPNS,VertexPNS::st)}
-	};
-
-	VertexBufferDesc vd{};
-	vd.nAttrib = std::size(attbs);
-	vd.pAttrib = attbs;
-	vd.cbStride = sizeof(VertexPNS);
-	vd.pData = vertices;
-	vd.cbSize = sizeof(vertices);
-
-	vbo = BufferCache::CreateVertexBuffer(vd);
-
-	IndexBufferDesc id{};
-	id.cbSize = sizeof(indices);
-	id.nIndices = std::size(indices);
-	id.pData = indices;
-
-	ibo = BufferCache::CreateIndexBuffer(id);
+	mPlane = ModelCache::CreatePlane(i);
 
 	ConstantBufferDesc cd{};
 	cd.cbSize = sizeof(matrices);
@@ -92,28 +56,8 @@ void Scene01::InitFrame()
 
 	//00 10
 	//01 11
-	VertexPS f_vertices[] = {
-		{{-1,-1,0},	{0.f,1.f}},
-		{{-1,1,0},	{0.0f,0.f}},
-		{{1,1,0},	{1.f,0.f}},
-		{{1,-1,0},	{1.f,1.f}}
-	};
+	
 
-	VertexAttrib f_attbs[] = {
-		{0,Format::Float,3,offsetof(VertexPS,VertexPS::position)},
-		{0,Format::Float,2,offsetof(VertexPS,VertexPS::st)}
-	};
-
-	vd.nAttrib = std::size(f_attbs);
-	vd.pAttrib = f_attbs;
-	vd.cbStride = sizeof(VertexPS);
-	vd.pData = f_vertices;
-	vd.cbSize = sizeof(f_vertices);
-
-	f_vbo = BufferCache::CreateVertexBuffer(vd);
-	f_ibo = BufferCache::CreateIndexBuffer(id);
-
-	f_vs = ShaderCache::CreateShader("ndcVS","ndcPS");
 
 	frameShaderVS = ShaderCache::CreateShader("GBuffer","GBuffer");
 }
@@ -140,28 +84,19 @@ void Scene01::RenderFrame()
 
 	cbo->BindVS(0);
 	cbo->BindPS(0);
-	vbo->BindPipeline();
+
 
 	texture->Bind(0);
 
-	//vs->BindPipeline();
-	//ps->BindPipeline();
-	ibo->BindPipeline();
-
-	//Draw Model
-	gContext->DrawIndexed(ibo->indices, 0, 0);
+	mPlane->Render();
 	tree->Render();
 	//-----------------------
 	fbo->EndFrame();
 
-	//2 rednderpass
+
 	fbo->BindRenderPass();
-	//------ps writeing
-	//Draw Screen
-	f_vbo->BindPipeline(0);
-	f_ibo->BindPipeline(0);
-	f_vs->Bind();
 
-	gContext->DrawIndexed(f_ibo->indices, 0, 0);
+	mScreenVp->Render();
 
+	fbo->UnBindRenderPass();
 }

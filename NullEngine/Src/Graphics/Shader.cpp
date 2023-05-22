@@ -7,7 +7,8 @@
 
 std::unordered_map<std::string, std::shared_ptr<Shader>> ShaderCache::mInternalShader;
 std::unordered_map<std::string, std::shared_ptr<Shader>> ShaderCache::mExternalShader;
-std::string shader_dir = "../NullEngine/Shader/";
+std::string shader_dir_glsl = "../NullEngine/Shader/GLSL/";
+std::string shader_dir_hlsl = "../NullEngine/Shader/HLSL/";
 
 Shader* ShaderCache::CreateShader(const std::string& vs, const std::string& fs)
 {
@@ -19,11 +20,11 @@ Shader* ShaderCache::CreateShader(const std::string& vs, const std::string& fs)
 	{
 	case GraphicAPI::DirectX11:
 	{
-		VS += shader_dir + vs + ".hlsl";
+		VS += shader_dir_hlsl + vs + ".hlsl";
 		if (!FileSystem::IsExistsFile(VS)) {
 			LOG_ERROR("failed to find %s" ,VS.c_str());
 		}
-		PS += shader_dir + fs + ".hlsl";
+		PS += shader_dir_hlsl + fs + ".hlsl";
 		if (!FileSystem::IsExistsFile(PS)) {
 			LOG_ERROR("failed to find %s", PS.c_str());
 		}
@@ -41,11 +42,11 @@ Shader* ShaderCache::CreateShader(const std::string& vs, const std::string& fs)
 
 	case GraphicAPI::OpenGL46:
 	{
-		VS += shader_dir + vs + ".glsl";
+		VS += shader_dir_glsl + vs + ".glsl";
 		if (!FileSystem::IsExistsFile(VS)) {
 			LOG_ERROR("failed to find %s", VS.c_str());
 		}
-		PS += shader_dir + fs + ".glsl";
+		PS += shader_dir_glsl + fs + ".glsl";
 		if (!FileSystem::IsExistsFile(PS)) {
 			LOG_ERROR("failed to find %s", PS.c_str());
 		}
