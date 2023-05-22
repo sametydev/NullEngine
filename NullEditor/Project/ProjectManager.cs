@@ -38,7 +38,7 @@ namespace NullEditor.Project
 
 
         //Events;
-        public event Action? OnProjectCreated;
+        public event Action<Project>? OnProjectCreated;
         public event Action? OnProjectListLoaded;
         public event Action? OnProjectListSaved;
 
@@ -47,7 +47,7 @@ namespace NullEditor.Project
             projectList.Projects.Add(project);
             SaveProjectList();
 
-            OnProjectCreated?.Invoke();
+            OnProjectCreated?.Invoke(project);
         }
 
         public void CreateProjectOnDisk(string ProjectName)
@@ -113,6 +113,7 @@ namespace NullEditor.Project
             string jsonString = JsonSerializer.Serialize<ProjectList>(projectList);
             File.WriteAllText(fileName, jsonString);
             OnProjectListSaved?.Invoke();
+            UpdateProjectList();
         }
 
         public void LoadProjectList()

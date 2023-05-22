@@ -27,13 +27,16 @@ namespace NullEditor
             InitializeComponent();
             UpdateProjectListView();
 
-            ProjectManager.Instance.OnProjectCreated += UpdateProjectListView;
+            ProjectManager.Instance.OnProjectCreated += OnProjectCreated;
             ProjectManager.Instance.OnProjectListLoaded += UpdateProjectListView;
         }
+
+
 
         private void CreateProjectButtonOnClick(object sender, RoutedEventArgs e)
         => ProjectManager.Instance.CreateProjectOnDisk(projectNameTextBox.Text);
 
+        //Callbacks;
         public void UpdateProjectListView()
         {
             // Populate list
@@ -41,7 +44,32 @@ namespace NullEditor
             {
                 this.projectListView.Items.Add(item);
             }
-            
+        }
+        void OpenEditor(Project.Project project)
+        {
+            this.Hide();
+            EditorWindow.EditorWindow editorWindow = new EditorWindow.EditorWindow(project);
+            editorWindow.Show();
+        }
+        private void OnProjectCreated(Project.Project project) => OpenEditor(project);
+
+        private void ProjectListItemClick(object sender, MouseButtonEventArgs e)
+        {
+            var item = (sender as ListViewItem);
+            if (item != null && item.IsSelected)
+            {
+
+                Project.Project project = (Project.Project)item.Content;
+
+                OpenEditor(project);
+            }
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            base.OnClosed(e);
+
+            Application.Current.Shutdown();
         }
     }
 }
