@@ -19,12 +19,12 @@ protected:
 	ConstantBuffer* mLightCBO;
 
 	Shader* mFrameShader;
-
+	Shader* mDebugShader;
 	std::shared_ptr<ScreenViewport> mScreenVp;
 	std::shared_ptr<FrameBuffer> mFrameBuffer;
 
 	struct{ mat4x4 proj, view, model; } matrices;
-	struct { mat4x4 proj, view; vec3f pos; } lightMatrices;
+	struct { mat4x4 proj, view; vec3f pos; float padding; } lightMatrices;
 
 	
 	std::shared_ptr<ShadowPass> mShadowPass;

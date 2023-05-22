@@ -373,7 +373,7 @@ inline mat4x4 mat4x4::perspectiveLH(float fovY, float ratioX, float znear, float
 
 inline mat4x4 mat4x4::LookAt(const vec3f& pos, const vec3f& center, const vec3f& worldUp)
 {
-	vec3f f = (pos-center).normalized();
+	vec3f f = (center-pos).normalized();
 	vec3f r   = vec3f::cross(worldUp , f).normalized();
 	vec3f u      = vec3f::cross(f, r).normalized();
 
