@@ -3,6 +3,7 @@
 #include <Graphics/Context.h>
 #include <Graphics/DX11/DX11Config.h>
 #include <Graphics/DX11/DXTexture.h>
+#include <Graphics/Shader.h>
 
 ShadowPass::ShadowPass()
 {
@@ -85,14 +86,46 @@ void ShadowPass::Create(uint width, uint height)
 	projection = CreateLightProjection(1.f, 100.f);
 
 	//Creating Shader;
+	mShader = ShaderCache::CreateShader("DepthVS","DepthPS");
+
+	mViewport = { 0.f,0.f,(float)width,(float)height,0.f,1.f };
+}
+
+Texture* ShadowPass::GetDepthMap()
+{
+	return mTexture.get();
 }
 
 void ShadowPass::Bind()
 {
+	// Get Prev Viewport
+	gContext->GetViewport(&prevViewport);
+	
+	// Set our Viewport
+	gContext->SetViewport(&mViewport);
+
+	// Get Prev Rtv and Dsv
+	gDXContext->OMGetRenderTargets(1, &prevRtv, &prevDsv);
+
+	// Set RenderTarget
+	gContext->GetDXContext()->OMSetRenderTargets(1, &mRtv, mDsv);
+
+	// Clear Render Buffer
+	const float rgba[4] = { 1.0f,1.0f,1.0f,1.0f };
+	gDXContext->ClearRenderTargetView(mRtv, rgba);
+	gDXContext->ClearDepthStencilView(mDsv, D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+	mShader->Bind();
 }
 
 void ShadowPass::UnBind()
 {
+	// Restore Prev Viewport
+	gContext->SetViewport(&prevViewport);
+	// Restore Prev Render Target
+	gDXContext->OMSetRenderTargets(1, &prevRtv, prevDsv);
+
+	mShader->UnBind();
 }
 
 mat4x4 ShadowPass::CreateLightView(const vec3f& pos, const vec3f& center)

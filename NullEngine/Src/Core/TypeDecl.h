@@ -143,7 +143,7 @@ struct WndDesc {
 
 
 struct Viewport {
-    float x, y, w, h;
+    float x, y, w, h,minDepth,maxDepth;
 };
 
 enum class SamplerState {

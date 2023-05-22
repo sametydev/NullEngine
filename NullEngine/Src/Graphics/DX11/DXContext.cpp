@@ -291,6 +291,18 @@ void DXContext::GetViewport(Viewport* vp)
 	vp->y = dxVp.TopLeftY;
 	vp->w = dxVp.Width;
 	vp->h = dxVp.Height;
+	vp->minDepth = dxVp.MinDepth;
+	vp->maxDepth = dxVp.MaxDepth;
+}
+
+void DXContext::SetViewport(Viewport* vp)
+{
+	D3D11_VIEWPORT dxVp{
+		vp->x,vp->y,vp->w,vp->h,vp->minDepth,vp->maxDepth
+	};
+
+
+	mDeviceContext->RSSetViewports(1,&dxVp);
 }
 
 void DXContext::SetSampler(SamplerState sampler)
