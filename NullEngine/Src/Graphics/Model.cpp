@@ -29,6 +29,11 @@ ModelNode* Model::GetNode(uint index)
 	return &mNodes[index];
 }
 
+void Model::SetTexture(uint index, Texture* texture)
+{
+	mNodes[index].texture = texture;
+}
+
 std::unordered_map<std::string, std::shared_ptr<Model>> ModelCache::mCache;
 std::vector<std::shared_ptr<Model>>						ModelCache::mBuiltinModels;
 Model* ModelCache::LoadFromFile(LPCSTR filename)

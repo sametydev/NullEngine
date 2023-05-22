@@ -43,6 +43,7 @@ struct mat4x4 {
 	//----------------------------------
 
 	static mat4x4 perspectiveLH(float fovY, float ratioX, float znear, float zfar);
+	static mat4x4 LookAt(const vec3f& pos, const vec3f& center, const vec3f& worldUp);
 	static mat4x4 RotationYawPitchRoll(float yaw, float pitch, float roll);
 	static mat4x4 RotationAxis(const vec3f& v, float angle);
 
@@ -370,6 +371,26 @@ inline mat4x4 mat4x4::perspectiveLH(float fovY, float ratioX, float znear, float
 	};
 
 	return mat;
+}
+
+inline mat4x4 mat4x4::LookAt(const vec3f& pos, const vec3f& center, const vec3f& worldUp)
+{
+	vec3f forward = (pos-center).normalized();
+	vec3f right   = vec3f::cross(worldUp , forward).normalized();
+	vec3f up      = vec3f::cross(forward, right).normalized();
+
+	float x = vec3f::dot(right,pos);
+	float y = vec3f::dot(up, pos);
+	float z = vec3f::dot(forward, pos);
+
+	mat4x4 m = {
+		right.x,up.x,forward.x,x,
+		right.y,up.y,forward.y,y,
+		right.z,up.z,forward.z,z,
+		0,0,0,1
+	};
+
+	return m;
 }
 
 inline mat4x4 mat4x4::RotationYawPitchRoll(float yaw, float pitch, float roll)

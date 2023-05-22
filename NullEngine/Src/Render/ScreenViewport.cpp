@@ -29,7 +29,7 @@ void ScreenViewport::Create()
 	VertexBufferDesc vd{};
 	vd.nAttrib = std::size(attbs);
 	vd.pAttrib = attbs;
-	vd.cbStride = sizeof(VertexPNS);
+	vd.cbStride = sizeof(VertexPS);
 	vd.pData = vertices;
 	vd.cbSize = sizeof(vertices);
 

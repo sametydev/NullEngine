@@ -14,25 +14,18 @@ public:
 protected:
 	TCamera* camera;
 	ConstantBuffer* cbo;
-	Shader* vs;
-	Shader* ps;
-
-	Shader* frameShaderVS;
-	Shader* frameShaderPS;
 
 
-	Shader* f_vs;
-	Shader* f_ps;
+	Shader* mFrameShader;
+
 	std::shared_ptr<ScreenViewport> mScreenVp;
-
+	std::shared_ptr<FrameBuffer> mFrameBuffer;
 
 	vec3f pos = {0,0,0};
 	vec3f rot = { 0,0,0 };
 	float angle = 0;
 	
 	struct{ mat4x4 proj, view, model; }matrices;
-
-	FrameBuffer* fbo;
 	
 
 	Model* tree;

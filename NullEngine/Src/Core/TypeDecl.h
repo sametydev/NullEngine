@@ -121,6 +121,7 @@ class Camera;
 class TCamera;
 
 class ScreenViewport;
+class ShadowPass;
 
 //===============================================
 

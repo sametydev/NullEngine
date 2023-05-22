@@ -16,6 +16,8 @@ public:
     const ModelNode* GetNodes() const;
     ModelNode* GetNode( uint index);
 
+    void SetTexture(uint index,Texture* texture);
+
     std::vector<ModelNode> mNodes;
 
 };

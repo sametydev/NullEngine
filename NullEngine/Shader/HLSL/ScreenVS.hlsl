@@ -5,7 +5,7 @@ struct VS_IN {
 
 struct PS_IN {
 	float4 pos : SV_POSITION;
-	float2 st  : TEXCOORD;
+	float2 st  : TEXCOORD0;
 };
 
 PS_IN VS(VS_IN vs) {

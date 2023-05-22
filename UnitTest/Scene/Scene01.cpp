@@ -24,11 +24,8 @@ void Scene01::InitFrame()
 
 	float i = 10.f;
 
-	mScreenVp = std::make_shared<ScreenViewport>();
-	mScreenVp->Create();
-
 	mPlane = ModelCache::CreatePlane(i);
-
+	mPlane->SetTexture(0, TextureCache::Load("../data/checker.jpg"));
 	ConstantBufferDesc cd{};
 	cd.cbSize = sizeof(matrices);
 	cd.pData = &matrices;
@@ -41,31 +38,34 @@ void Scene01::InitFrame()
 	matrices.proj = camera->GetProjectionMatrix();
 
 	tree = ModelCache::LoadFromFile("../data/tree01.obj");
-	texture = TextureCache::Load("../data/style.jpg");
 	tree->mNodes[0].texture = TextureCache::Load("../data/tree01.png");
 	tree->mNodes[1].texture = TextureCache::Load("../data/tree00.png");
 
-	fbo = new DXFrameBuffer();
+	mFrameBuffer = std::make_shared<DXFrameBuffer>();
 	FrameBufferDesc fd{};
 	fd.width = vp.w;
 	fd.height = vp.h;
-	fd.nRenderPass = 2;
-	fd.bDepthStencil = false;
+	fd.nRenderPass = 3;
+	fd.bDepthStencil = true;
 
-	fbo->Create(fd);
+	mFrameBuffer->Create(fd);
 
 	//00 10
 	//01 11
-	
+	mScreenVp = std::make_shared<ScreenViewport>();
+	mScreenVp->Create();
 
+	mFrameShader = ShaderCache::CreateShader("GBufferVS","GBufferPS");
 
-	frameShaderVS = ShaderCache::CreateShader("GBuffer","GBuffer");
+	gContext->SetTopology(Topolgy::TRIANGLELIST);
 }
 
 void Scene01::UpdateFrame(float dt)
 {
 	camera->Update(dt);
+	matrices.proj = camera->GetProjectionMatrix();
 	matrices.view = camera->GetViewMatrix();
+	matrices.model = mat4x4();
 
 	cbo->SubData(&matrices);
 }
@@ -73,30 +73,22 @@ void Scene01::UpdateFrame(float dt)
 void Scene01::RenderFrame()
 {
 
-	//Bind frame buffer
-	//--------------------------
-	fbo->BeginFrame();
-	fbo->Clear(0.f, 0.f, 0.f, 1.f);
-
-	frameShaderVS->Bind();
-
-	gContext->SetTopology(Topolgy::TRIANGLELIST);
-
 	cbo->BindVS(0);
-	cbo->BindPS(0);
+	mFrameBuffer->BeginFrame();
+	mFrameShader->Bind();
 
-
-	texture->Bind(0);
-
-	mPlane->Render();
 	tree->Render();
-	//-----------------------
-	fbo->EndFrame();
+	mPlane->Render();
 
 
-	fbo->BindRenderPass();
+	mFrameBuffer->EndFrame();
+	//Bind texture from 0 to 1
+	mFrameBuffer->BindRenderPass();
 
 	mScreenVp->Render();
 
-	fbo->UnBindRenderPass();
+	//We need unbind
+	mFrameBuffer->UnBindRenderPass();
+
+
 }

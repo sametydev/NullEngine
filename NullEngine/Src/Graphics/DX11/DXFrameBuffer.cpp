@@ -115,12 +115,20 @@ void DXFrameBuffer::BeginFrame()
 
 	//========== set ============
 	gDXContext->OMSetRenderTargets(mRenderTargetViews.size(), mRenderTargetViews.data(),
-		nullptr);
+		mDepthStencilView);
+
+	const float color[4] = { 0.f,0.f,0.f,0.f };
+	for (auto rtv : mRenderTargetViews)
+		gDXContext->ClearRenderTargetView(rtv, color);
+
+	if (mDepthStencilView) {
+		gDXContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH, 1.f, 0);
+	}
 }
 
 void DXFrameBuffer::EndFrame()
 {
-	//load previous RTV and DRV 
+	//set back main render target
 	gDXContext->OMSetRenderTargets(1, &mPrevRTV, mPrevDTV);
 
 }
