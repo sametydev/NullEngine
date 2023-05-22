@@ -113,11 +113,9 @@ void Scene01::InitFrame()
 	f_vbo = BufferCache::CreateVertexBuffer(vd);
 	f_ibo = BufferCache::CreateIndexBuffer(id);
 
-	f_vs = ShaderCache::LoadVSBuiltIn("ndcVS");
-	f_ps = ShaderCache::LoadPSBuiltIn("ndcPS");
+	f_vs = ShaderCache::CreateShader("ndcVS","ndcPS");
 
-	frameShaderVS = ShaderCache::LoadVSBuiltIn("GBuffer");
-	frameShaderPS = ShaderCache::LoadPSBuiltIn("GBuffer");
+	frameShaderVS = ShaderCache::CreateShader("GBuffer","GBuffer");
 }
 
 void Scene01::UpdateFrame(float dt)
@@ -136,8 +134,7 @@ void Scene01::RenderFrame()
 	fbo->BeginFrame();
 	fbo->Clear(0.f, 0.f, 0.f, 1.f);
 
-	frameShaderVS->BindPipeline();
-	frameShaderPS->BindPipeline();
+	frameShaderVS->Bind();
 
 	gContext->SetTopology(Topolgy::TRIANGLELIST);
 
@@ -163,8 +160,7 @@ void Scene01::RenderFrame()
 	//Draw Screen
 	f_vbo->BindPipeline(0);
 	f_ibo->BindPipeline(0);
-	f_vs->BindPipeline();
-	f_ps->BindPipeline();
+	f_vs->Bind();
 
 	gContext->DrawIndexed(f_ibo->indices, 0, 0);
 

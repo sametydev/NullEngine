@@ -10,6 +10,7 @@ DXRenderState::DXRenderState()
 
 DXRenderState::~DXRenderState()
 {
+
 }
 
 void DXRenderState::Create()
@@ -17,6 +18,25 @@ void DXRenderState::Create()
 	CreateRSState();
 	CreateSamplerState();
 	CreateBlendState();
+	CreateDepthStencilState();
+	bStateCreated = true;
+}
+
+void DXRenderState::ReleaseStates()
+{
+	//Release all of states release devices before
+	gDXContext->ClearState();
+	SAFE_RELEASE(RSCullBack);
+	SAFE_RELEASE(RSCullFront);
+	SAFE_RELEASE(RSCullFrontAndBack);
+	SAFE_RELEASE(RSWireFrame);
+
+	SAFE_RELEASE(SSWrap);
+	SAFE_RELEASE(SSClamp);
+
+	SAFE_RELEASE(BSTransparent);
+	SAFE_RELEASE(BSBlendDisable);
+	SAFE_RELEASE(BSBlend);
 }
 
 void DXRenderState::CreateRSState()
@@ -57,7 +77,8 @@ void DXRenderState::CreateSamplerState()
 	sd.BorderColor[3] = { 0 };
 	sd.MinLOD         = 0;
 	sd.MaxAnisotropy  = D3D11_MAX_MAXANISOTROPY;
-	sd.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	//sd.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	sd.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
 
 
 	//Wrap sampler to default 
@@ -106,4 +127,36 @@ void DXRenderState::CreateBlendState()
 
 
 
+}
+
+void DXRenderState::CreateDepthStencilState()
+{
+
+	D3D11_DEPTH_STENCIL_DESC desc{};
+	// Set up the description of the stencil state.
+	desc.DepthEnable = true;
+	desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	desc.DepthFunc = D3D11_COMPARISON_LESS;
+	
+	desc.StencilEnable = true;
+	desc.StencilReadMask = 0xFF;
+	desc.StencilWriteMask = 0xFF;
+	
+	//desctions if pixel is front-facing.
+	desc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	desc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+	desc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	desc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+	
+	//desctions if pixel is back-facing.
+	desc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+	desc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+	desc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+	desc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	// Create the depth stencil state.
+	HR(gDXDevice->CreateDepthStencilState(&desc, &DSState));
+
+	// Set the depth stencil state.
+	gDXContext->OMSetDepthStencilState(DSState, 1);
 }

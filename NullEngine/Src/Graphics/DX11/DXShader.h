@@ -1,36 +1,29 @@
 #pragma once
-#include <Graphics/Shader.h>
-#include <vector>
+
+#include <graphics/shader.h>
+
 
 #define VS_ENTRY	"VS"
 #define PS_ENTRY	"PS"
-#define VS_VERSION	"vs_5_0"
-#define PS_VERSION	"ps_5_0"
 
+#define VS_VER		"vs_5_0"
+#define PS_VER		"ps_5_0"
 
-class DXVertexShader : public Shader {
+class DXShader : public Shader
+{
 public:
-	DXVertexShader();
-	~DXVertexShader();
+	DXShader();
+	virtual~DXShader();
 
-	//void Create(const ShaderDesc& desc);
-	void Create(LPCSTR code) override;
-	void BindPipeline() override;
+	void CreateFromFile(const char* vs, const char* fs) override;
+	void CreateFromCode(const char* vs, const char* fs) override;
 
-	//void CreateInputLayout(D3D11_INPUT_ELEMENT_DESC* element,uint numOfElements);
+	void Bind() override;
+	void UnBind() override;
 
-	ID3D11VertexShader* mVS;
+	void CompileFromFile(const std::string& file, const char* entry, const char* ver, ID3DBlob** blob);
+	void CompileFromCode(const char* code, const char* entry, const char* ver, ID3DBlob** blob);
+
+	ID3D11VertexShader* mVShader;
+	ID3D11PixelShader* mPShader;
 };
-
-class DXPixelShader : public Shader {
-public:
-	DXPixelShader();
-	~DXPixelShader();
-
-	void BindPipeline() override;
-	void Create(LPCSTR code) override;
-	
-	ID3D11PixelShader* mPS;
-};
-
-

@@ -4,6 +4,7 @@ struct DXRenderState {
 	~DXRenderState();
 
 	void Create();
+	void ReleaseStates();
 
 	//State
 	//ID3D11RasterizerState* RSState[2]{};
@@ -20,7 +21,11 @@ struct DXRenderState {
 	ID3D11BlendState* BSBlendDisable          = nullptr;
 	ID3D11BlendState* BSBlend			  = nullptr;
 
+	ID3D11DepthStencilState* DSState = nullptr;
+
 	void CreateRSState();
 	void CreateSamplerState();
 	void CreateBlendState();
+	void CreateDepthStencilState();
+	bool bStateCreated = false;
 };
