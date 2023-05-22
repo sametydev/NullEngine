@@ -1,29 +1,21 @@
 #pragma once
+
 #include <Graphics/Shader.h>
 
-class GLShader : public Shader {
-public:
-	GLShader() : mShader(0) {};
-	virtual ~GLShader();
-	virtual void BindPipeline();
-	uint mShader;
-};
-
-class GLVertexShader : public GLShader
+class GLShader : public Shader
 {
 public:
-	GLVertexShader() {};
-	virtual ~GLVertexShader() {};
+	GLShader();
+	virtual~GLShader();
 
-	virtual void Create(LPCSTR code);
+	void CreateFromFile(const char* vs, const char* fs) override;
+	void CreateFromCode(const char* vs, const char* fs) override;
+
+	void Bind() override;
+	void UnBind() override;
+	uint mId;
+protected:
+	std::string FileToCode(const char* file);
+	uint		CompileCode(const char* code, uint type);
+
 };
-
-class GLPixelShader : public GLShader
-{
-public:
-	GLPixelShader() {};
-	virtual ~GLPixelShader() {};
-
-	virtual void Create(LPCSTR code);
-};
-

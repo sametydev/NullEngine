@@ -90,6 +90,7 @@ struct ID3D11ShaderResourceView;
 struct ID3D11RasterizerState;
 struct ID3D11SamplerState;
 struct ID3D11BlendState;
+struct ID3D11DepthStencilState;
 
 struct ID3D10Blob;
 typedef ID3D10Blob ID3DBlob;

@@ -3,26 +3,29 @@
 class Shader
 {
 public:
-	Shader() = default;
-	virtual ~Shader() {}
-	virtual void BindPipeline() = 0;
+	Shader() : mIsCompiled(false) {}
+	virtual~Shader() {}
 
-	virtual void Create(LPCSTR code) = 0;
+	virtual void CreateFromFile(const char* vs, const char* fs) = 0;
+	virtual void CreateFromCode(const char* vs, const char* fs) = 0;
+
+	virtual void Bind() = 0;
+	virtual void UnBind() = 0;
+protected:
+	bool mIsCompiled;
 };
 
 #include <unordered_map>
 
-//Todo: ECS Subsystem Shader Cache
-class ShaderCache {
+class ShaderCache
+{
 public:
-	/*static Shader* Create(ShaderDesc* desc);*/
-	static Shader* LoadVSBuiltIn(LPCSTR filename);
-	static Shader* LoadPSBuiltIn(LPCSTR filename);
-
-	static Shader* CreateVertexShaderFromCode(LPCSTR code);
-	static Shader* CreatePixelShaderFromCode(LPCSTR code);
+	//Internal
 
 
-	static std::unordered_map<std::string, std::shared_ptr<Shader>> mCache;
-	static std::vector<std::shared_ptr<Shader>> mShaders;
+	//External
+	static Shader* CreateShader(const std::string& vs, const std::string& fs);
+
+	static std::unordered_map<std::string, std::shared_ptr<Shader>> mInternalShader;
+	static std::unordered_map<std::string, std::shared_ptr<Shader>> mExternalShader;
 };

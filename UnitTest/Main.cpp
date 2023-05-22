@@ -2,7 +2,7 @@
 #include <Wnd/WndFrame.h>
 #include <Graphics/DX11/DXBuffer.h>
 #include <PCH.h>
-#include <Scene/GLTestScene.h>
+
 #include <Scene/Scene01.h>
 #include <Engine/Timer.h>
 #include <Core/FileSystem.h>

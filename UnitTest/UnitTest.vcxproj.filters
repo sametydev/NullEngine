@@ -5,7 +5,6 @@
     <ClCompile Include="Scene\Scene01.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Scene\GLTestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Scene">
@@ -16,6 +15,5 @@
     <ClInclude Include="Scene\Scene01.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Scene\GLTestScene.h" />
   </ItemGroup>
 </Project>

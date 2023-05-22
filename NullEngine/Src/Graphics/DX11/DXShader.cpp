@@ -1,93 +1,110 @@
 #include <PCH.h>
-#include <Graphics/DX11/DXShader.h>
-#include <Graphics/DX11/DX11Config.h>
+#include <Graphics/dx11/dxshader.h>
 #include <Graphics/Context.h>
+#include <Graphics/DX11/DX11Config.h>
 
-void Compile(LPCSTR code, LPCSTR entry, LPCSTR version, ID3DBlob** blob)
-{
-	ID3DBlob* errorBlob = nullptr;
-	DWORD flag = D3DCOMPILE_ENABLE_STRICTNESS;
-
-#ifdef _DEBUG
-	flag |= D3DCOMPILE_DEBUG;
-	flag |= D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif
-
-	HRESULT hr = D3DCompile(code,
-		strlen(code),
-		nullptr,
-		nullptr,
-		nullptr,
-		entry,
-		version,
-		flag,
-		0,
-		blob,
-		&errorBlob
-	);
-
-	if (FAILED(hr))
-	{
-		MessageBox(NULL,(LPCSTR)errorBlob->GetBufferPointer(),"Shader Compile Error",MB_OK);
-	}
-
-	SAFE_RELEASE(errorBlob);
-}
-
-DXVertexShader::DXVertexShader() : mVS(nullptr)
+DXShader::DXShader()
+	: mVShader(nullptr), mPShader(nullptr)
 {
 }
 
-DXVertexShader::~DXVertexShader()
+DXShader::~DXShader()
 {
-	SAFE_RELEASE(mVS);
+	SAFE_RELEASE(mVShader);
+	SAFE_RELEASE(mPShader);
 }
 
-void DXVertexShader::Create(LPCSTR code)
+void DXShader::CreateFromFile(const char* vs, const char* fs)
 {
-	//Compile -> Create Shader -> Create Input Layout
-	ID3DBlob* blob = nullptr;
-	Compile(code,VS_ENTRY,VS_VERSION,&blob);
+	ID3DBlob* vb = NULL;
+	ID3DBlob* pb = NULL;
+
+	CompileFromFile(vs, VS_ENTRY, VS_VER, &vb);
 
 	HR(gDXDevice->CreateVertexShader(
-		blob->GetBufferPointer(),
-		blob->GetBufferSize(),
-		nullptr,
-		&mVS
-	));
-}
+		vb->GetBufferPointer(),
+		vb->GetBufferSize(),
+		NULL,
+		&mVShader));
 
-void DXVertexShader::BindPipeline()
-{
-	gDXContext->VSSetShader(mVS, 0, 0);
-}
-
-DXPixelShader::DXPixelShader() : mPS(nullptr)
-{
-}
-
-DXPixelShader::~DXPixelShader()
-{
-	SAFE_RELEASE(mPS);
-}
-
-void DXPixelShader::Create(LPCSTR code)
-{
-	ID3DBlob* psBlob = nullptr; // binary byte code
-
-	Compile(code, PS_ENTRY, PS_VERSION, &psBlob);
+	CompileFromFile(fs, PS_ENTRY, PS_VER, &pb);
 
 	HR(gDXDevice->CreatePixelShader(
-		psBlob->GetBufferPointer(),
-		psBlob->GetBufferSize(),
-		nullptr,
-		&mPS
-	));
-
-	SAFE_RELEASE(psBlob);
+		pb->GetBufferPointer(),
+		pb->GetBufferSize(),
+		NULL,
+		&mPShader));
 }
 
-void DXPixelShader::BindPipeline()
+void DXShader::CreateFromCode(const char* vs, const char* fs)
 {
-	gDXContext->PSSetShader(mPS, 0, 0);
+	ID3DBlob* vb = NULL;
+	ID3DBlob* pb = NULL;
+
+	HRESULT res;
+
+	CompileFromCode(vs, VS_ENTRY, VS_VER, &vb);
+
+	HR(gDXDevice->CreateVertexShader(
+		vb->GetBufferPointer(),
+		vb->GetBufferSize(),
+		NULL,
+		&mVShader));
+
+	CompileFromCode(fs, PS_ENTRY, PS_VER, &pb);
+
+	HR(gDXDevice->CreatePixelShader(
+		pb->GetBufferPointer(),
+		pb->GetBufferSize(),
+		NULL,
+		&mPShader));
+}
+
+void DXShader::Bind()
+{
+
+	gDXContext->VSSetShader(mVShader, 0, 0);
+	gDXContext->PSSetShader(mPShader, 0, 0);
+}
+
+void DXShader::UnBind()
+{
+}
+
+void DXShader::CompileFromFile(const std::string& file, const char* entry, const char* ver, ID3DBlob** blob)
+{
+	ID3DBlob* errBlob = nullptr;
+	HRESULT res;
+
+	std::wstring widefile;
+	widefile.assign(file.begin(), file.end());
+
+	res = D3DCompileFromFile(widefile.c_str(), nullptr, nullptr,
+		entry, ver, 0, 0, blob, &errBlob);
+
+	if (FAILED(res))
+	{
+		if (!errBlob) {
+			MessageBoxA(NULL, file.c_str(), "failed no find filename", MB_OK);
+			return;
+		}
+		LOG_ERROR("Shader Error : %s \n%s",errBlob->GetBufferPointer(), file.c_str());
+	}
+}
+
+void DXShader::CompileFromCode(const char* code, const char* entry, const char* ver, ID3DBlob** blob)
+{
+	ID3DBlob* errBlob = nullptr;
+
+	HRESULT res = D3DCompile(code, strlen(code), nullptr, nullptr, nullptr, entry, ver, 0,
+		0, blob, &errBlob);
+
+	if (FAILED(res))
+	{
+		if (!errBlob) {
+			MessageBoxA(NULL, code, "failed no find filename", MB_OK);
+			return;
+		}
+		MessageBoxA(NULL, (char*)errBlob->GetBufferPointer(), code, MB_OK);
+	}
 }
