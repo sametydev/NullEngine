@@ -13,6 +13,7 @@ Model::~Model()
 {
 }
 
+
 uint Model::GetNodeCount() const
 {
 	return (uint)mNodes.size();

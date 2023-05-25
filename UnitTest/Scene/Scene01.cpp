@@ -44,9 +44,8 @@ void Scene01::InitFrame()
 	camera->SetPosition({ 0,0.5f,-5 });
 	matrices.proj = camera->GetProjectionMatrix();
 
-	mTree = ModelCache::LoadFromFile("../data/tree01.obj");
-	mTree->mNodes[0].texture = TextureCache::Load("../data/tree01.png");
-	mTree->mNodes[1].texture = TextureCache::Load("../data/tree00.png");
+	mTree = ModelCache::LoadFromFile("../data/model/knot.obj");
+	mTree->mNodes[0].texture = TextureCache::Load("../data/checker.jpg");
 
 	mFrameBuffer = std::make_shared<DXFrameBuffer>();
 	FrameBufferDesc fd{};
@@ -85,22 +84,18 @@ void Scene01::UpdateFrame(float dt)
 void Scene01::RenderFrame()
 {
 	RenderDepth();
-	//mCBO->BindVS(0);
-	//mFrameBuffer->BeginFrame();
-	//mFrameShader->Bind();
+	matrices.proj = mShadowPass->projection;
+	matrices.view = mShadowPass->view;
+	matrices.model = mat4x4();
 
-	//tree->Render();
-	//mPlane->Render();
+	mCBO->SubData(&matrices);
+	mCBO->BindVS(0);
 
+	mShadowPass->Bind();
+	Renderable* models[2] = {mTree,mPlane};
+	mShadowPass->Render(models,std::size(models));
 
-	//mFrameBuffer->EndFrame();
-	////Bind texture from 0 to 1
-	//mFrameBuffer->BindRenderPass();
-
-	//mScreenVp->Render();
-
-	////We need unbind
-	//mFrameBuffer->UnBindRenderPass();
+	mShadowPass->UnBind();
 
 
 }

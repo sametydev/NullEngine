@@ -123,6 +123,9 @@ class TCamera;
 class ScreenViewport;
 class ShadowPass;
 
+class Object;
+class Renderable;
+
 //===============================================
 
 

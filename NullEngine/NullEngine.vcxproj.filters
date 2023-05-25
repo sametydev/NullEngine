@@ -43,6 +43,7 @@
     <ClInclude Include="Src\Graphics\DX11\DXFrameBuffer.h" />
     <ClInclude Include="Src\Render\ScreenViewport.h" />
     <ClInclude Include="Src\Render\ShadowPass.h" />
+    <ClInclude Include="Src\Component\Object.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp" />
@@ -77,6 +78,7 @@
     <ClCompile Include="Src\Graphics\DX11\DXFrameBuffer.cpp" />
     <ClCompile Include="Src\Render\ScreenViewport.cpp" />
     <ClCompile Include="Src\Render\ShadowPass.cpp" />
+    <ClCompile Include="Src\Component\Object.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\HLSL\GBufferPS.hlsl" />
