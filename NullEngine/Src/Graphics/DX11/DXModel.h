@@ -6,12 +6,15 @@ class DXModel :
 {
 public:
     DXModel();
-
-    void Load(LPCSTR filename);
+    virtual ~DXModel();
+    virtual void Create(std::vector<VertexPNS>& vertices,
+        std::vector<uint>& indices
+    );
     void Render();
 
-    VertexBuffer* vbo;
-    IndexBuffer*  ibo;
-
+    ID3D11Buffer* mVBO = nullptr;
+    ID3D11Buffer* mIBO = nullptr;
+    static ID3D11Buffer* gInstanceBuffer;
+    ID3D11InputLayout* mLayout = nullptr;
 };
 

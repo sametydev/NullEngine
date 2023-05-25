@@ -120,27 +120,3 @@ void Shadow::RenderFrame()
 	mPlane->Render();
 	depth->UnBind();
 }
-
-void Shadow::RenderDepth()
-{
-	//matrices.proj = mShadowPass->projection;
-	//matrices.view = mShadowPass->view;
-	//matrices.model = mat4x4();
-
-	//mCBO->SubData(&matrices);
-	//mCBO->BindVS(0);
-
-	//mShadowPass->Bind();
-	//
-	//mTree->Render();
-	//mPlane->Render();
-
-	//mShadowPass->UnBind();
-
-	//auto texture = mShadowPass->GetDepthMap();
-	//texture->Bind(0);
-	//mScreenVp->Render();
-	//texture->UnBind();
-
-
-}

@@ -13,6 +13,11 @@ public:
     Model();
     virtual ~Model();
 
+
+    virtual void Create(std::vector<VertexPNS>& vertices,
+        std::vector<uint>& indices
+    ) = 0;
+
     void Render() {};
 
     uint GetNodeCount() const;
