@@ -34,7 +34,7 @@ public:
 	//API Function 
 	virtual void GetViewport(Viewport* vp) override;
 	virtual void SetViewport(Viewport* vp) override;
-	virtual void SetSampler(SamplerState sampler) override;
+	virtual void SetSampler(uint slot,SamplerState sampler) override;
 	virtual void ClearBuffer(float r, float g, float b, float a);
 	virtual void SwapBuffer();
 	virtual void DrawIndexed(uint indices, uint offset, uint base);
