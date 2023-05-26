@@ -126,6 +126,7 @@ class ShadowPass;
 class Object;
 class Renderable;
 
+class Font;
 //===============================================
 
 
