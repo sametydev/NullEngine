@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Render\Font.h" />
     <ClInclude Include="Src\Component\Object.h" />
     <ClInclude Include="Src\Render\ShadowPass.h" />
     <ClInclude Include="Src\Render\ScreenViewport.h" />
@@ -182,6 +183,7 @@
     <ClInclude Include="Src\Component\TCamera.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Render\Font.cpp" />
     <ClCompile Include="Src\Component\Object.cpp" />
     <ClCompile Include="Src\Render\ShadowPass.cpp" />
     <ClCompile Include="Src\Render\ScreenViewport.cpp" />

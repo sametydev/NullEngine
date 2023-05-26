@@ -24,5 +24,7 @@ protected:
 	Model* mTree;
 	Model* mPlane;
 	Texture* texture;
+
+	Font* font;
 };
 

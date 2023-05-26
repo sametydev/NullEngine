@@ -12,10 +12,13 @@
 #include <Component/TCamera.h>
 #include <Render/ScreenViewport.h>
 #include <Render/ShadowPass.h>
-
+#include <Render/Font.h>
 
 void InstancingTest::InitFrame()
 {
+
+	font = new Font;
+	font->Create("../data/font/arial.ttf",100);
 	Viewport vp{};
 
 	gContext->GetViewport(&vp);
