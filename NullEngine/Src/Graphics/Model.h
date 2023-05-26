@@ -1,16 +1,24 @@
 #pragma once
+#include <Component/Object.h>
+
 struct ModelNode {
     uint nIndices;
     uint nIndicesOffset;
     Texture* texture;
 };
-class Model
+
+class Model : public Renderable
 {
 public:
     Model();
     virtual ~Model();
 
-    virtual void Render() = 0;
+
+    virtual void Create(std::vector<VertexPNS>& vertices,
+        std::vector<uint>& indices
+    ) = 0;
+
+    void Render() {};
 
     uint GetNodeCount() const;
     const ModelNode* GetNodes() const;

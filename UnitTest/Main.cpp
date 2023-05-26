@@ -3,7 +3,7 @@
 #include <Graphics/DX11/DXBuffer.h>
 #include <PCH.h>
 
-#include <Scene/Scene01.h>
+#include <Scene/Shadow.h>
 #include <Engine/Timer.h>
 #include <Core/FileSystem.h>
 
@@ -19,7 +19,7 @@ int main(int args, char* argv[]) {
 	desc.api = GraphicAPI::DirectX11;
 
 	WndFrame wnd(desc);
-	Scene01 scene01;
+	Shadow scene01;
 
 	return wnd.ExecFrame(&scene01);
 }

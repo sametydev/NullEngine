@@ -305,15 +305,15 @@ void DXContext::SetViewport(Viewport* vp)
 	mDeviceContext->RSSetViewports(1,&dxVp);
 }
 
-void DXContext::SetSampler(SamplerState sampler)
+void DXContext::SetSampler(uint slot, SamplerState sampler)
 {
 	switch (sampler)
 	{
 		case SamplerState::WRAP:
-			mDeviceContext->PSSetSamplers(0, 1, &mStates.SSWrap);
+			mDeviceContext->PSSetSamplers(slot, 1, &mStates.SSWrap);
 			break;
 		case SamplerState::CLAMP:
-			mDeviceContext->PSSetSamplers(0, 1, &mStates.SSClamp);
+			mDeviceContext->PSSetSamplers(slot, 1, &mStates.SSClamp);
 			break;
 	}
 }

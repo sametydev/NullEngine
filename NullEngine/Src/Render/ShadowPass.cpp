@@ -4,6 +4,7 @@
 #include <Graphics/DX11/DX11Config.h>
 #include <Graphics/DX11/DXTexture.h>
 #include <Graphics/Shader.h>
+#include <Component/Object.h>
 
 ShadowPass::ShadowPass()
 {
@@ -125,6 +126,14 @@ void ShadowPass::UnBind()
 	gDXContext->OMSetRenderTargets(1, &prevRtv, prevDsv);
 
 	mShader->UnBind();
+}
+
+void ShadowPass::Render(Renderable** Objs, uint nObjs)
+{
+	for (int i = 0; i < nObjs; i++)
+	{
+		Objs[i]->Render();
+	}
 }
 
 mat4x4 ShadowPass::CreateLightView(const vec3f& pos, const vec3f& center)

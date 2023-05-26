@@ -10,6 +10,7 @@ public:
 
 	void Bind();
 	void UnBind();
+	void Render(Renderable** Objs, uint nObjs);
 
 	ID3D11RenderTargetView* mRtv = nullptr;
 	ID3D11DepthStencilView* mDsv = nullptr;

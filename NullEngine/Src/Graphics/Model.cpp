@@ -5,6 +5,10 @@
 #include <Graphics/Context.h>
 #include <Graphics/Buffer.h>
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 Model::Model()
 {
 }
@@ -51,7 +55,7 @@ Model* ModelCache::LoadFromFile(LPCSTR filename)
 
 	auto model = std::make_shared<DXModel>();
 
-	model->Load(filename);
+	LoadModelFromAssimp(filename, model.get());
 
 	mCache.insert(std::make_pair(filename, model));
 
@@ -60,44 +64,96 @@ Model* ModelCache::LoadFromFile(LPCSTR filename)
 
 Model* ModelCache::CreatePlane(float size)
 {
-	DXModel* plane = new DXModel();
+	/*DXModel* plane = new DXModel();
 
-	VertexPNS vertices[] = {
+	std::vector<VertexPNS> vertices = {
 		{{-size,0,-size},		{0,1.f,0},	{0.f,1.f}},
 		{{-size,0,size},		{0,1.f,0},	{0.0f,0.f}},
 		{{size,0,size},			{0,1.f,0},	{1.f,0.f}},
 		{{size,0,-size},		{0,1.f,0},	{1.f,1.f}}
 	};
 
-	uint indices[] = {
+	std::vector<uint> indices = {
 		0,1,2,0,2,3
 	};
 
-	VertexAttrib attbs[] = {
-		{0,Format::Float,3,offsetof(VertexPNS,VertexPNS::position)},
-		{0,Format::Float,3,offsetof(VertexPNS,VertexPNS::normal)},
-		{0,Format::Float,2,offsetof(VertexPNS,VertexPNS::st)}
-	};
-
-	VertexBufferDesc vd{};
-	vd.nAttrib = std::size(attbs);
-	vd.pAttrib = attbs;
-	vd.cbStride = sizeof(VertexPNS);
-	vd.pData = vertices;
-	vd.cbSize = sizeof(vertices);
-
-	plane->vbo = BufferCache::CreateVertexBuffer(vd);
-
-	IndexBufferDesc id{};
-	id.cbSize = sizeof(indices);
-	id.nIndices = std::size(indices);
-	id.pData = indices;
-
-	plane->ibo = BufferCache::CreateIndexBuffer(id);
-	plane->mNodes.resize(1);
-	plane->mNodes[0] = {plane->ibo->indices,0,0};
+	plane->Create(vertices, indices);
 
 	mBuiltinModels.emplace_back(std::shared_ptr<DXModel>(plane));
 
-	return plane;
+	return plane;*/
+	return nullptr;
+}
+
+
+void LoadModelFromAssimp(LPCSTR filename,
+	Model* model) {
+
+	using namespace Assimp;
+
+	if (!FileSystem::IsExistsFile(filename))
+	{
+		LOG_ERROR("Failed to load model, model is not exists : %s", filename);
+	}
+
+	Importer importer;
+	importer.SetPropertyInteger(AI_CONFIG_PP_SBP_REMOVE,
+		aiPrimitiveType_LINE | aiPrimitiveType_POINT);
+
+	const aiScene* scene = importer.ReadFile(filename,
+		aiProcess_ConvertToLeftHanded | aiProcess_Triangulate |
+		aiProcess_ImproveCacheLocality | aiProcess_SortByPType
+	);
+
+	if (!scene)
+	{
+		LOG_ERROR("Failed to load model scene");
+	}
+
+	std::vector<VertexPNS> vertices;
+	std::vector<uint> indices;
+
+	uint numMesh = scene->mNumMeshes;
+	model->mNodes.resize(numMesh);
+
+	for (int index = 0; index < numMesh; index++)
+	{
+		const aiMesh* mesh = scene->mMeshes[index];
+		uint nVertices = mesh->mNumVertices;
+
+		for (int i = 0; i < nVertices; i++) {
+
+			VertexPNS vtx;
+			memcpy(&vtx.position, &mesh->mVertices[i], sizeof(vec3f));
+			memcpy(&vtx.normal, &mesh->mNormals[i], sizeof(vec3f));
+
+			if (mesh->mTextureCoords[0])
+			{
+				memcpy(&vtx.st, &mesh->mTextureCoords[0][i], sizeof(vec2f));
+			}
+
+			vertices.emplace_back(vtx);
+		}
+		uint nIndices = mesh->mNumFaces * 3;
+		ModelNode* nodes = model->mNodes.data();
+
+
+		nodes[index].nIndicesOffset += (index > 0) ? nodes[index - 1].nIndices : 0;
+		nodes[index].nIndices = nIndices;
+		int offset = nodes[index].nIndicesOffset;
+
+		for (int i = 0; i < mesh->mNumFaces; i++)
+		{
+			const aiFace* face = &mesh->mFaces[i];
+			if (face->mNumIndices > 3)
+			{
+				LOG_ERROR("Mesh is not triangular");
+			}
+			indices.emplace_back(face->mIndices[0] + offset);
+			indices.emplace_back(face->mIndices[1] + offset);
+			indices.emplace_back(face->mIndices[2] + offset);
+		}
+	}
+
+	model->Create(vertices,indices);
 }
