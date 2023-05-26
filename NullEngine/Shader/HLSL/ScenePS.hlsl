@@ -1,15 +1,15 @@
 Texture2D GTexture : register(t0);
 SamplerState GSampler : register(s0);
 
-struct PS_IN
+struct PSIn
 {
-    float4 pos : SV_POSITION;
+    float4 pos : SV_Position;
     float3 normal : TEXCOORD0;
     float2 st : TEXCOORD1;
 };
 
 
-float4 PS(PS_IN ps) : SV_TARGET
+float4 PS(PSIn ps) : SV_TARGET
 {
     float4 diffuse = GTexture.Sample(GSampler, ps.st);
 

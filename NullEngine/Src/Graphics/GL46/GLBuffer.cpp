@@ -34,16 +34,16 @@ void GLVertexBuffer::Create(const VertexBufferDesc& desc)
 	glBufferData(GL_ARRAY_BUFFER, desc.cbSize, desc.pData, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexPNS),
-		(void*)offsetof(VertexPNS, VertexPNS::position));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexPNTS),
+		(void*)offsetof(VertexPNTS, VertexPNTS::position));
 
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexPNS),
-		(void*)offsetof(VertexPNS, VertexPNS::normal));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexPNTS),
+		(void*)offsetof(VertexPNTS, VertexPNTS::normal));
 
 	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexPNS),
-		(void*)offsetof(VertexPNS, VertexPNS::st));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(VertexPNTS),
+		(void*)offsetof(VertexPNTS, VertexPNTS::st));
 
 	glBindVertexArray(0);
 }

@@ -1,14 +1,34 @@
-Texture2D Texture0 : register(t0);
-Texture2D Texture1 : register(t1);
-Texture2D Texture2 : register(t2);
-SamplerState Sampler0 : register(s0);
-
-struct PS_IN {
-	float4 pos : SV_POSITION;
-	float2 st  : TEXCOORD0;
+cbuffer matrices : register(b0)
+{
+    matrix proj;
+    matrix view;
+    matrix model;
 };
 
-float4 PS(PS_IN ps) : SV_TARGET {
-	float4 albedo = Texture0.Sample(Sampler0,ps.st);
-	return albedo;
+struct VSIn
+{
+    float3 pos : POSITION;
+    float3 normal : TEXCOORD0;
+    float3 tangent : TEXCOORD1;
+    float2 st : TEXCOORD2;
 };
+
+struct PSIn
+{
+    float4 pos : SV_Position;
+    float3 normal : TEXCOORD0;
+    float2 st : TEXCOORD1;
+};
+
+PSIn VS(VSIn vs)
+{
+    PSIn ps;
+    
+    ps.pos = mul(float4(vs.pos, 1), model);
+    ps.pos = mul(ps.pos, view);
+    ps.pos = mul(ps.pos, proj);
+    
+    ps.normal = mul(vs.normal, (float3x3) model);
+    ps.st = vs.st;
+    return ps;
+}

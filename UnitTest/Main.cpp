@@ -4,6 +4,7 @@
 #include <PCH.h>
 
 #include <Scene/Shadow.h>
+#include <Scene/InstancingTest.h>
 #include <Engine/Timer.h>
 #include <Core/FileSystem.h>
 
@@ -19,7 +20,7 @@ int main(int args, char* argv[]) {
 	desc.api = GraphicAPI::DirectX11;
 
 	WndFrame wnd(desc);
-	Shadow scene01;
+	InstancingTest scene01;
 
 	return wnd.ExecFrame(&scene01);
 }

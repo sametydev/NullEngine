@@ -2,6 +2,7 @@
 #include <Component/Object.h>
 
 struct ModelNode {
+    ModelNode() : nIndices(0), nIndicesOffset(0), texture(nullptr) {};
     uint nIndices;
     uint nIndicesOffset;
     Texture* texture;
@@ -14,9 +15,11 @@ public:
     virtual ~Model();
 
 
-    virtual void Create(std::vector<VertexPNS>& vertices,
+    virtual void Create(std::vector<VertexPNTS>& vertices,
         std::vector<uint>& indices
     ) = 0;
+
+    virtual void RenderInstanced(uint nInstance, void* data);
 
     void Render() {};
 
@@ -28,6 +31,18 @@ public:
 
     std::vector<ModelNode> mNodes;
 
+};
+
+class BuiltInModel : public Model {
+public:
+    BuiltInModel();
+    virtual void Create(std::vector<VertexPNTS>& vertices,
+        std::vector<uint>& indices
+    );
+    void Render();
+
+    VertexBuffer* vbo;
+    IndexBuffer* ibo;
 };
 
 #include <unordered_map>
