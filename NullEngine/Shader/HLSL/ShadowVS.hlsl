@@ -17,7 +17,8 @@ struct VSIn
 {
     float3 pos : POSITION;
     float3 normal : TEXCOORD0;
-    float2 st : TEXCOORD1;
+    float3 tangent : TEXCOORD1;
+    float2 st : TEXCOORD2;
 };
 
 struct PSIn

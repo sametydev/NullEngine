@@ -9,9 +9,10 @@ struct VertexPS
 };
 
 //POS NORMAL ST
-struct VertexPNS
+struct VertexPNTS
 {
 	vec3f position;
 	vec3f normal;
+	vec3f tangent;
 	vec2f st;
 };

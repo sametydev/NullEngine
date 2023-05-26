@@ -87,5 +87,7 @@
     <FxCompile Include="Shader\HLSL\DepthVS.hlsl" />
     <FxCompile Include="Shader\HLSL\ShadowVS.hlsl" />
     <FxCompile Include="Shader\HLSL\ShadowPS.hlsl" />
+    <FxCompile Include="Shader\HLSL\SceneInstanceVS.hlsl" />
+    <FxCompile Include="Shader\HLSL\SceneVS.hlsl" />
   </ItemGroup>
 </Project>

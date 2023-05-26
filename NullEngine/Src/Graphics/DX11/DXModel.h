@@ -7,10 +7,12 @@ class DXModel :
 public:
     DXModel();
     virtual ~DXModel();
-    virtual void Create(std::vector<VertexPNS>& vertices,
+    virtual void Create(std::vector<VertexPNTS>& vertices,
         std::vector<uint>& indices
     );
     void Render();
+    virtual void RenderInstanced(uint nInstance, void* data) override;
+
 
     ID3D11Buffer* mVBO = nullptr;
     ID3D11Buffer* mIBO = nullptr;
