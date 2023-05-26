@@ -36,13 +36,15 @@ void InstancingTest::InitFrame()
 	mTree->mNodes[0].texture = TextureCache::Load("../data/tree01.png");
 	mTree->mNodes[1].texture = TextureCache::Load("../data/tree00.png");
 
-	int i = 50;
-	for (i; i < 100; i++)
-	{
-		mat4x4 t = mat4x4::translated({(float) - i * 3.f,0.f,0.f});
-		instanceData.emplace_back(t);
-	}
+	int size = 5;
 
+	for (int z = -size; z < size; z++) {
+		for (int x = -size; x < size; x++)
+		{
+			mat4x4 t = mat4x4::translated(vec3f(x, 0.f, z));
+			instanceData.emplace_back(t);
+		}
+	}
 
 	gContext->SetTopology(Topolgy::TRIANGLELIST);
 	mSceneShader = ShaderCache::CreateShader("SceneInstanceVS","ScenePS");
