@@ -129,7 +129,7 @@ void DXModel::Render()
 		ModelNode* node = GetNode(i);
 		if (node->texture)
 		{
-			node->texture->Bind(0);
+			//node->texture->Bind(0);
 		}
 		gDXContext->DrawIndexed(node->nIndices, node->nIndicesOffset, offset);
 	}

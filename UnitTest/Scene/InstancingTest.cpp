@@ -18,7 +18,7 @@ void InstancingTest::InitFrame()
 {
 
 	font = new Font;
-	font->Create("../data/font/arial.ttf",100);
+	font->Create("../data/font/arial.ttf",16);
 	Viewport vp{};
 
 	gContext->GetViewport(&vp);
@@ -50,7 +50,7 @@ void InstancingTest::InitFrame()
 	}
 
 	gContext->SetTopology(Topolgy::TRIANGLELIST);
-	mSceneShader = ShaderCache::CreateShader("SceneInstanceVS","ScenePS");
+	mSceneShader = ShaderCache::CreateShader("SceneVS","ScenePS");
 }
 
 void InstancingTest::UpdateFrame(float dt)
@@ -66,6 +66,10 @@ void InstancingTest::RenderFrame()
 {
 	mCBO->BindVS(0);
 	mSceneShader->Bind();
+
+
 	mPlane->Render();
-	mTree->RenderInstanced(instanceData.size(), instanceData.data());
+
+
+	//mTree->RenderInstanced(instanceData.size(), instanceData.data());
 }
