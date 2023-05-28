@@ -38,9 +38,9 @@ public:
 
 class BufferCache {
 public:
-	static VertexBuffer* CreateVertexBuffer(const VertexBufferDesc& desc);
-	static IndexBuffer* CreateIndexBuffer(const IndexBufferDesc& desc);
-	static ConstantBuffer* CreateConstantBuffer(const ConstantBufferDesc& desc);
+	[[nodiscard]]static VertexBuffer* CreateVertexBuffer(const VertexBufferDesc& desc);
+	[[nodiscard]]static IndexBuffer* CreateIndexBuffer(const IndexBufferDesc& desc);
+	[[nodiscard]]static ConstantBuffer* CreateConstantBuffer(const ConstantBufferDesc& desc);
 
 	static std::vector<std::shared_ptr<Buffer>> mCache;
 };
