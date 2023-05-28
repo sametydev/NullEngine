@@ -44,7 +44,7 @@ void InstancingTest::InitFrame()
 	for (int z = -size; z < size; z++) {
 		for (int x = -size; x < size; x++)
 		{
-			mat4x4 t = mat4x4::translated(vec3f(x, 0.f, z));
+			mat4x4 t = mat4x4::translated(vec3f((float)x, 0.f, (float)z));
 			instanceData.emplace_back(t);
 		}
 	}

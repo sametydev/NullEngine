@@ -4,7 +4,7 @@
 #include <Graphics/Shader.h>
 #include <Graphics/Context.h>
 
-ScreenViewport::ScreenViewport()
+ScreenViewport::ScreenViewport():mIbo(nullptr),mShader(nullptr),mVbo(nullptr)
 {
 }
 

@@ -24,7 +24,7 @@ public:
 
 
 	//External
-	static Shader* CreateShader(const std::string& vs, const std::string& fs);
+	[[nodiscard]]static Shader* CreateShader(const std::string& vs, const std::string& fs);
 
 	static std::unordered_map<std::string, std::shared_ptr<Shader>> mInternalShader;
 	static std::unordered_map<std::string, std::shared_ptr<Shader>> mExternalShader;
