@@ -16,6 +16,7 @@ using NullEditor.Project;
 using System.IO;
 using NullEditor.Engine;
 using NullEditor.Other;
+#pragma warning disable CS8604
 
 namespace NullEditor
 {
@@ -40,18 +41,20 @@ namespace NullEditor
         public void UpdateProjectListView()
         {
             // Populate list
-            foreach (var item in ProjectManager.Instance.GetProjectList().Projects)
+            foreach (var item in ProjectManager.Instance.GetProjectList().ProjectListItems)
             {
                 this.projectListView.Items.Add(item);
             }
         }
-        void OpenEditor(Project.Project project)
+        void OpenEditor(Project.ProjectListItem projectList)
         {
             this.Hide();
-            EditorWindow.EditorWindow editorWindow = new EditorWindow.EditorWindow(project);
+            EditorWindow.EditorWindow editorWindow = new EditorWindow.EditorWindow(
+                ProjectManager.Instance.GetProjectFromPath(projectList.Path)
+                );
             editorWindow.Show();
         }
-        private void OnProjectCreated(Project.Project project) => OpenEditor(project);
+        private void OnProjectCreated(Project.ProjectListItem project) => OpenEditor(project);
 
         private void ProjectListItemClick(object sender, MouseButtonEventArgs e)
         {
@@ -59,7 +62,7 @@ namespace NullEditor
             if (item != null && item.IsSelected)
             {
 
-                Project.Project project = (Project.Project)item.Content;
+                Project.ProjectListItem project = (Project.ProjectListItem)item.Content;
 
                 OpenEditor(project);
             }

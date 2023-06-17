@@ -12,6 +12,9 @@ using System.Windows;
 using System.Runtime.Serialization;
 using NullEditor.Other;
 using System.Text.RegularExpressions;
+using System.Diagnostics.CodeAnalysis;
+
+#pragma warning disable CS8604
 
 namespace NullEditor.Project
 {
@@ -24,12 +27,27 @@ namespace NullEditor.Project
 
     }
 
-    [Serializable]public class ProjectList {
-        public List<Project> Projects { get; set; } = new List<Project>();
+    [Serializable] public class ProjectListItem
+    {
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public string? Version { get; set; }
+        public string? Path { get; set; }
     }
+
+    
+
+    [Serializable]public class ProjectList {
+        public List<ProjectListItem> ProjectListItems { get; set; } = new List<ProjectListItem>();
+    }
+
     internal class ProjectManager : Singleton<ProjectManager>
     {
+
         public ProjectManager() { LoadProjectList(); }
+
+        //public List<Project> mProjects = new List<Project>();
+
         private ProjectList projectList = new ProjectList();
 
         private string projectsFileData = "Projects.json";
@@ -38,16 +56,17 @@ namespace NullEditor.Project
 
 
         //Events;
-        public event Action<Project>? OnProjectCreated;
+        public event Action<ProjectListItem>? OnProjectCreated;
         public event Action? OnProjectListLoaded;
         public event Action? OnProjectListSaved;
 
-        public void CreateProject(Project project)
+        public void CreateProject(ProjectListItem projectListItem)
         {
-            projectList.Projects.Add(project);
+            projectList.ProjectListItems.Add(projectListItem);
+
             SaveProjectList();
 
-            OnProjectCreated?.Invoke(project);
+            OnProjectCreated?.Invoke(projectListItem);
         }
 
         public void CreateProjectOnDisk(string ProjectName)
@@ -83,7 +102,8 @@ namespace NullEditor.Project
 
             //Create Project Directory and Proj File
             Directory.CreateDirectory(Helper.GenerateProjectBaseDirPath(projectName));
-            File.Create(projectFileJson);
+            var stream = File.Create(projectFileJson);
+            stream.Close();
             FileInfo finfo = new FileInfo(projectFileJson);
 
             //Create Engine Config;
@@ -96,9 +116,16 @@ namespace NullEditor.Project
             project.Path = finfo.FullName;
             project.@EngineConfig = engineConfig;
 
+            //Its for init of editor window, its UI thing
+            ProjectListItem projectListItem = new ProjectListItem();
+            projectListItem.Name = project.Name;
+            projectListItem.Description = project.Description;
+            projectListItem.Path = project.Path;
+            projectListItem.Version = project.Version;
 
             //Add Project into our Program
-            ProjectManager.Instance.CreateProject(project);
+            ProjectManager.Instance.SaveProject(project);
+            ProjectManager.Instance.CreateProject(projectListItem);
 
             //TODO : Copy Default project
 
@@ -107,10 +134,27 @@ namespace NullEditor.Project
             Helper.MessageInfo("Project is created!");
         }
 
+        #pragma warning disable CS8603
+        public Project GetProjectFromPath(string path)
+        {
+            if (!File.Exists(path)) return null;
+            string jsonString = File.ReadAllText(path);
+            return JsonSerializer.Deserialize<Project>(jsonString)!;
+        }
+
         public void SaveProjectList()
         {
             string fileName = projectsFileData;
             string jsonString = JsonSerializer.Serialize<ProjectList>(projectList);
+            File.WriteAllText(fileName, jsonString);
+            OnProjectListSaved?.Invoke();
+            UpdateProjectList();
+        }
+
+        public void SaveProject(Project project)
+        {
+            string? fileName = project.Path;
+            string jsonString = JsonSerializer.Serialize<Project>(project);
             File.WriteAllText(fileName, jsonString);
             OnProjectListSaved?.Invoke();
             UpdateProjectList();
@@ -127,7 +171,7 @@ namespace NullEditor.Project
 
         public void UpdateProjectList()
         {
-            projectList.Projects.Clear();
+            projectList.ProjectListItems.Clear();
 
             LoadProjectList();
         }
