@@ -43,14 +43,10 @@ namespace NullEditor.Project
 
     internal class ProjectManager : Singleton<ProjectManager>
     {
-
         public ProjectManager() { LoadProjectList(); }
-
-        //public List<Project> mProjects = new List<Project>();
 
         private ProjectList projectList = new ProjectList();
 
-        private string projectsFileData = "Projects.json";
         
         public ProjectList GetProjectList() => projectList;
 
@@ -144,9 +140,8 @@ namespace NullEditor.Project
 
         public void SaveProjectList()
         {
-            string fileName = projectsFileData;
             string jsonString = JsonSerializer.Serialize<ProjectList>(projectList);
-            File.WriteAllText(fileName, jsonString);
+            File.WriteAllText(Global.PROJECTLIST_FILE, jsonString);
             OnProjectListSaved?.Invoke();
             UpdateProjectList();
         }
@@ -162,9 +157,8 @@ namespace NullEditor.Project
 
         public void LoadProjectList()
         {
-            string fileName = projectsFileData;
-            if (!File.Exists(fileName)) return;
-            string jsonString = File.ReadAllText(fileName);
+            if (!File.Exists(Global.PROJECTLIST_FILE)) return;
+            string jsonString = File.ReadAllText(Global.PROJECTLIST_FILE);
             projectList = JsonSerializer.Deserialize<ProjectList>(jsonString)!;
             OnProjectListLoaded?.Invoke();
         }

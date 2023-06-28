@@ -107,7 +107,7 @@ void DXModel::Create(std::vector<VertexPNTS>& vertices, std::vector<uint>& indic
 		ibd.Usage = D3D11_USAGE_DYNAMIC;
 		ibd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		ibd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		ibd.ByteWidth = sizeof(VertexPNTS) * 40000; // TODO : Make Global Functions for Performant Calculations
+		ibd.ByteWidth = g_instaceSize; // TODO : Make Global Functions for Performant Calculations
 		
 
 		HR(gDXDevice->CreateBuffer(&ibd, nullptr, &gInstanceBuffer));
