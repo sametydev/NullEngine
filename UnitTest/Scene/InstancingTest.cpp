@@ -27,6 +27,7 @@ void InstancingTest::InitFrame()
 
 	mPlane = ModelCache::CreatePlane(5.f);
 	mPlane->SetTexture(0, TextureCache::Load("../data/checker.jpg"));
+
 	ConstantBufferDesc cd{};
 	cd.cbSize = sizeof(matrices);
 	cd.pData = &matrices;

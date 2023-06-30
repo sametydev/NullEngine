@@ -33,7 +33,7 @@ void DXVertexBuffer::Create(const VertexBufferDesc& desc)
 
 	HR(gDXDevice->CreateBuffer(&bd, &sd, &mBuffer));
 
-	//make temp shader
+	//make temp shader for DX, Its not global thing because OpenGL doesnt working like this
 	std::vector<D3D11_INPUT_ELEMENT_DESC> inputs(desc.nAttrib);
 	std::string temp;
 	temp += "struct VS_IN {";
