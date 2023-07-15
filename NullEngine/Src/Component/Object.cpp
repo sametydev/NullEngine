@@ -3,7 +3,7 @@
 
 std::hash<uint> hasher;
 
-Object::Object() : id(0)
+Object::Object() : id(0), transform()
 {
 	static uint idCounter = 0;
 	id = idCounter;
@@ -12,6 +12,16 @@ Object::Object() : id(0)
 
 Object::~Object()
 {
+}
+
+Transform* Object::GetTransform()
+{
+	return transform;
+}
+
+void Object::SetTransform(Transform* t)
+{
+	transform = t;
 }
 
 Renderable::Renderable()

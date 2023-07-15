@@ -1,14 +1,17 @@
 #pragma once
-
+#include <Component/Transform.h>
 class Object
 {
 public:
 	Object();
 	virtual ~Object();
-	//virtual void OnCreate() {};
-	//virtual void OnDestroy() {};
-	//virtual void OnUpdate() {};
+	virtual void OnCreate() {};
+	virtual void OnDestroy() {};
+	virtual void OnUpdate() {};
 
+	Transform* GetTransform();
+
+	void SetTransform(Transform* t);
 
 	bool isRenderable = true;
 
@@ -23,6 +26,9 @@ public:
 	std::size_t operator()(const Object& obj) const {
 		return hasher(id);
 	}
+
+private:
+	Transform* transform;
 };
 
 class Renderable {
