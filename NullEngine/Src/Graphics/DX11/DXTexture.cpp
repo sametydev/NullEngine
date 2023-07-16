@@ -10,7 +10,7 @@
 #include <stb/stb_image_write.h>
 
 
-DXTexture::DXTexture():mSRV(nullptr),mSlot(0)
+DXTexture::DXTexture():mSRV(nullptr),mSlot(0),height(0),width(0)
 {
 
 }

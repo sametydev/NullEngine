@@ -1,5 +1,6 @@
 #pragma once
 #include <Graphics/Model.h>
+constexpr int g_instaceSize = sizeof(VertexPNTS) * 40000;
 
 class DXModel :
     public Model
