@@ -11,11 +11,9 @@ public:
 	virtual void Load(LPCSTR filename);
 	virtual void Bind(uint slot = 0);
 	virtual void UnBind();
-
+	ID3D11ShaderResourceView* mSRV;
 	uint width;
 	uint height;
 	uint mSlot;
-
-	ID3D11ShaderResourceView* mSRV;
 };
 

@@ -45,6 +45,8 @@ struct mat4x4 {
 	static mat4x4 RotationYawPitchRoll(float yaw, float pitch, float roll);
 	static mat4x4 RotationAxis(const vec3f& v, float angle);
 
+	static mat4x4 NDCToScreen(float widht,float height);
+
 	union {
 		float f[16];
 		float m[4][4];
@@ -448,6 +450,22 @@ inline mat4x4 mat4x4::RotationAxis(const vec3f& v, float angle)
 		0.0f,                         0.0f,                         0.0f,       1.0f
 	};
 	return mat;
+}
+
+inline mat4x4 mat4x4::NDCToScreen(float widht, float height)
+{
+	float screenX = 2.f / (float)widht;
+	float screenY = 2.f / (float)height;
+
+	//Calculating to NDC to Screen Space
+	mat4x4 screenMat{
+		screenX,0.f,0.f,-1.f,
+		0.f,-screenY,0.f,1.f,
+		0.f,0.f,1.f,0.f,
+		0.f,0.f,0.f,1.f
+	};
+
+	return screenMat;
 }
 
 inline std::ostream& operator<<(std::ostream& o, const mat4x4& mat) {

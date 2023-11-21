@@ -45,6 +45,8 @@
     <ClInclude Include="Src\Render\ShadowPass.h" />
     <ClInclude Include="Src\Component\Object.h" />
     <ClInclude Include="Src\Render\Font.h" />
+    <ClInclude Include="Src\Render\DXBatch.h" />
+    <ClInclude Include="Src\Math\vec4f.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp" />
@@ -81,6 +83,7 @@
     <ClCompile Include="Src\Render\ShadowPass.cpp" />
     <ClCompile Include="Src\Component\Object.cpp" />
     <ClCompile Include="Src\Render\Font.cpp" />
+    <ClCompile Include="Src\Render\DXBatch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\HLSL\GBufferPS.hlsl" />
@@ -91,5 +94,7 @@
     <FxCompile Include="Shader\HLSL\ShadowPS.hlsl" />
     <FxCompile Include="Shader\HLSL\SceneInstanceVS.hlsl" />
     <FxCompile Include="Shader\HLSL\SceneVS.hlsl" />
+    <FxCompile Include="Shader\HLSL\FontVS.hlsl" />
+    <FxCompile Include="Shader\HLSL\FontPS.hlsl" />
   </ItemGroup>
 </Project>

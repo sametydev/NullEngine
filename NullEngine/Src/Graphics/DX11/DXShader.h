@@ -26,4 +26,6 @@ public:
 
 	ID3D11VertexShader* mVShader;
 	ID3D11PixelShader* mPShader;
+
+	ID3DBlob* mBlob = nullptr;
 };

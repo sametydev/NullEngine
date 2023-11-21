@@ -17,9 +17,9 @@
 void InstancingTest::InitFrame()
 {
 
-	font = new Font;
-	font->Create("../data/font/arial.ttf",16);
+	//font->Create("../data/font/arial.ttf",16);
 	Viewport vp{};
+
 
 	gContext->GetViewport(&vp);
 
@@ -40,7 +40,7 @@ void InstancingTest::InitFrame()
 	mTree->mNodes[0].texture = TextureCache::Load("../data/tree01.png");
 	mTree->mNodes[1].texture = TextureCache::Load("../data/tree00.png");
 
-	int size = 5;
+	int size = 10;
 
 	for (int z = -size; z < size; z++) {
 		for (int x = -size; x < size; x++)
@@ -50,12 +50,24 @@ void InstancingTest::InitFrame()
 		}
 	}
 
+	mFrameBuffer = std::make_shared<DXFrameBuffer>();
+	FrameBufferDesc fd{};
+	fd.width = vp.w;
+	fd.height = vp.h;
+	fd.nRenderPass = 1;
+	fd.bDepthStencil = true;
+
+	mFrameBuffer->Create(fd);
+
 	gContext->SetTopology(Topolgy::TRIANGLELIST);
 	mSceneShader = ShaderCache::CreateShader("SceneVS","ScenePS");
+	mInstanceShader = ShaderCache::CreateShader("SceneInstanceVS","ScenePS");
 }
 
 void InstancingTest::UpdateFrame(float dt)
 {
+
+
 	camera->Update(dt);
 	matrices.proj = camera->GetProjectionMatrix();
 	matrices.view = camera->GetViewMatrix();
@@ -65,12 +77,24 @@ void InstancingTest::UpdateFrame(float dt)
 
 void InstancingTest::RenderFrame()
 {
+	//mFrameBuffer->BeginFrame();
+	//mFrameBuffer->Clear(0, 0, 0, 1);
 	mCBO->BindVS(0);
+
 	mSceneShader->Bind();
 
 
 	mPlane->Render();
 
+	//mFrameBuffer->EndFrame();
 
-	//mTree->RenderInstanced(instanceData.size(), instanceData.data());
+
+
+	//mFrameBuffer->BindRenderPass();
+
+
+
+	//mFrameBuffer->UnBindRenderPass();
+	mInstanceShader->Bind();
+	mTree->RenderInstanced(instanceData.size(), instanceData.data());
 }

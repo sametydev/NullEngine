@@ -6,6 +6,15 @@
       <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="Scene\InstancingTest.cpp" />
+    <ClCompile Include="ImGui\imgui.cpp" />
+    <ClCompile Include="ImGui\imgui_demo.cpp" />
+    <ClCompile Include="ImGui\imgui_draw.cpp" />
+    <ClCompile Include="ImGui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="ImGui\imgui_stdlib.cpp" />
+    <ClCompile Include="ImGui\imgui_tables.cpp" />
+    <ClCompile Include="ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Scene\Scene01.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Scene">
@@ -17,5 +26,6 @@
       <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Scene\InstancingTest.h" />
+    <ClInclude Include="Scene\Scene01.h" />
   </ItemGroup>
 </Project>
