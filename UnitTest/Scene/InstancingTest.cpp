@@ -17,7 +17,6 @@
 void InstancingTest::InitFrame()
 {
 
-	font = new Font;
 	//font->Create("../data/font/arial.ttf",16);
 	Viewport vp{};
 
@@ -81,8 +80,7 @@ void InstancingTest::RenderFrame()
 	//mFrameBuffer->BeginFrame();
 	//mFrameBuffer->Clear(0, 0, 0, 1);
 	mCBO->BindVS(0);
-	auto tex = font->GetFontTexture();
-	tex->Bind();
+
 	mSceneShader->Bind();
 
 

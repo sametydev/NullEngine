@@ -1,6 +1,7 @@
 #pragma once
 #include <Math/vec4f.h>
 #include <Render/Font.h>
+#include <Core/Singleton.h>
 #include <freetype/freetype.h>
 
 #define MAX_FONT_TEXT 8192
@@ -15,7 +16,7 @@ class Batch
 {
 public:
 	Batch();
-	virtual ~Batch() = 0;
+	virtual ~Batch();
 
 
 	virtual void Init() = 0;
@@ -23,17 +24,12 @@ public:
 	//Gathering resources
 	virtual void Begin() = 0;
 
-	virtual void Render(const char*, int x, int y,
+	virtual void Render(const char* text, int x, int y,
 		const vec4f& color = vec4f(1.f)) = 0;
 
 	virtual void End() = 0;
-
-	static Batch* Instance;
 };
-
-Batch* Batch::Instance = nullptr;
-
-class DXBatch : public Batch {
+class DXBatch : Batch {
 public:
 	DXBatch();
 
@@ -44,12 +40,15 @@ public:
 	void End() override;
 	void Create_Font(const char* filename, uint size);
 	void CreateBuffer();
+
+
+	static DXBatch* Instance;
+
 private:
 	uint texture;
 	uint m_width;
 	uint m_height;
 
-	ConstantBuffer* mScreenCBO;
 
 	Shader* mShader;
 	FontGlyph fonts[FONT_MAX_CHAR];
@@ -59,6 +58,14 @@ private:
 
 	ID3D11Buffer* mVbo;
 
+	ID3D11InputLayout* inputLayout;
+
 	std::unique_ptr<FontInstanceVertex[]> mVertices;
+
+	FontInstanceVertex* pCurrentVertex = nullptr;
+
+	bool mIsBegin = false;
+
+	int mCurVtxIndex = 0;
 };
 

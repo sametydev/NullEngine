@@ -3,30 +3,54 @@
 #include <Graphics/Shader.h>
 #include <Graphics/Buffer.h>
 #include <Graphics/DX11/DX11Config.h>
+#include <Graphics/DX11/DXContext.h>
 #include <Graphics/Context.h>
-#include <Graphics/DX11/DXTexture.h>
+#include <Graphics/DX11/DXShader.h>
 
+#include <Graphics/DX11/DXTexture.h>
+DXBatch* DXBatch::Instance = nullptr;
 DXBatch::DXBatch()
 {
+	if (Instance == nullptr)
+	{
+		Instance = this;
+	}
 }
 
 void DXBatch::Init()
 {
 	mShader = ShaderCache::CreateShader("FontVS", "FontPS");
+	Viewport v{};
+
+	auto blob = static_cast<DXShader*>(mShader)->mBlob;
+
+	gContext->GetViewport(&v);
+
+	mat4x4 screenMatrix = mat4x4::NDCToScreen(v.w, v.h);
+
 
 	ConstantBufferDesc cbd{};
 	cbd.cbSize = sizeof(mat4x4);
-	cbd.pData = nullptr;
+	cbd.pData = &screenMatrix;
 
 	mScreenCbo = BufferCache::CreateConstantBuffer(cbd);
 
-	Viewport v{};
-	
-	gContext->GetViewport(&v);
-	
-	mat4x4 screenMatrix = mat4x4::NDCToScreen(v.w,v.h);
+
 
 	mScreenCbo->SubData(&screenMatrix);
+
+
+	std::vector<D3D11_INPUT_ELEMENT_DESC> inputs = {
+		{"POSITION",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,0,D3D11_INPUT_PER_INSTANCE_DATA},
+		{"TEXCOORD",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_INSTANCE_DATA},
+		{"COLOR",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,0,D3D11_INPUT_PER_INSTANCE_DATA}
+	};
+
+	HR(gDXDevice->CreateInputLayout(inputs.data(), inputs.size(),
+		blob->GetBufferPointer(),blob->GetBufferSize(),
+		&inputLayout));
+
+
 
 	Create_Font("../data/font/arial.ttf", 16);
 	CreateBuffer(); //Create Font Buffer
@@ -40,14 +64,73 @@ void DXBatch::Init()
 
 void DXBatch::Begin()
 {
+	mIsBegin = true;
+	mCurVtxIndex = 0;
+	pCurrentVertex = mVertices.get();
 }
 
-void DXBatch::Render(const char* text, int x, int y, const vec4f& color = vec4f(1.f))
+void DXBatch::Render(const char* text, int x, int y, const vec4f& color)
 {
+	if (!mIsBegin)return;
+
+	const unsigned char* ch = nullptr;
+	for (ch=(const unsigned char*)text; *ch; ++ch)
+	{
+		if (mCurVtxIndex >= FONT_MAX_CHAR)
+		{
+			break;
+		}
+
+		auto& font = fonts[*ch];
+
+		float posx = x + font.bl;
+		float posy = y - (font.h - font.bt) + m_height;
+
+		float w = font.w;
+		float h = font.h;
+
+		FontInstanceVertex fontVtx;
+		fontVtx.pswh = { posx,posy,w,h };
+		fontVtx.uv = { font.uvx1,font.uvy1,font.uvx2,font.uvy2 };
+		fontVtx.color = color;
+
+
+		*pCurrentVertex++ = fontVtx;
+		x += font.ax;
+	}
 }
 
 void DXBatch::End()
-{
+{ 
+	if (!mIsBegin || mCurVtxIndex == 0) return;
+
+	D3D11_MAPPED_SUBRESOURCE mapped{};
+	gDXContext->Map(mVbo, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+	memcpy(mapped.pData, mVertices.get(), sizeof(FontInstanceVertex)*mCurVtxIndex);
+
+	gDXContext->Unmap(mVbo,0);
+
+	mShader->Bind();
+	mScreenCbo->BindVS(1);
+
+	uint stride = sizeof(FontInstanceVertex);
+	uint offset = 0;
+
+	gDXContext->IASetInputLayout(inputLayout);
+	
+	gDXContext->IASetVertexBuffers(0, 1, &mVbo, &stride, &offset);
+
+	gDXContext->PSSetShaderResources(0, 1, &mTexture);
+
+	auto sampler = static_cast<DXContext*>(gContext)->mStates.SSWrap;
+
+	gDXContext->PSSetSamplers(0, 1, &sampler);
+
+	gDXContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	gContext->SetBlendState(BlendState::Transparent);
+	gDXContext->DrawInstanced(6, mCurVtxIndex, 0, 0);
+	gContext->SetBlendState(BlendState::Disable);
+
 }
 
 void DXBatch::Create_Font(const char* filename, uint size)
@@ -189,8 +272,9 @@ void DXBatch::CreateBuffer()
 
 Batch::Batch()
 {
-	if (Instance == nullptr)
-	{
-		Instance = this;
-	}
+
+}
+
+Batch::~Batch()
+{
 }

@@ -16,14 +16,14 @@ DXShader::~DXShader()
 
 void DXShader::CreateFromFile(const char* vs, const char* fs)
 {
-	ID3DBlob* vb = NULL;
+	//ID3DBlob* vb = NULL;
 	ID3DBlob* pb = NULL;
 
-	CompileFromFile(vs, VS_ENTRY, VS_VER, &vb);
+	CompileFromFile(vs, VS_ENTRY, VS_VER, &mBlob);
 
 	HR(gDXDevice->CreateVertexShader(
-		vb->GetBufferPointer(),
-		vb->GetBufferSize(),
+		mBlob->GetBufferPointer(),
+		mBlob->GetBufferSize(),
 		NULL,
 		&mVShader));
 

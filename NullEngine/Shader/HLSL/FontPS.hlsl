@@ -12,7 +12,7 @@ struct PS_In
 float4 PS(PS_In ps) : SV_Target
 {
     float4 color = ps.color;
-    float4 texColor = tex0.Sample(samplerState, ps.uv);
+    float4 texColor = tex0.Sample(samplerState, ps.st);
     color.a = texColor.r;
     return color;
 }

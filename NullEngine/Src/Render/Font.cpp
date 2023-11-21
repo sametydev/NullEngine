@@ -10,9 +10,3 @@
 Font::Font()
 {
 }
-
-
-Texture* Font::GetFontTexture() const
-{
-	return mTexture.get();
-}

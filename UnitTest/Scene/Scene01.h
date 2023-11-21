@@ -17,9 +17,5 @@ protected:
 	ConstantBuffer* mCBO;
 
 	struct { mat4x4 proj, view, model; } matrices;
-
-	Texture* texture;
-
-	Font* font;
 };
 
