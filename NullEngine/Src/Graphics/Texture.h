@@ -13,7 +13,7 @@ public:
 	virtual void Load(LPCSTR filename) = 0;
 	virtual void Bind(uint slot = 0) = 0;
 	virtual void UnBind() {};
-
+	ID3D11ShaderResourceView* mSRV;
 	uint bytePerPixel = 0; //Optional;
 	uint width;
 	uint height;

@@ -45,21 +45,21 @@ void Shadow::InitFrame()
 	mTree = ModelCache::LoadFromFile("../data/model/knot.obj");
 	mTree->mNodes[0].texture = TextureCache::Load("../data/checker.jpg");
 
-	//mFrameBuffer = std::make_shared<DXFrameBuffer>();
-	//FrameBufferDesc fd{};
-	//fd.width = vp.w;
-	//fd.height = vp.h;
-	//fd.nRenderPass = 3;
-	//fd.bDepthStencil = true;
+	mFrameBuffer = std::make_shared<DXFrameBuffer>();
+	FrameBufferDesc fd{};
+	fd.width = vp.w;
+	fd.height = vp.h;
+	fd.nRenderPass = 3;
+	fd.bDepthStencil = true;
 
-	//mFrameBuffer->Create(fd);
+	mFrameBuffer->Create(fd);
 
 	//00 10
 	//01 11
 	mScreenVp = std::make_shared<ScreenViewport>();
 	mScreenVp->Create();
 
-	//mFrameShader = ShaderCache::CreateShader("GBufferVS","GBufferPS");
+	mFrameShader = ShaderCache::CreateShader("GBufferVS","GBufferPS");
 
 	mShadowShader = ShaderCache::CreateShader("ShadowVS", "ShadowPS");
 

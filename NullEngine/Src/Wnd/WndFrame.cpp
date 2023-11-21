@@ -40,6 +40,9 @@ void WndFrame::OnCreate()
 		break;
 	}
 
+	mBatcher = std::make_shared<DXBatch>();
+	mBatcher->Init();
+
 }
 
 void WndFrame::OnReSize(uint cx, uint cy)
@@ -73,13 +76,19 @@ int WndFrame::ExecFrame(Scene* scene)
 		{
 			Timer::instance()->Update();
 			Input::Update(*this);
+			
+			//Batch Begin
+			//TODO :: Batch Begin
+			mBatcher->Begin();
+
 			mContext->ClearBuffer(0.2f, 0.2f, 0.2f,1.0f);
 			if (scene)
 			{
-				
 				scene->UpdateFrame(Timer::instance()->deltaTime);
 				scene->RenderFrame();
 			}
+			mBatcher->End();
+
 			mContext->SwapBuffer();
 		}
 		//Update

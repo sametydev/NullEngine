@@ -11,14 +11,18 @@ public:
 	void UpdateFrame(float dt) override;
 	void RenderFrame() override;
 
+	HWND ref;
 protected:
 	TCamera* camera;
 	ConstantBuffer* mCBO;
 
 
 	Shader* mSceneShader;
+	Shader* mInstanceShader;
 
 	std::vector<mat4x4> instanceData;
+
+	std::shared_ptr<FrameBuffer> mFrameBuffer;
 
 	struct { mat4x4 proj, view, model; } matrices;
 	Model* mTree;

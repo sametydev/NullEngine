@@ -1,6 +1,6 @@
 #pragma once
 #include <Wnd/Wnd.h>
-
+#include <Render/DXBatch.h>
 class WndFrame : public Wnd
 {
 
@@ -13,6 +13,7 @@ public:
 
 	GraphicAPI mApiType;
 	std::shared_ptr<Context> mContext;
+	std::shared_ptr<DXBatch> mBatcher;
 
 	int ExecFrame(Scene* scene = nullptr);
 };

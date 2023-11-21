@@ -21,6 +21,7 @@ int main(int args, char* argv[]) {
 
 	WndFrame wnd(desc);
 	InstancingTest scene01;
+	scene01.ref = wnd.mHwnd;
 
 	return wnd.ExecFrame(&scene01);
 }

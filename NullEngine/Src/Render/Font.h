@@ -26,15 +26,15 @@ class Font
 public:
 	Font();
 
-	void Create(LPCSTR filename,uint size);
-
+	//void Create(LPCSTR filename,uint size);
+	//void CreateShader();
 	uint mWidth;
 	uint mHeight;
 
 	FontGlyph mFont[FONT_MAX_CHAR];
 
 	ID3D11ShaderResourceView* mSRV = nullptr;
-	std::shared_ptr<Texture> mTexture;
+
 
 	Texture* GetFontTexture() const;
 };
