@@ -137,9 +137,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Render\DXSpriteBatch.h" />
     <ClInclude Include="Src\Math\vec4f.h" />
     <ClInclude Include="Src\Render\DXBatch.h" />
-    <ClInclude Include="Src\Render\Font.h" />
+    <ClInclude Include="Src\Render\DXFontBatch.h" />
     <ClInclude Include="Src\Component\Object.h" />
     <ClInclude Include="Src\Render\ShadowPass.h" />
     <ClInclude Include="Src\Render\ScreenViewport.h" />
@@ -186,9 +187,9 @@
     <ClInclude Include="Src\Graphics\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Render\DXSpriteBatch.cpp" />
     <ClCompile Include="Src\Graphics\Vertex.cpp" />
-    <ClCompile Include="Src\Render\DXBatch.cpp" />
-    <ClCompile Include="Src\Render\Font.cpp" />
+    <ClCompile Include="Src\Render\DXFontBatch.cpp" />
     <ClCompile Include="Src\Component\Object.cpp" />
     <ClCompile Include="Src\Render\ShadowPass.cpp" />
     <ClCompile Include="Src\Render\ScreenViewport.cpp" />
@@ -286,6 +287,20 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </FxCompile>
     <FxCompile Include="Shader\HLSL\ShadowVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shader\HLSL\SpritePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+    <FxCompile Include="Shader\HLSL\SpriteVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>

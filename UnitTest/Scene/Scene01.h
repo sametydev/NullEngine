@@ -15,7 +15,7 @@ public:
 protected:
 	TCamera* camera;
 	ConstantBuffer* mCBO;
-
+	Texture* testTexture = nullptr;
 	struct { mat4x4 proj, view, model; } matrices;
 };
 

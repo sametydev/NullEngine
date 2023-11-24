@@ -21,7 +21,7 @@ int main(int args, char* argv[]) {
 	desc.api = GraphicAPI::DirectX11;
 
 	WndFrame wnd(desc);
-	InstancingTest scene01;
+	Scene01 scene01;
 	scene01.ref = wnd.mHwnd;
 
 	return wnd.ExecFrame(&scene01);

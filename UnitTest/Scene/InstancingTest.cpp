@@ -12,8 +12,8 @@
 #include <Component/TCamera.h>
 #include <Render/ScreenViewport.h>
 #include <Render/ShadowPass.h>
-#include <Render/Font.h>
 #include <Graphics/Vertex.h>
+#include <Render/DXFontBatch.h>
 
 void InstancingTest::InitFrame()
 {
@@ -86,6 +86,7 @@ void InstancingTest::RenderFrame()
 {
 	//mFrameBuffer->BeginFrame();
 	//mFrameBuffer->Clear(0, 0, 0, 1);
+	
 	mCBO->BindVS(0);
 
 	mSceneShader->Bind();
@@ -104,4 +105,6 @@ void InstancingTest::RenderFrame()
 	//mFrameBuffer->UnBindRenderPass();
 	mInstanceShader->Bind();
 	mTree->RenderInstanced(instanceData.size(), instanceData.data());
+
+	DXFontBatch::Instance->Render("Current Tree Count : 100", 20, 30);
 }

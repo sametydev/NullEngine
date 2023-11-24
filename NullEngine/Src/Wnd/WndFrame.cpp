@@ -40,9 +40,8 @@ void WndFrame::OnCreate()
 		break;
 	}
 
-	mBatcher = std::make_shared<DXBatch>();
-	mBatcher->Init();
-
+	mFontBatcher = std::make_shared<DXFontBatch>();
+	mSpriteBatcher = std::make_shared<DXSpriteBatch>();
 }
 
 void WndFrame::OnReSize(uint cx, uint cy)
@@ -56,6 +55,8 @@ int WndFrame::ExecFrame(Scene* scene)
 		scene->InitFrame();
 	}
 
+	mFontBatcher->Init();
+	mSpriteBatcher->Init();
 
 	MSG msg{};
 
@@ -79,7 +80,8 @@ int WndFrame::ExecFrame(Scene* scene)
 			
 			//Batch Begin
 			//TODO :: Batch Begin
-			mBatcher->Begin();
+			mSpriteBatcher->Begin();
+			mFontBatcher->Begin();
 
 			mContext->ClearBuffer(0.2f, 0.2f, 0.2f,1.0f);
 			if (scene)
@@ -87,7 +89,9 @@ int WndFrame::ExecFrame(Scene* scene)
 				scene->UpdateFrame(Timer::instance()->deltaTime);
 				scene->RenderFrame();
 			}
-			mBatcher->End();
+			mSpriteBatcher->End();
+			mFontBatcher->End();
+
 
 			mContext->SwapBuffer();
 		}
