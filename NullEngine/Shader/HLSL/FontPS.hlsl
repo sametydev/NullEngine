@@ -13,6 +13,8 @@ float4 PS(PS_In ps) : SV_Target
 {
     float4 color = ps.color;
     float4 texColor = tex0.Sample(samplerState, ps.st);
-    color.a = texColor.r;
+    float alpha = 1.0f;
+    
+    color.a = texColor.r*alpha;
     return color;
 }

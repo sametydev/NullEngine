@@ -16,6 +16,7 @@ struct PS_In
     float4 pos : SV_POSITION;
     float2 st : TEXCOORD;
     float4 color : COLOR;
+    float alpha : PSIZE;
 };
 
 PS_In VS(VS_In vs, uint id : SV_VertexID)
@@ -26,12 +27,12 @@ PS_In VS(VS_In vs, uint id : SV_VertexID)
 
     const float3 quad[6] =
     {
-        { pos.x, pos.y, 0 }, // 0 index
-        { pos.x + pos.z, pos.y, 0 }, // 1 index
-        { pos.x, pos.y + pos.w, 0 }, // 2 index
-        { pos.x, pos.y + pos.w, 0 }, // 0 index
-        { pos.x + pos.z, pos.y, 0 }, // 1 index
-        { pos.x + pos.z, pos.y + pos.w, 0 } // 2 index
+        { pos.x          , pos.y, 0 },         // 0 index
+        { pos.x + pos.z  , pos.y, 0 },         // 1 index
+        { pos.x          , pos.y + pos.w, 0 }, // 2 index
+        { pos.x          , pos.y + pos.w, 0 }, // 2 index
+        { pos.x + pos.z  , pos.y, 0 },         // 1 index
+        { pos.x + pos.z  , pos.y + pos.w, 0 }  // 3 index
 
     };
     const float2 st[6] =

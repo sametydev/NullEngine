@@ -12,12 +12,12 @@
 #include <Component/TCamera.h>
 #include <Render/ScreenViewport.h>
 #include <Render/ShadowPass.h>
-#include <Render/Font.h>
-#include <Render/DXBatch.h>
+#include <Render/DXFontBatch.h>
+#include <Render/DXSpriteBatch.h>
 
 void Scene01::InitFrame()
 {
-
+	testTexture = TextureCache::Load("../data/checker.jpg");
 }
 
 void Scene01::UpdateFrame(float dt)
@@ -27,5 +27,7 @@ void Scene01::UpdateFrame(float dt)
 
 void Scene01::RenderFrame()
 {
-	DXBatch::Instance->Render("Hello", 20, 30);
+	DXSpriteBatch::Instance->Render(testTexture, 50, 50, 128, 128);
+	DXFontBatch::Instance->Render("Hello World!", 20, 30);
+
 }

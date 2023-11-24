@@ -44,10 +44,11 @@
     <ClInclude Include="Src\Render\ScreenViewport.h" />
     <ClInclude Include="Src\Render\ShadowPass.h" />
     <ClInclude Include="Src\Component\Object.h" />
-    <ClInclude Include="Src\Render\Font.h" />
-    <ClInclude Include="Src\Render\DXBatch.h" />
+    <ClInclude Include="Src\Render\DXFontBatch.h" />
     <ClInclude Include="Src\Math\vec4f.h" />
     <ClInclude Include="Src\Graphics\Vertex.h" />
+    <ClInclude Include="Src\Render\DXBatch.h" />
+    <ClInclude Include="Src\Render\DXSpriteBatch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp" />
@@ -83,9 +84,9 @@
     <ClCompile Include="Src\Render\ScreenViewport.cpp" />
     <ClCompile Include="Src\Render\ShadowPass.cpp" />
     <ClCompile Include="Src\Component\Object.cpp" />
-    <ClCompile Include="Src\Render\Font.cpp" />
-    <ClCompile Include="Src\Render\DXBatch.cpp" />
+    <ClCompile Include="Src\Render\DXFontBatch.cpp" />
     <ClCompile Include="Src\Graphics\Vertex.cpp" />
+    <ClCompile Include="Src\Render\DXSpriteBatch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\HLSL\GBufferPS.hlsl" />
@@ -98,5 +99,7 @@
     <FxCompile Include="Shader\HLSL\SceneVS.hlsl" />
     <FxCompile Include="Shader\HLSL\FontVS.hlsl" />
     <FxCompile Include="Shader\HLSL\FontPS.hlsl" />
+    <FxCompile Include="Shader\HLSL\SpritePS.hlsl" />
+    <FxCompile Include="Shader\HLSL\SpriteVS.hlsl" />
   </ItemGroup>
 </Project>
