@@ -39,7 +39,9 @@ void InstancingTest::InitFrame()
 
 	gContext->SetTopology(Topolgy::TRIANGLELIST);
 	mSceneShader = ShaderCache::CreateShader("SceneVS", "ScenePS");
+
 	mInstanceShader = ShaderCache::CreateShader("SceneInstanceVS", "ScenePS");
+
 	mInstanceShader->CreateInputLayout(VertexPTTTInstancedLayout::inputLayout,
 		std::size(VertexPTTTInstancedLayout::inputLayout));
 
