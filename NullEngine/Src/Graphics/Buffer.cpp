@@ -53,6 +53,10 @@ ConstantBuffer* BufferCache::CreateConstantBuffer(const ConstantBufferDesc& desc
 		buffer = std::make_shared<DXConstantBuffer>();
 		break;
 	case GraphicAPI::OpenGL46:
+
+		//OpenGL is Deprecated Right Now!
+		return nullptr;
+
 		buffer = std::make_shared<GLUniformBuffer>();
 		break;
 	default:

@@ -24,8 +24,21 @@ public:
 	void CompileFromFile(const std::string& file, const char* entry, const char* ver, ID3DBlob** blob);
 	void CompileFromCode(const char* code, const char* entry, const char* ver, ID3DBlob** blob);
 
+	ID3DBlob& GetVertexShaderBlob() override;
+	ID3DBlob& GetPixelShaderBlob() override;
+	ID3D11InputLayout& GetInputLayout() override;
+
+	void SetInputLayoutPipeline() override;
+
+	void CreateInputLayout(const D3D11_INPUT_ELEMENT_DESC* elements,
+		uint32_t nElements) override;
+
 	ID3D11VertexShader* mVShader;
 	ID3D11PixelShader* mPShader;
 
-	ID3DBlob* mBlob = nullptr;
+private:
+	ID3DBlob* pixelShaderBlob = nullptr;
+	ID3DBlob* vertexShaderBlob = nullptr;
+
+	ID3D11InputLayout* inputLayout = nullptr;
 };

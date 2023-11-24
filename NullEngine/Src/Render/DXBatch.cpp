@@ -22,8 +22,6 @@ void DXBatch::Init()
 	mShader = ShaderCache::CreateShader("FontVS", "FontPS");
 	Viewport v{};
 
-	auto blob = static_cast<DXShader*>(mShader)->mBlob;
-
 	gContext->GetViewport(&v);
 
 	mat4x4 screenMatrix = mat4x4::NDCToScreen(v.w, v.h);
@@ -47,7 +45,8 @@ void DXBatch::Init()
 	};
 
 	HR(gDXDevice->CreateInputLayout(inputs.data(), inputs.size(),
-		blob->GetBufferPointer(),blob->GetBufferSize(),
+		mShader->GetVertexShaderBlob().GetBufferPointer(),
+		mShader->GetVertexShaderBlob().GetBufferSize(),
 		&inputLayout));
 
 

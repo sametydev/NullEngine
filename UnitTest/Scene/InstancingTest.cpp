@@ -13,6 +13,7 @@
 #include <Render/ScreenViewport.h>
 #include <Render/ShadowPass.h>
 #include <Render/Font.h>
+#include <Graphics/Vertex.h>
 
 void InstancingTest::InitFrame()
 {
@@ -36,7 +37,13 @@ void InstancingTest::InitFrame()
 
 	camera->SetPosition({ 0,0.5f,-5 });
 
-	mTree = ModelCache::LoadFromFile("../data/tree01.obj");
+	gContext->SetTopology(Topolgy::TRIANGLELIST);
+	mSceneShader = ShaderCache::CreateShader("SceneVS", "ScenePS");
+	mInstanceShader = ShaderCache::CreateShader("SceneInstanceVS", "ScenePS");
+	mInstanceShader->CreateInputLayout(VertexPTTTInstancedLayout::inputLayout,
+		std::size(VertexPTTTInstancedLayout::inputLayout));
+
+	mTree = ModelCache::LoadFromFile("../data/tree01.obj", mInstanceShader);
 	mTree->mNodes[0].texture = TextureCache::Load("../data/tree01.png");
 	mTree->mNodes[1].texture = TextureCache::Load("../data/tree00.png");
 
@@ -59,9 +66,7 @@ void InstancingTest::InitFrame()
 
 	mFrameBuffer->Create(fd);
 
-	gContext->SetTopology(Topolgy::TRIANGLELIST);
-	mSceneShader = ShaderCache::CreateShader("SceneVS","ScenePS");
-	mInstanceShader = ShaderCache::CreateShader("SceneInstanceVS","ScenePS");
+
 }
 
 void InstancingTest::UpdateFrame(float dt)

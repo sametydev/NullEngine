@@ -37,11 +37,14 @@ Shader* ShaderCache::CreateShader(const std::string& vs, const std::string& fs)
 		shader = std::make_shared<DXShader>();
 		shader->CreateFromFile(VS.c_str(), PS.c_str());
 		mExternalShader.insert(std::make_pair(VS + PS, shader));
+
 		break;
 	}
 
 	case GraphicAPI::OpenGL46:
 	{
+
+		return nullptr;
 		VS += shader_dir_glsl + vs + ".glsl";
 		if (!FileSystem::IsExistsFile(VS)) {
 			LOG_ERROR("failed to find %s", VS.c_str());
@@ -56,9 +59,9 @@ Shader* ShaderCache::CreateShader(const std::string& vs, const std::string& fs)
 			return found->second.get();
 		}
 
-		shader = std::make_shared<GLShader>();
-		shader->CreateFromFile(VS.c_str(), PS.c_str());
-		mExternalShader.insert(std::make_pair(VS + PS, shader));
+		//shader = std::make_shared<GLShader>();
+		//shader->CreateFromFile(VS.c_str(), PS.c_str());
+		//mExternalShader.insert(std::make_pair(VS + PS, shader));
 		break;
 	}
 	}

@@ -42,7 +42,7 @@ void Shadow::InitFrame()
 	camera->SetPosition({ 0,0.5f,-5 });
 	matrices.proj = camera->GetProjectionMatrix();
 
-	mTree = ModelCache::LoadFromFile("../data/model/knot.obj");
+	mTree = ModelCache::LoadFromFile("../data/model/knot.obj",nullptr);
 	mTree->mNodes[0].texture = TextureCache::Load("../data/checker.jpg");
 
 	mFrameBuffer = std::make_shared<DXFrameBuffer>();

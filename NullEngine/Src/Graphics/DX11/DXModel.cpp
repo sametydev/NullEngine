@@ -8,6 +8,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include <Graphics/Shader.h>
 
 
 //memory leak
@@ -20,15 +21,15 @@ DXModel::DXModel()
 
 DXModel::~DXModel()
 {
-	SAFE_RELEASE(mLayout);
 	SAFE_RELEASE(mIBO);
 	SAFE_RELEASE(mVBO);
 }
 
 
 
-void DXModel::Create(std::vector<VertexPNTS>& vertices, std::vector<uint>& indices)
+void DXModel::Create(std::vector<VertexPNTS>& vertices, std::vector<uint>& indices, Shader* shader)
 {
+	currentShader = shader;
 	D3D11_BUFFER_DESC vd{};
 	vd.Usage = D3D11_USAGE_DEFAULT;
 	vd.CPUAccessFlags = 0;
@@ -51,55 +52,27 @@ void DXModel::Create(std::vector<VertexPNTS>& vertices, std::vector<uint>& indic
 	HR(gDXDevice->CreateBuffer(&id, &sd, &mIBO));
 
 
-	D3D11_INPUT_ELEMENT_DESC ied[] = {
-		{"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0},
-		{"TEXCOORD",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12,D3D11_INPUT_PER_VERTEX_DATA,0},
-		{"TEXCOORD",1,DXGI_FORMAT_R32G32B32_FLOAT,0,24,D3D11_INPUT_PER_VERTEX_DATA,0},
-		{"TEXCOORD",2,DXGI_FORMAT_R32G32_FLOAT,0,36,D3D11_INPUT_PER_VERTEX_DATA,0},
+	//D3D11_INPUT_ELEMENT_DESC ied[] = {
+	//	{"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0},
+	//	{"TEXCOORD",0,DXGI_FORMAT_R32G32B32_FLOAT,0,12,D3D11_INPUT_PER_VERTEX_DATA,0},
+	//	{"TEXCOORD",1,DXGI_FORMAT_R32G32B32_FLOAT,0,24,D3D11_INPUT_PER_VERTEX_DATA,0},
+	//	{"TEXCOORD",2,DXGI_FORMAT_R32G32_FLOAT,0,36,D3D11_INPUT_PER_VERTEX_DATA,0},
 
-		//Instancing 
-		{"INSTANCE",0,DXGI_FORMAT_R32G32B32A32_FLOAT,1,0,D3D11_INPUT_PER_INSTANCE_DATA,1},
-		{"INSTANCE",1,DXGI_FORMAT_R32G32B32A32_FLOAT,1,16,D3D11_INPUT_PER_INSTANCE_DATA,1},
-		{"INSTANCE",2,DXGI_FORMAT_R32G32B32A32_FLOAT,1,32,D3D11_INPUT_PER_INSTANCE_DATA,1},
-		{"INSTANCE",3,DXGI_FORMAT_R32G32B32A32_FLOAT,1,48,D3D11_INPUT_PER_INSTANCE_DATA,1}
+	//	//Instancing 
+	//	{"INSTANCE",0,DXGI_FORMAT_R32G32B32A32_FLOAT,1,0,D3D11_INPUT_PER_INSTANCE_DATA,1},
+	//	{"INSTANCE",1,DXGI_FORMAT_R32G32B32A32_FLOAT,1,16,D3D11_INPUT_PER_INSTANCE_DATA,1},
+	//	{"INSTANCE",2,DXGI_FORMAT_R32G32B32A32_FLOAT,1,32,D3D11_INPUT_PER_INSTANCE_DATA,1},
+	//	{"INSTANCE",3,DXGI_FORMAT_R32G32B32A32_FLOAT,1,48,D3D11_INPUT_PER_INSTANCE_DATA,1}
+	//};
 
-	};
-	std::string bumpCode = R"(
-		struct VSIn {
-			float3 pos : POSITION;
-			float3 normal : TEXCOORD0;
-			float3 tangent : TEXCOORD1;
-			float2 st : TEXCOORD2;
-			
-			float4 inst0 : INSTANCE0;
-			float4 inst1 : INSTANCE1;
-			float4 inst2 : INSTANCE2;
-			float4 inst3 : INSTANCE3;
-		};
-		
+	//HR(gDXDevice->CreateInputLayout(ied,
+	//	std::size(ied),
+	//	proxyBlob->GetBufferPointer(),
+	//	proxyBlob->GetBufferSize(),
+	//	&mLayout
+	//));
 
-		float4 VS(VSIn vs) : SV_POSITION {
-			return vs.pos.xxxx;
-		};
-	)";
-
-	ID3DBlob* proxyBlob;
-	ID3DBlob* errBlob;
-
-	HR(D3DCompile(bumpCode.c_str(), bumpCode.size(), NULL,
-		nullptr, nullptr, "VS", "vs_5_0", 0, 0, &proxyBlob, &errBlob));
-
-	if (errBlob != nullptr)
-	{
-		LOG_ERROR("D3D Compile Error from Model : %s", errBlob->GetBufferPointer());
-	}
-
-	HR(gDXDevice->CreateInputLayout(ied,
-		std::size(ied),
-		proxyBlob->GetBufferPointer(),
-		proxyBlob->GetBufferSize(),
-		&mLayout
-	));
+	//shader->CreateInputLayout(ied, std::size(ied));
 
 	if (gInstanceBuffer == nullptr)
 	{
@@ -122,7 +95,7 @@ void DXModel::Render()
 
 	gDXContext->IASetVertexBuffers(0, 1, &mVBO, &stride, &offset);
 	gDXContext->IASetIndexBuffer(mIBO, DXGI_FORMAT_R32_UINT, 0);
-	gDXContext->IASetInputLayout(mLayout);
+	currentShader->SetInputLayoutPipeline();
 
 	for (int i = 0; i < GetNodeCount(); i++)
 	{
@@ -150,7 +123,7 @@ void DXModel::RenderInstanced(uint nInstance,void* data)
 
 	gDXContext->IASetVertexBuffers(0, 2, buffers, stride, offset);
 	gDXContext->IASetIndexBuffer(mIBO, DXGI_FORMAT_R32_UINT, 0);
-	gDXContext->IASetInputLayout(mLayout);
+	currentShader->SetInputLayoutPipeline();
 
 	for (unsigned int i = 0; i < GetNodeCount(); i++)
 	{
