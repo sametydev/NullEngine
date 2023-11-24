@@ -44,10 +44,7 @@ void DXBatch::Init()
 		{"COLOR",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,0,D3D11_INPUT_PER_INSTANCE_DATA}
 	};
 
-	HR(gDXDevice->CreateInputLayout(inputs.data(), inputs.size(),
-		mShader->GetVertexShaderBlob().GetBufferPointer(),
-		mShader->GetVertexShaderBlob().GetBufferSize(),
-		&inputLayout));
+	mShader->CreateInputLayout(inputs.data(), std::size(inputs));
 
 
 
