@@ -47,6 +47,7 @@
     <ClInclude Include="Src\Render\Font.h" />
     <ClInclude Include="Src\Render\DXBatch.h" />
     <ClInclude Include="Src\Math\vec4f.h" />
+    <ClInclude Include="Src\Graphics\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp" />
@@ -84,6 +85,7 @@
     <ClCompile Include="Src\Component\Object.cpp" />
     <ClCompile Include="Src\Render\Font.cpp" />
     <ClCompile Include="Src\Render\DXBatch.cpp" />
+    <ClCompile Include="Src\Graphics\Vertex.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\HLSL\GBufferPS.hlsl" />

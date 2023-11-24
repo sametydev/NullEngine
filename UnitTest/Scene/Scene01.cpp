@@ -27,5 +27,5 @@ void Scene01::UpdateFrame(float dt)
 
 void Scene01::RenderFrame()
 {
-	DXBatch::Instance->Render("Hello World", 10, 30);
+	DXBatch::Instance->Render("Hello", 20, 30);
 }

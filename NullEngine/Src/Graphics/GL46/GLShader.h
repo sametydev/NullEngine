@@ -2,17 +2,17 @@
 
 #include <Graphics/Shader.h>
 
-class GLShader : public Shader
+class GLShader
 {
 public:
 	GLShader();
 	virtual~GLShader();
 
-	void CreateFromFile(const char* vs, const char* fs) override;
-	void CreateFromCode(const char* vs, const char* fs) override;
+	void CreateFromFile(const char* vs, const char* fs);
+	void CreateFromCode(const char* vs, const char* fs);
 
-	void Bind() override;
-	void UnBind() override;
+	void Bind();
+	void UnBind();
 	uint mId;
 protected:
 	std::string FileToCode(const char* file);

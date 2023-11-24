@@ -44,7 +44,7 @@ void Model::SetTexture(uint index, Texture* texture)
 }
 
 void LoadModelFromAssimp(LPCSTR filename,
-	Model* model) {
+	Model* model,Shader* shader) {
 
 	using namespace Assimp;
 
@@ -112,13 +112,13 @@ void LoadModelFromAssimp(LPCSTR filename,
 		}
 	}
 
-	model->Create(vertices, indices);
+	model->Create(vertices, indices, shader);
 }
 
 
 std::unordered_map<std::string, std::shared_ptr<Model>> ModelCache::mCache;
 std::vector<std::shared_ptr<Model>>						ModelCache::mBuiltinModels;
-Model* ModelCache::LoadFromFile(LPCSTR filename)
+Model* ModelCache::LoadFromFile(LPCSTR filename,Shader* shader)
 {
 
 	if (!FileSystem::IsExistsFile(filename))
@@ -133,7 +133,7 @@ Model* ModelCache::LoadFromFile(LPCSTR filename)
 
 	auto model = std::make_shared<DXModel>();
 
-	LoadModelFromAssimp(filename, model.get());
+	LoadModelFromAssimp(filename, model.get(),shader);
 
 	mCache.insert(std::make_pair(filename, model));
 
@@ -188,7 +188,7 @@ BuiltInModel::BuiltInModel() : ibo(nullptr),vbo(nullptr)
 	mNodes.resize(1);
 }
 
-void BuiltInModel::Create(std::vector<VertexPNTS>& vertices, std::vector<uint>& indices)
+void BuiltInModel::Create(std::vector<VertexPNTS>& vertices, std::vector<uint>& indices,Shader* shader)
 {
 }
 

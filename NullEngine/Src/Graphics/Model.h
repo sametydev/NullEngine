@@ -16,7 +16,7 @@ public:
 
 
     virtual void Create(std::vector<VertexPNTS>& vertices,
-        std::vector<uint>& indices
+        std::vector<uint>& indices,Shader* shader
     ) = 0;
 
     virtual void RenderInstanced(uint nInstance, void* data);
@@ -37,7 +37,7 @@ class BuiltInModel : public Model {
 public:
     BuiltInModel();
     virtual void Create(std::vector<VertexPNTS>& vertices,
-        std::vector<uint>& indices
+        std::vector<uint>& indices,Shader* shader
     );
     void Render();
 
@@ -49,7 +49,7 @@ public:
 
 class ModelCache {
 public:
-    static Model* LoadFromFile(LPCSTR filename);
+    static Model* LoadFromFile(LPCSTR filename, Shader* shader);
     static Model* CreatePlane(float size);
 
     static std::unordered_map<std::string, std::shared_ptr<Model>> mCache;

@@ -183,8 +183,10 @@
     <ClInclude Include="Src\Engine\Timer.h" />
     <ClInclude Include="Src\Component\Transform.h" />
     <ClInclude Include="Src\Component\TCamera.h" />
+    <ClInclude Include="Src\Graphics\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Graphics\Vertex.cpp" />
     <ClCompile Include="Src\Render\DXBatch.cpp" />
     <ClCompile Include="Src\Render\Font.cpp" />
     <ClCompile Include="Src\Component\Object.cpp" />

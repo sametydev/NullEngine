@@ -2,7 +2,7 @@
 #include <Graphics/dx11/dxshader.h>
 #include <Graphics/Context.h>
 #include <Graphics/DX11/DX11Config.h>
-
+#include  <array>
 DXShader::DXShader()
 	: mVShader(nullptr), mPShader(nullptr)
 {
@@ -16,53 +16,46 @@ DXShader::~DXShader()
 
 void DXShader::CreateFromFile(const char* vs, const char* fs)
 {
-	//ID3DBlob* vb = NULL;
-	ID3DBlob* pb = NULL;
-
-	CompileFromFile(vs, VS_ENTRY, VS_VER, &mBlob);
+	CompileFromFile(vs, VS_ENTRY, VS_VER, &vertexShaderBlob);
 
 	HR(gDXDevice->CreateVertexShader(
-		mBlob->GetBufferPointer(),
-		mBlob->GetBufferSize(),
+		vertexShaderBlob->GetBufferPointer(),
+		vertexShaderBlob->GetBufferSize(),
 		NULL,
 		&mVShader));
 
-	CompileFromFile(fs, PS_ENTRY, PS_VER, &pb);
+	CompileFromFile(fs, PS_ENTRY, PS_VER, &pixelShaderBlob);
 
 	HR(gDXDevice->CreatePixelShader(
-		pb->GetBufferPointer(),
-		pb->GetBufferSize(),
+		pixelShaderBlob->GetBufferPointer(),
+		pixelShaderBlob->GetBufferSize(),
 		NULL,
 		&mPShader));
 }
 
 void DXShader::CreateFromCode(const char* vs, const char* fs)
 {
-	ID3DBlob* vb = NULL;
-	ID3DBlob* pb = NULL;
-
 	HRESULT res;
 
-	CompileFromCode(vs, VS_ENTRY, VS_VER, &vb);
+	CompileFromCode(vs, VS_ENTRY, VS_VER, &vertexShaderBlob);
 
 	HR(gDXDevice->CreateVertexShader(
-		vb->GetBufferPointer(),
-		vb->GetBufferSize(),
+		vertexShaderBlob->GetBufferPointer(),
+		vertexShaderBlob->GetBufferSize(),
 		NULL,
 		&mVShader));
 
-	CompileFromCode(fs, PS_ENTRY, PS_VER, &pb);
+	CompileFromCode(fs, PS_ENTRY, PS_VER, &pixelShaderBlob);
 
 	HR(gDXDevice->CreatePixelShader(
-		pb->GetBufferPointer(),
-		pb->GetBufferSize(),
+		pixelShaderBlob->GetBufferPointer(),
+		pixelShaderBlob->GetBufferSize(),
 		NULL,
 		&mPShader));
 }
 
 void DXShader::Bind()
 {
-
 	gDXContext->VSSetShader(mVShader, 0, 0);
 	gDXContext->PSSetShader(mPShader, 0, 0);
 }
@@ -107,4 +100,33 @@ void DXShader::CompileFromCode(const char* code, const char* entry, const char* 
 		}
 		MessageBoxA(NULL, (char*)errBlob->GetBufferPointer(), code, MB_OK);
 	}
+}
+
+ID3DBlob& DXShader::GetVertexShaderBlob()
+{
+	return *vertexShaderBlob;
+}
+
+ID3DBlob& DXShader::GetPixelShaderBlob()
+{
+	return *pixelShaderBlob;
+}
+
+ID3D11InputLayout& DXShader::GetInputLayout()
+{
+	return *inputLayout;
+}
+
+void DXShader::SetInputLayoutPipeline()
+{
+	gDXContext->IASetInputLayout(inputLayout);
+}
+
+void DXShader::CreateInputLayout(const D3D11_INPUT_ELEMENT_DESC* elements, uint32_t nElements)
+{
+	HR(gDXDevice->CreateInputLayout(elements, nElements,
+		vertexShaderBlob->GetBufferPointer(), vertexShaderBlob->GetBufferSize(),
+		&inputLayout));
+
+	SetInputLayoutPipeline();
 }

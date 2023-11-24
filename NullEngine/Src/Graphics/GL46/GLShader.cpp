@@ -11,7 +11,7 @@ GLShader::GLShader()
 GLShader::~GLShader()
 {
 	if (mId) glDeleteProgram(mId);
-	mIsCompiled = false;
+	//mIsCompiled = false;
 }
 
 void GLShader::CreateFromFile(const char* vs, const char* fs)
@@ -42,7 +42,7 @@ void GLShader::CreateFromCode(const char* vs, const char* fs)
 	}
 	glDeleteShader(vertShader);
 	glDeleteShader(fragShader);
-	mIsCompiled = true;
+	//mIsCompiled = true;
 }
 
 void GLShader::Bind()
