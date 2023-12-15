@@ -26,7 +26,8 @@ void Scene01::UpdateFrame(float dt)
 
 void Scene01::RenderFrame()
 {
-	BasicBatch::Instance->Render(50, 50, 128, 128);
+	BasicBatch::Instance->Render(10, 10, 128, 128, {0.4,1,0.5,1});
+	BasicBatch::Instance->Render(20, 20, 128, 128);
 
 	DXFontBatch::Instance->Render("Hello World!", 20, 30);
 
