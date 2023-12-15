@@ -33,6 +33,8 @@ void DXSpriteBatch::Init()
 
 	mScreen = ShaderCache::CreateShader("SpriteVS","SpritePS");
 
+
+
 	D3D11_INPUT_ELEMENT_DESC ied[2] = {
 		{"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_INSTANCE_DATA,1},
 		{"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_INSTANCE_DATA,1},
@@ -173,13 +175,15 @@ void DXSpriteBatch::RenderBatches()
 
 	gDXContext->OMSetDepthStencilState(nullptr, 0);
 	mScreen->Bind();
-	mCBO->BindVS();
+	mCBO->BindVS(1);
 
 	uint stride = sizeof(VertexPS);
 	uint offset = 0;
 
+	mScreen->SetInputLayoutPipeline();
+
 	gDXContext->IASetVertexBuffers(0, 1, &mVBO, &stride, &offset);
-	gDXContext->IASetIndexBuffer(mIBO, DXGI_FORMAT_R32_UINT, 0u);
+	gDXContext->IASetIndexBuffer(mIBO, DXGI_FORMAT_R32_UINT, offset);
 
 	gDXContext->PSSetSamplers(0, 1, &dxContext->mStates.SSWrap);
 
