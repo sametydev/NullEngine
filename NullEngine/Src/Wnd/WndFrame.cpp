@@ -41,7 +41,9 @@ void WndFrame::OnCreate()
 	}
 
 	mFontBatcher = std::make_shared<DXFontBatch>();
-	mSpriteBatcher = std::make_shared<DXSpriteBatch>();
+	mSpriteBatcher = std::make_shared<BasicBatch>(
+		gContext->GetDXDevice(), gContext->GetDXContext()
+	);
 }
 
 void WndFrame::OnReSize(uint cx, uint cy)

@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Render\BasicBatch.h" />
     <ClInclude Include="Src\Render\DXSpriteBatch.h" />
     <ClInclude Include="Src\Math\vec4f.h" />
     <ClInclude Include="Src\Render\DXBatch.h" />
@@ -187,6 +188,7 @@
     <ClInclude Include="Src\Graphics\Vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Render\BasicBatch.cpp" />
     <ClCompile Include="Src\Render\DXSpriteBatch.cpp" />
     <ClCompile Include="Src\Graphics\Vertex.cpp" />
     <ClCompile Include="Src\Render\DXFontBatch.cpp" />

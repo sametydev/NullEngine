@@ -1,5 +1,5 @@
-Texture2D tex0 : register(t0);
-SamplerState texSampler : register(s0);
+//Texture2D tex0 : register(t0);
+//SamplerState texSampler : register(s0);
 
 struct PS_In
 {
@@ -9,5 +9,8 @@ struct PS_In
 
 float4 PS(PS_In ps) : SV_TARGET
 {
-    return tex0.Sample(texSampler, ps.st);
+    //return tex0.Sample(texSampler, ps.st);
+    
+    return float4(1, 1, 1, 1);
+
 }

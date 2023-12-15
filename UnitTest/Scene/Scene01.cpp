@@ -13,7 +13,7 @@
 #include <Render/ScreenViewport.h>
 #include <Render/ShadowPass.h>
 #include <Render/DXFontBatch.h>
-#include <Render/DXSpriteBatch.h>
+#include <Render/BasicBatch.h>
 
 void Scene01::InitFrame()
 {
@@ -22,12 +22,12 @@ void Scene01::InitFrame()
 
 void Scene01::UpdateFrame(float dt)
 {
-
 }
 
 void Scene01::RenderFrame()
 {
-	DXSpriteBatch::Instance->Render(testTexture, 50, 50, 128, 128);
+	BasicBatch::Instance->Render(50, 50, 128, 128);
+
 	DXFontBatch::Instance->Render("Hello World!", 20, 30);
 
 }
