@@ -1,5 +1,8 @@
 #pragma once
 #include <Math/vec4f.h>
+#include <Graphics/DX11/DX11Config.h>
+#include <Graphics/Context.h>
+
 #include <wrl.h>
 #include <vector>
 
@@ -7,7 +10,7 @@ using namespace Microsoft::WRL;
 
 typedef ComPtr<ID3D11VertexShader> VertexShaderPtr;
 typedef ComPtr<ID3D11PixelShader> PixelShaderPtr;
-typedef ComPtr<ID3D11Buffer> BufferPtr;
+//typedef ComPtr<ID3D11Buffer> BufferPtr;
 
 /*
 	LT(0) ----- RT(1)
@@ -17,8 +20,10 @@ typedef ComPtr<ID3D11Buffer> BufferPtr;
 */
 
 struct SpriteRect{
-	VertexPS LT, RT, RB, LB;
+	VertexPS LT, RT, LB, RB;
+	vec4f color;
 };
+
 
 #define DEFAULT_SPRITE_SIZE 1024
 #define INDEX_PER_QUAD 6
@@ -43,9 +48,12 @@ private:
 	Shader* mShader;
 	Viewport mVp;
 
-	BufferPtr mConstantBuffer;
-	BufferPtr mVertexBuffer;
-	BufferPtr mIndexBuffer;
+	ComPtr<ID3D11Buffer> mConstantBuffer;
+	ComPtr<ID3D11Buffer> mColorBuffer;
+
+
+	ComPtr<ID3D11Buffer> mVertexBuffer;
+	ComPtr<ID3D11Buffer> mIndexBuffer;
 
 	void CreateShader();
 	void CreateBuffer();
