@@ -1,7 +1,7 @@
 #pragma once
 #include <PCH.h>
 #include <Engine/Scene.h>
-
+#include <Core/SubSystem.h>
 class Scene01 : public Scene
 {
 public:
@@ -19,3 +19,17 @@ protected:
 	struct { mat4x4 proj, view, model; } matrices;
 };
 
+
+class TestSubystem : public BaseSubsystem {
+public:
+	void Initialize() override {
+		std::cout << "TestSubystem Initialized\n";
+	}
+
+	void Update() override {
+		std::cout << "TestSubystem Update\n";
+	}
+
+	void Shutdown() override {
+	}
+};

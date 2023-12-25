@@ -6,6 +6,7 @@
 #include <Graphics/DX11/DXContext.h>
 #include <Graphics/GL46/GLContext.h>
 #include <Wnd/WndConfig.h>
+#include <Core/SubSystem.h>
 
 WndFrame::WndFrame(const WndDesc& desc) : Wnd(nullptr, 0, 0, desc.width, desc.heigth),mApiType(desc.api)
 {
@@ -16,7 +17,7 @@ WndFrame::WndFrame(const WndDesc& desc) : Wnd(nullptr, 0, 0, desc.width, desc.he
 
 WndFrame::~WndFrame()
 {
-
+	SubsystemManager::Shutdown();
 }
 
 void WndFrame::OnCreate()
@@ -79,6 +80,7 @@ int WndFrame::ExecFrame(Scene* scene)
 		{
 			Timer::instance()->Update();
 			Input::Update(*this);
+			SubsystemManager::Update();
 			
 			//Batch Begin
 			//TODO :: Batch Begin
@@ -88,6 +90,7 @@ int WndFrame::ExecFrame(Scene* scene)
 			mContext->ClearBuffer(0.2f, 0.2f, 0.2f,1.0f);
 			if (scene)
 			{
+				
 				scene->UpdateFrame(Timer::instance()->deltaTime);
 				scene->RenderFrame();
 			}
