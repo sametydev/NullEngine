@@ -50,6 +50,7 @@
     <ClInclude Include="Src\Render\DXBatch.h" />
     <ClInclude Include="Src\Render\DXSpriteBatch.h" />
     <ClInclude Include="Src\Render\BasicBatch.h" />
+    <ClInclude Include="Src\Core\SubSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Main.cpp" />
@@ -89,6 +90,7 @@
     <ClCompile Include="Src\Graphics\Vertex.cpp" />
     <ClCompile Include="Src\Render\DXSpriteBatch.cpp" />
     <ClCompile Include="Src\Render\BasicBatch.cpp" />
+    <ClCompile Include="Src\Core\SubSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\HLSL\GBufferPS.hlsl" />

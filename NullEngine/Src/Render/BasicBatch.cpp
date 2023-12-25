@@ -67,6 +67,21 @@ void BasicBatch::End()
 	{
 		return;
 	}
+	switch (mType)
+	{
+	case SortType::BackToFront:
+		std::reverse(mSprite.begin(), mSprite.end());
+		break;
+	case SortType::FrontToBack:
+
+		break;
+	case SortType::TextureIndex:
+
+		break;
+	default:
+		break;
+	}
+	
 	mShader->Bind();
 	mShader->SetInputLayoutPipeline();
 
@@ -90,7 +105,6 @@ void BasicBatch::End()
 		vertices.emplace_back(mSprite[i].RT);
 		vertices.emplace_back(mSprite[i].LB);
 		vertices.emplace_back(mSprite[i].RB);
-
 	}
 
 

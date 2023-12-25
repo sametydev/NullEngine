@@ -12,6 +12,12 @@ typedef ComPtr<ID3D11VertexShader> VertexShaderPtr;
 typedef ComPtr<ID3D11PixelShader> PixelShaderPtr;
 //typedef ComPtr<ID3D11Buffer> BufferPtr;
 
+enum class SortType : uint {
+	BackToFront,
+	FrontToBack,
+	TextureIndex
+};
+
 /*
 	LT(0) ----- RT(1)
 	|				|
@@ -63,5 +69,7 @@ private:
 	uint mQueueIndex = 0;
 
 	mat4x4 screenNDC;
+
+	SortType mType = SortType::BackToFront;
 };
 
