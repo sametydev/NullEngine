@@ -27,7 +27,7 @@ public:
 	}
 
 	void Update() override {
-		std::cout << "TestSubystem Update\n";
+		//std::cout << "TestSubystem Update\n";
 	}
 
 	void Shutdown() override {

@@ -14,6 +14,7 @@
 #include <Render/ShadowPass.h>
 #include <Render/DXFontBatch.h>
 #include <Render/BasicBatch.h>
+#include <Component/Object.h>
 
 void Scene01::InitFrame()
 {
@@ -22,6 +23,10 @@ void Scene01::InitFrame()
 	testTexture = TextureCache::Load("../data/checker.jpg");
 
 	TestSubystem* mySubTest = SubsystemManager::Get<TestSubystem>();
+
+	Object obj;
+
+	LOG << obj.mIdStr << ENDL;
 }
 
 void Scene01::UpdateFrame(float dt)
@@ -30,9 +35,10 @@ void Scene01::UpdateFrame(float dt)
 
 void Scene01::RenderFrame()
 {
-	BasicBatch::Instance->Render(10, 10, 128, 128, {0.4,1,0.5,1}); // back
-	BasicBatch::Instance->Render(20, 20, 128, 128);                // front
-
+	//BasicBatch::Instance->Render(10, 10, 128, 128, {0.4,1,0.5,1}); // back
+	//BasicBatch::Instance->Render(20, 20, 128, 128);                // front
+	BasicBatch::Instance->DrawRect(50, 50,128,128,vec3f(0.4f));
+	BasicBatch::Instance->DrawLine(vec2f(0.f),vec2f(100.f));
 	DXFontBatch::Instance->Render("Hello World!", 20, 30);
 
 }

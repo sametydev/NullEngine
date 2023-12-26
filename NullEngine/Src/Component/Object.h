@@ -1,10 +1,17 @@
 #pragma once
 #include <Component/Transform.h>
+#include <string>
+#include <sstream>
+#include <guiddef.h>
+#include <combaseapi.h>
+
+
 class Object
 {
 public:
 	Object();
 	virtual ~Object();
+
 	virtual void OnCreate() {};
 	virtual void OnDestroy() {};
 	virtual void OnUpdate() {};
@@ -13,19 +20,13 @@ public:
 
 	void SetTransform(Transform* t);
 
-	bool isRenderable = true;
-
-	static std::hash<uint> hasher;
-
 	uint id;
+	
 
-	bool operator == (const Object& other) const {
-		return id == other.id;
-	}
+	static std::string GuidToString(const GUID& id);
 
-	std::size_t operator()(const Object& obj) const {
-		return hasher(id);
-	}
+	std::string mIdStr;
+
 
 private:
 	Transform* transform;
@@ -37,4 +38,3 @@ public:
 	virtual ~Renderable();
 	virtual void Render();
 };
-
