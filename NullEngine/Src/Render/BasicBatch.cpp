@@ -29,67 +29,87 @@ void BasicBatch::Begin()
 {
 	mIsBegin = true;
 	mQueueIndex = 0;
-	mSprite.clear();
+	mCmdList.clear();
 }
 
-void BasicBatch::Render(int x, int y, int w, int h, const vec4f& color)
+void BasicBatch::DrawRect(int x, int y, int w, int h, const vec3f& color)
 {
 	if (mQueueIndex > DEFAULT_SPRITE_SIZE) return;
 
-	SpriteRect sr{};
+	//Vertex Data Part
+	vec4f* ptr = mQueuedVertices.get();
 
-	sr.LT = {
-		vec3f(x,       y,      0 ), vec2f(),
+	ptr += mQueueIndex;
+
+	vec4f src[4] = {
+		{(float)x,(float)y,0,0}, //pos and uv
+		{(float)(x+w),(float)y,0,0},
+		{(float)x,(float)(y+h),0,0},
+		{(float)(x+w),(float)(y+h),0,0},
 	};
 
-	sr.RT = {
-		vec3f(x + w,   y,      0), vec2f(),
+	//memcpy_s(ptr,sizeof(vec4f)*4,src,sizeof(vec4f) * 4);
+	memcpy(ptr,src,sizeof(vec4f)*4);
+
+	//--------
+
+	//Command Part
+
+	BatchCommandList cmd{};
+	cmd.type = QUAD;
+	cmd.bufferOffset = 4;
+	cmd.drawCount = 6;
+
+	mCmdList.emplace_back(cmd);
+	mQueueIndex += VERTEX_PER_QUAD;
+}
+
+void BasicBatch::DrawLine(const vec2f& p1, const vec2f& p2, const vec3f& color)
+{
+	if (mQueueIndex > DEFAULT_SPRITE_SIZE) return;
+
+	//Vertex Data Part
+	vec4f* ptr = mQueuedVertices.get();
+
+	ptr += mQueueIndex;
+
+	vec4f src[2] = {
+		{p1.x,p1.y,0,0},
+		{p2.x,p2.y,0,0}
 	};
 
-	sr.LB = {
-		vec3f(x ,      y + h,  0 ), vec2f(),
-	};
+	memcpy(ptr, src, sizeof(vec4f) * 2);
 
-	sr.RB = {
-		vec3f(x + w,   y+h,    0 ), vec2f(),
-	};
+	//--------
 
-	sr.color = color;
+	//Command Part
 
-	mSprite.emplace_back(sr);
-	++mQueueIndex;
+	BatchCommandList cmd{};
+	cmd.type = LINE;
+	cmd.bufferOffset = 2;
+	cmd.drawCount = 2;
+
+	mCmdList.emplace_back(cmd);
+	mQueueIndex += VERTEX_PER_LINE;
 }
 
 
 void BasicBatch::End()
 {
-	if (mIsBegin && mSprite.empty())
+	if (mIsBegin && (mQueueIndex <= 0))
 	{
 		return;
 	}
-	switch (mType)
-	{
-	case SortType::BackToFront:
-		std::reverse(mSprite.begin(), mSprite.end());
-		break;
-	case SortType::FrontToBack:
 
-		break;
-	case SortType::TextureIndex:
-
-		break;
-	default:
-		break;
-	}
 	
 	mShader->Bind();
 	mShader->SetInputLayoutPipeline();
 
-	uint stride = sizeof(VertexPS), offset = 0;
+	uint stride = sizeof(vec4f), offset = 0;
 
 	mContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &stride,&offset);
 
-	mContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+	//mContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 	mContext->VSSetConstantBuffers(1, 1, mConstantBuffer.GetAddressOf());
 
@@ -97,32 +117,33 @@ void BasicBatch::End()
 
 	mContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	std::vector<VertexPS> vertices;
-	vertices.reserve(mQueueIndex * VERTEX_PER_QUAD);
-	for (size_t i = 0; i < mSprite.size(); i++)
-	{
-		vertices.emplace_back(mSprite[i].LT);
-		vertices.emplace_back(mSprite[i].RT);
-		vertices.emplace_back(mSprite[i].LB);
-		vertices.emplace_back(mSprite[i].RB);
-	}
 
 
 	D3D11_MAPPED_SUBRESOURCE map{};
 	mContext->Map(mVertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-	memcpy(map.pData, vertices.data(), sizeof(VertexPS) * 4 * mQueueIndex);
+	memcpy(map.pData, mQueuedVertices.get(), sizeof(vec4f) *  BATCH_MAX_VERTEX);
 	mContext->Unmap(mVertexBuffer.Get(), 0);
 
-	uint vertexPos = 0;
-	ZeroMemory(&map, sizeof(D3D11_MAPPED_SUBRESOURCE));
-	for (size_t i = 0; i < mQueueIndex; i++)
+	uint currentOffset = 0;
+	for (size_t i = 0; i < mCmdList.size(); i++)
 	{
-		mContext->UpdateSubresource(mColorBuffer.Get(), 0, 0, &mSprite[i].color, 0, 0);
+		BatchCommandList& CMD = mCmdList[i];
 
-		mContext->DrawIndexed(6, 0, vertexPos);
+		if (CMD.type == QUAD)
+		{
+			mContext->IASetIndexBuffer(mIndexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+			mContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			mContext->DrawIndexed(CMD.drawCount, 0, currentOffset);
+		}
+		else if (CMD.type == LINE) {
 
-		vertexPos += 4;
+			mContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+			mContext->Draw(CMD.drawCount, currentOffset);
+		}
+
+		currentOffset += CMD.bufferOffset;
 	}
+	
 
 	mIsBegin = false;
 }
@@ -143,7 +164,11 @@ void BasicBatch::CreateBuffer()
 	D3D11_BUFFER_DESC bd{};
 	D3D11_SUBRESOURCE_DATA sd{};
 
+	//Allocate vertices data
+	mQueuedVertices = std::make_unique<vec4f[]>(BATCH_MAX_VERTEX);
+
 	//Vertex;
+
 	bd.ByteWidth = sizeof(VertexPS) * DEFAULT_SPRITE_SIZE * VERTEX_PER_QUAD;
 	bd.Usage = D3D11_USAGE_DYNAMIC;
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
