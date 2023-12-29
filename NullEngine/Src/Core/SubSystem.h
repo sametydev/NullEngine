@@ -1,3 +1,4 @@
+#pragma once
 #include <vector>
 #include <memory>
 #include <typeinfo>
@@ -8,7 +9,7 @@ class BaseSubsystem {
 public:
     virtual ~BaseSubsystem() = default;
 
-    virtual void Initialize() = 0;
+    virtual void Init() = 0;
     virtual void Update() = 0;
     virtual void Shutdown() = 0;
 };
@@ -33,7 +34,7 @@ public:
         subsystems.emplace_back(subsystem);
         subsystemMap[typeid(T).name()] = subsystem;
 
-        subsystem->Initialize();
+        subsystem->Init();
 
         return subsystem;
     }

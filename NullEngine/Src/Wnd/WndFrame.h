@@ -3,6 +3,7 @@
 #include <Render/DXBatch.h>
 #include <Render/DXFontBatch.h>
 #include <Render/BasicBatch.h>
+#include <Render/BasicBatch.h>
 
 class WndFrame : public Wnd
 {
@@ -16,9 +17,12 @@ public:
 
 	GraphicAPI mApiType;
 	std::shared_ptr<Context> mContext;
-	std::shared_ptr<DXFontBatch> mFontBatcher;
-	std::shared_ptr<BasicBatch> mSpriteBatcher;
+
 
 	int ExecFrame(Scene* scene = nullptr);
+
+private:
+	DXFontBatch* mFontBatcher  = nullptr;
+	BasicBatch* mSpriteBatcher = nullptr;
 };
 

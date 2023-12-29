@@ -2,7 +2,7 @@
 #include <Math/vec4f.h>
 #include <Graphics/DX11/DX11Config.h>
 #include <Graphics/Context.h>
-
+#include <Core/SubSystem.h>
 #include <wrl.h>
 #include <vector>
 
@@ -45,7 +45,7 @@ struct BatchCommandList {
 #define VERTEX_PER_QUAD 4
 #define VERTEX_PER_LINE 2
 
-class BasicBatch
+class BasicBatch : public BaseSubsystem
 {
 public:
 	BasicBatch(ID3D11Device* device, ID3D11DeviceContext* context);
@@ -56,8 +56,8 @@ public:
 	void DrawLine(const vec2f& p1, const vec2f& p2,
 		const vec3f& color = vec3f(1.f));
 	void End();
-
-	static BasicBatch* Instance;
+	void Shutdown();
+	void Update();
 
 private:
 	ID3D11Device* mDevice;
@@ -69,7 +69,6 @@ private:
 	ComPtr<ID3D11Buffer> mConstantBuffer;
 	ComPtr<ID3D11Buffer> mColorBuffer;
 
-
 	ComPtr<ID3D11Buffer> mVertexBuffer;
 	ComPtr<ID3D11Buffer> mIndexBuffer;
 
@@ -78,12 +77,11 @@ private:
 
 	std::unique_ptr<vec4f[]> mQueuedVertices;
 	std::vector<BatchCommandList> mCmdList;
+	std::vector<vec4f> mColorList;
 
 	bool mIsBegin = false;
 	uint mQueueIndex = 0;
 
-
-	//graphic design?
 	mat4x4 screenNDC;
 
 	SortType mType = SortType::BackToFront;

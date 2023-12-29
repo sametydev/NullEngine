@@ -3,7 +3,7 @@
 #include <Core/Singleton.h>
 #include <freetype/freetype.h>
 #include <Render/DXBatch.h>
-
+#include <Core/SubSystem.h>
 #define MAX_FONT_TEXT 8192
 #pragma comment(lib,"freetype.lib")
 constexpr int FONT_MIN_CHAR = 32;
@@ -33,26 +33,27 @@ struct FontInstanceVertex {
 	vec4f color;
 };
 
-class DXFontBatch : Batch {
+class DXFontBatch : public BaseSubsystem {
 public:
-	DXFontBatch();
+	DXFontBatch(ID3D11Device* device, ID3D11DeviceContext* context);
 
 	void Init() override;
-	void Begin() override;
+	void Begin();
 	void Render(const char* text, int x, int y,
-		const vec4f& color = vec4f(1.f)) override;
-	void End() override;
+		const vec4f& color = vec4f(1.f));
+	void End();
 	void Create_Font(const char* filename, uint size);
 	void CreateBuffer();
-
-
-	static DXFontBatch* Instance;
+	void Update() override;
+	void Shutdown() override;
 
 private:
+	ID3D11Device* mDevice;
+	ID3D11DeviceContext* mContext;
+
 	uint texture;
 	uint m_width;
 	uint m_height;
-
 
 	Shader* mShader;
 

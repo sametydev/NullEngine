@@ -8,13 +8,9 @@
 #include <Graphics/DX11/DXShader.h>
 
 #include <Graphics/DX11/DXTexture.h>
-DXFontBatch* DXFontBatch::Instance = nullptr;
-DXFontBatch::DXFontBatch()
+DXFontBatch::DXFontBatch(ID3D11Device* device, ID3D11DeviceContext* context)
 {
-	if (Instance == nullptr)
-	{
-		Instance = this;
-	}
+	mDevice = device; mContext = context;
 }
 
 void DXFontBatch::Init()
@@ -102,10 +98,10 @@ void DXFontBatch::End()
 	if (!mIsBegin || mCurVtxIndex == 0) return;
 
 	D3D11_MAPPED_SUBRESOURCE mapped{};
-	gDXContext->Map(mVbo, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
+	mContext->Map(mVbo, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapped);
 	memcpy(mapped.pData, mVertices.get(), sizeof(FontInstanceVertex)*mCurVtxIndex);
 
-	gDXContext->Unmap(mVbo,0);
+	mContext->Unmap(mVbo,0);
 
 	mShader->Bind();
 	mScreenCbo->BindVS(1);
@@ -115,17 +111,17 @@ void DXFontBatch::End()
 
 	mShader->SetInputLayoutPipeline();
 
-	gDXContext->IASetVertexBuffers(0, 1, &mVbo, &stride, &offset);
+	mContext->IASetVertexBuffers(0, 1, &mVbo, &stride, &offset);
 
-	gDXContext->PSSetShaderResources(0, 1, &mTexture);
+	mContext->PSSetShaderResources(0, 1, &mTexture);
 
 	auto sampler = static_cast<DXContext*>(gContext)->mStates.SSWrap;
 
-	gDXContext->PSSetSamplers(0, 1, &sampler);
+	mContext->PSSetSamplers(0, 1, &sampler);
 
-	gDXContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	mContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	gContext->SetBlendState(BlendState::Transparent);
-	gDXContext->DrawInstanced(6, mCurVtxIndex, 0, 0);
+	mContext->DrawInstanced(6, mCurVtxIndex, 0, 0);
 	gContext->SetBlendState(BlendState::Disable);
 
 }
@@ -236,7 +232,7 @@ void DXFontBatch::Create_Font(const char* filename, uint size)
 	sd.SysMemPitch = width;
 	sd.SysMemSlicePitch = width * height;
 
-	HR(gDXDevice->CreateTexture2D(&t2d, &sd, &dump));
+	HR(mDevice->CreateTexture2D(&t2d, &sd, &dump));
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvd{};
 	srvd.Format = t2d.Format;
@@ -244,7 +240,7 @@ void DXFontBatch::Create_Font(const char* filename, uint size)
 	srvd.Texture2D.MipLevels = 1;
 	srvd.Texture2D.MostDetailedMip = 0;
 
-	HR(gDXDevice->CreateShaderResourceView(dump, &srvd, &mTexture));
+	HR(mDevice->CreateShaderResourceView(dump, &srvd, &mTexture));
 
 	SAFE_RELEASE(dump);
 
@@ -265,7 +261,15 @@ void DXFontBatch::CreateBuffer()
 	bd.MiscFlags           = 0;
 	bd.StructureByteStride = 0;
 
-	HR(gDXDevice->CreateBuffer(&bd, nullptr, &mVbo));
+	HR(mDevice->CreateBuffer(&bd, nullptr, &mVbo));
+}
+
+void DXFontBatch::Update()
+{
+}
+
+void DXFontBatch::Shutdown()
+{
 }
 
 

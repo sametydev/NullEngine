@@ -41,10 +41,8 @@ void WndFrame::OnCreate()
 		break;
 	}
 
-	mFontBatcher = std::make_shared<DXFontBatch>();
-	mSpriteBatcher = std::make_shared<BasicBatch>(
-		gContext->GetDXDevice(), gContext->GetDXContext()
-	);
+	mFontBatcher   = SubsystemManager::Create<DXFontBatch>(gDXDevice, gDXContext);
+	mSpriteBatcher = SubsystemManager::Create<BasicBatch>(gDXDevice,gDXContext);
 }
 
 void WndFrame::OnReSize(uint cx, uint cy)
