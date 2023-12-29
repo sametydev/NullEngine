@@ -106,5 +106,5 @@ void InstancingTest::RenderFrame()
 	mInstanceShader->Bind();
 	mTree->RenderInstanced(instanceData.size(), instanceData.data());
 
-	DXFontBatch::Instance->Render("Current Tree Count : 100", 20, 30);
+	//DXFontBatch::Instance->Render("Current Tree Count : 100", 20, 30);
 }
