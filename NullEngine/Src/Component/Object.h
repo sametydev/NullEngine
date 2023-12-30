@@ -25,11 +25,12 @@ public:
 
 	static std::string GuidToString(const GUID& id);
 
-	std::string mIdStr;
-
+	std::string& GetGUID() { return this->mIdStr; };
 
 private:
 	Transform* transform;
+
+	std::string mIdStr;
 };
 
 class Renderable {

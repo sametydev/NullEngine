@@ -25,18 +25,3 @@ protected:
 	DXFontBatch* fontBatcher = nullptr;
 
 };
-
-
-class TestSubystem : public BaseSubsystem {
-public:
-	void Init() override {
-		std::cout << "TestSubystem Initialized\n";
-	}
-
-	void Update() override {
-		//std::cout << "TestSubystem Update\n";
-	}
-
-	void Shutdown() override {
-	}
-};
