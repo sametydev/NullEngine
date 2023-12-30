@@ -17,15 +17,10 @@
 
 void Scene01::InitFrame()
 {
-	SubsystemManager::Create<TestSubystem>();
-
 	testTexture = TextureCache::Load("../data/checker.jpg");
 
-	TestSubystem* mySubTest = SubsystemManager::Get<TestSubystem>();
-
 	Object obj;
-
-	LOG << obj.mIdStr << ENDL;
+	LOG << obj.GetGUID() << ENDL;
 
 	basicBatcher = SubsystemManager::Get<BasicBatch>();
 	fontBatcher  = SubsystemManager::Get<DXFontBatch>();
